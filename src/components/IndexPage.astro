@@ -218,8 +218,8 @@ const l = pageLabels[lang];
         <div id="keyboard-backdrop" class="keyboard-backdrop"></div>
         <a href={getLocalizedPath('/contact')} class="cta keycap-iso-enter">
           <svg class="keycap-svg" viewBox="0 -16 174 94">
-            <path class="key-shadow" d="M 70,-10 H 166 A 6,6 0 0 1 172,-4 V 72 A 6,6 0 0 1 166,78 H 10 A 6,6 0 0 1 4,72 V 52 A 6,6 0 0 1 10,46 H 58 A 6,6 0 0 0 64,40 V -4 A 6,6 0 0 1 70,-10 Z" fill="var(--ink)"></path>
-            <path class="key-face" d="M 66,-16 H 162 A 6,6 0 0 1 168,-10 V 66 A 6,6 0 0 1 162,72 H 6 A 6,6 0 0 1 0,66 V 46 A 6,6 0 0 1 6,40 H 54 A 6,6 0 0 0 60,34 V -10 A 6,6 0 0 1 66,-16 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
+            <path class="key-shadow" d="M 70,-10 H 166 A 6,6 0 0 1 172,-4 V 72 A 6,6 0 0 1 166,78 H 10 A 6,6 0 0 1 4,72 V 44 A 6,6 0 0 1 10,38 H 58 A 6,6 0 0 0 64,32 V -4 A 6,6 0 0 1 70,-10 Z" fill="var(--ink)"></path>
+            <path class="key-face" d="M 66,-16 H 162 A 6,6 0 0 1 168,-10 V 66 A 6,6 0 0 1 162,72 H 6 A 6,6 0 0 1 0,66 V 38 A 6,6 0 0 1 6,32 H 54 A 6,6 0 0 0 60,26 V -10 A 6,6 0 0 1 66,-16 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
           </svg>
           <div class="keycap-content">
             <div class="keycap-top-stem">
@@ -901,6 +901,9 @@ const l = pageLabels[lang];
     width: 174px !important;
     height: 100px !important; /* Adjusted to prevent aspect-ratio scaling shrink */
     top: 10px !important;
+  }
+  .keycap-iso-enter .keycap-bottom-base {
+    top: 41px !important; /* Center text vertically in taller bottom appendix */
   }
   .keyboard-backdrop {
     position: absolute !important;

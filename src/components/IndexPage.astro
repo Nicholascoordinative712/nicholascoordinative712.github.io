@@ -214,23 +214,26 @@ const l = pageLabels[lang];
       </h1>
       <p class="mono-label avail"><span class="dot"></span> {l.heroAvail}</p>
       
-      <a href={getLocalizedPath('/contact')} class="cta keycap-iso-enter">
-        <svg class="keycap-svg" viewBox="0 0 166 86">
-          <path class="key-shadow" d="M 70,6 H 158 A 6,6 0 0 1 164,12 V 80 A 6,6 0 0 1 158,86 H 10 A 6,6 0 0 1 4,80 V 52 A 6,6 0 0 1 10,46 H 58 A 6,6 0 0 0 64,40 V 12 A 6,6 0 0 1 70,6 Z" fill="var(--ink)"></path>
-          <path class="key-face" d="M 66,0 H 154 A 6,6 0 0 1 160,6 V 74 A 6,6 0 0 1 154,80 H 6 A 6,6 0 0 1 0,74 V 46 A 6,6 0 0 1 6,40 H 54 A 6,6 0 0 0 60,34 V 6 A 6,6 0 0 1 66,0 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
-        </svg>
-        <div class="keycap-content">
-          <div class="keycap-top-stem">
-            <div class="keycap-top-row">
-              <span class="key-label">Enter</span>
-              <span class="key-arrow">↵</span>
+      <div class="enter-button-wrapper">
+        <div id="keyboard-backdrop" class="keyboard-backdrop"></div>
+        <a href={getLocalizedPath('/contact')} class="cta keycap-iso-enter">
+          <svg class="keycap-svg" viewBox="0 0 166 86">
+            <path class="key-shadow" d="M 70,6 H 158 A 6,6 0 0 1 164,12 V 80 A 6,6 0 0 1 158,86 H 10 A 6,6 0 0 1 4,80 V 52 A 6,6 0 0 1 10,46 H 58 A 6,6 0 0 0 64,40 V 12 A 6,6 0 0 1 70,6 Z" fill="var(--ink)"></path>
+            <path class="key-face" d="M 66,0 H 154 A 6,6 0 0 1 160,6 V 74 A 6,6 0 0 1 154,80 H 6 A 6,6 0 0 1 0,74 V 46 A 6,6 0 0 1 6,40 H 54 A 6,6 0 0 0 60,34 V 6 A 6,6 0 0 1 66,0 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
+          </svg>
+          <div class="keycap-content">
+            <div class="keycap-top-stem">
+              <div class="keycap-top-row">
+                <span class="key-label">Enter</span>
+                <span class="key-arrow">↵</span>
+              </div>
+            </div>
+            <div class="keycap-bottom-base">
+              <span class="key-text">{l.heroContact}</span>
             </div>
           </div>
-          <div class="keycap-bottom-base">
-            <span class="key-text">{l.heroContact}</span>
-          </div>
-        </div>
-      </a>
+        </a>
+      </div>
     </section>
 
     <section class="clients" id="clients">
@@ -708,10 +711,132 @@ const l = pageLabels[lang];
         });
       }
     }
+
+    // Dynamic mechanical keyboard background grid
+    const backdrop = document.getElementById("keyboard-backdrop");
+    if (backdrop) {
+      const fragment = document.createDocumentFragment();
+      const keys = [];
+      const staggers = {
+        "-2": -10,
+        "-1": 0,
+        "0": 15,
+        "1": 30,
+        "2": 45,
+        "3": 20,
+        "4": -10,
+        "5": 0,
+        "6": 10
+      };
+
+      for (let r = -2; r <= 6; r++) {
+        const rowStagger = staggers[r] || 0;
+        for (let c = -10; c <= 10; c++) {
+          // Skip keys covered by the ISO Enter button centered at (0, 0)
+          if (r === 0 && (c === 0 || c === 1)) continue;
+          if (r === 1 && (c === -1 || c === 0 || c === 1)) continue;
+
+          // Radial distance from center (0,0)
+          const dist = Math.sqrt(c * c + r * r);
+          const opacity = Math.max(0, 0.7 - dist * 0.08); // fade out at dist ~9
+
+          if (opacity <= 0.05) continue;
+
+          const key = document.createElement("div");
+          key.className = "bg-keycap";
+          key.style.opacity = opacity;
+          key.style.left = `calc(50% + ${c * 58 + rowStagger - 25}px)`;
+          key.style.top = `calc(50% + ${r * 58 - 25}px)`;
+
+          // Random letters/numbers for the key labels
+          const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+          const labelText = chars[Math.floor(Math.random() * chars.length)];
+          const label = document.createElement("span");
+          label.className = "bg-keycap-label";
+          label.textContent = labelText;
+          key.appendChild(label);
+
+          fragment.appendChild(key);
+          keys.push({ element: key, baseOpacity: opacity });
+        }
+      }
+      backdrop.appendChild(fragment);
+
+      // Random ghost typing simulation
+      setInterval(() => {
+        if (keys.length === 0) return;
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        randomKey.element.classList.add("bg-keycap-pressed");
+        setTimeout(() => {
+          randomKey.element.classList.remove("bg-keycap-pressed");
+        }, 300);
+      }, 1000);
+    }
   })();
 </script>
 
 <style is:global>
+  .enter-button-wrapper {
+    position: relative !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 166px !important;
+    height: 92px !important;
+    margin-top: 36px !important;
+    z-index: 10 !important;
+  }
+  .keyboard-backdrop {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 1400px !important;
+    height: 600px !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+    overflow: visible !important;
+  }
+  @media (max-width: 900px) {
+    .keyboard-backdrop {
+      display: none !important;
+    }
+  }
+  .bg-keycap {
+    position: absolute !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: var(--paper) !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 6px !important;
+    box-sizing: border-box !important;
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s !important;
+  }
+  [data-theme=dark] .bg-keycap {
+    background: var(--surface) !important;
+  }
+  .bg-keycap-label {
+    font-family: var(--font-mono) !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    color: var(--gray) !important;
+    line-height: 1 !important;
+  }
+  .bg-keycap-pressed {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 0px 0px 0px var(--ink) !important;
+    background: var(--cyan) !important;
+    border-color: var(--ink) !important;
+  }
+  [data-theme=dark] .bg-keycap-pressed {
+    background: var(--cyan) !important;
+  }
+
   .display-name {
     font-size: clamp(38px, 6.5vw, 92px) !important;
   }

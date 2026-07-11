@@ -9,7 +9,9 @@ export const PROJECTS_DATA = {
     license: "Other",
     github: "https://github.com/Almanex/Classic-Windows-image-viewer-for-Windows-11",
     image: "images/projects/classic-windows-image-viewer.jpg",
-    readme: `# Shell Image Viewer
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Shell Image Viewer
 
 Classic Windows image viewer for Windows 10/11.
 
@@ -48,9 +50,91 @@ BMP, JPG, JPEG, PNG, GIF, TIF, TIFF, ICO, WMF, EMF
 
 ## License
 
-MIT
-# Classic-Windows-image-viewer-for-Windows-11
-`
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Shell Image Viewer
+
+Классическое средство просмотра изображений Windows для Windows 10/11.
+
+## Обзор
+
+Microsoft удалила классический интерфейс средства просмотра фотографий в Windows 10 и 11, но базовая системная библиотека \`shimgvw.dll\` осталась для поддержки устаревших функций.
+
+\`PhotoViewer.exe\` — это крошечный загрузчик, который вызывает функцию \`ImageView_FullscreenW\` из \`shimgvw.dll\`, чтобы вернуть привычный полноэкранный режим просмотра.
+
+Если в вашей версии системы отсутствует библиотека \`shimgvw.dll\` (часто встречается в облегченных версиях или Windows редакций «N»), вы можете найти совместимые версии в директории \`DLL/\` этого проекта.
+
+## Использование
+
+\`\`\`powershell
+PhotoViewer.exe "C:\\Pictures\\photo.jpg"
+PhotoViewer.exe
+\`\`\`
+
+## Сборка
+
+Требования:
+- Windows 10/11
+- CMake 3.16+
+- MinGW-w64 или MSVC с поддержкой C++17
+
+\`\`\`powershell
+cmake -B build -G "MinGW Makefiles"
+cmake --build build --config Release
+\`\`\`
+
+Результат: \`release/PhotoViewer.exe\`
+
+## Поддерживаемые форматы
+
+BMP, JPG, JPEG, PNG, GIF, TIF, TIFF, ICO, WMF, EMF
+
+## Лицензия
+
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Shell Image Viewer
+
+Klassischer Windows-Bildbetrachter für Windows 10/11.
+
+## Übersicht
+
+Microsoft hat die klassische Windows-Fotoanzeige in Windows 10 und 11 entfernt, aber die zugrunde liegende Systembibliothek \`shimgvw.dll\` bleibt erhalten, um Legacy-Funktionalitäten zu unterstützen.
+
+\`PhotoViewer.exe\` is ein winziger Launcher, der \`ImageView_FullscreenW\` aus der \`shimgvw.dll\` aufruft, um das vertraute Vollbild-Bilderlebnis zurückzubringen.
+
+Wenn Ihrer Systemversion die \`shimgvw.dll\` fehlt (häufig in einigen Lite- oder N-Editionen), finden Sie kompatible Versionen im Verzeichnis \`DLL/\` dieses Projekts.
+
+## Verwendung
+
+\`\`\`powershell
+PhotoViewer.exe "C:\\Pictures\\photo.jpg"
+PhotoViewer.exe
+\`\`\`
+
+## Build
+
+Anforderungen:
+- Windows 10/11
+- CMake 3.16+
+- MinGW-w64 oder MSVC mit C++17-Unterstützung
+
+\`\`\`powershell
+cmake -B build -G "MinGW Makefiles"
+cmake --build build --config Release
+\`\`\`
+
+Ergebnis: \`release/PhotoViewer.exe\`
+
+## Unterstützte Formate
+
+BMP, JPG, JPEG, PNG, GIF, TIF, TIFF, ICO, WMF, EMF
+
+## Lizenz
+
+MIT`
   },
   "portable-app-sync": {
     title: "Portable App Sync",
@@ -62,59 +146,59 @@ MIT
     license: "MIT",
     github: "https://github.com/Almanex/Portable-App-Sync",
     image: "images/projects/portable-app-sync.jpg",
-    readme: `# PAS (Portable App Sync)
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# PAS (Portable App Sync)
 
 **A portable utility to automate backup and restore of installed Windows applications**
 
-- 📝 **Automatic logging** of all operations
-- 🚀 **Portable** — no installation required, single \`.exe\` file
-- 🎨 **Modern Fluent UI** — styled with WPF-UI 4.3.0, supporting Light/Dark themes and system theme matching
-- 🎯 **Smart filtering** — by default indexes only user applications (with option to show hidden system components)
-- ℹ️ **Detailed info** — background loading of official descriptions and human-readable names. If the app name is not yet loaded, the package ID is displayed instead (they are often identical).
+- Automatic logging of all operations
+- Portable — no installation required, single executable file
+- Modern Fluent UI — styled with WPF-UI 4.3.0, supporting Light/Dark themes and system theme matching
+- Smart filtering — by default indexes only user applications (with option to show hidden system components)
+- Detailed info — background loading of official descriptions and human-readable names
 
-🇷🇺 **[Russian version of README / Русская версия](README_RU.md)**
+## Technologies
 
-## 🛠️ Technologies
+- .NET 10.0 — modern development platform
+- WPF & WPF-UI (v4.3.0) — Fluent design system and modern controls
+- Winget — Windows Package Manager for package management
+- MVVM — architectural pattern for separation of logic and presentation
 
-- **.NET 10.0** — modern development platform
-- **WPF & WPF-UI (v4.3.0)** — Fluent design system and modern controls
-- **Winget** — Windows Package Manager for package management
-- **MVVM** — architectural pattern for separation of logic and presentation
+## System Requirements
 
-## 📥 System Requirements
+- OS: Windows 10 (version 1809+) or Windows 11
+- Winget: Must be installed (usually pre-installed in Windows 11)
+- .NET Runtime: Not required (self-contained build)
 
-- **OS**: Windows 10 (version 1809+) or Windows 11
-- **Winget**: Must be installed (usually pre-installed in Windows 11)
-- **.NET Runtime**: Not required (self-contained build)
-
-## 🚀 Usage
+## Usage
 
 ### Creating a Backup
 
 1. Run \`PAS.exe\`
 2. Wait for system scanning to complete (only user desktop applications are indexed)
 3. Select the applications you want to save
-   - The filter **All Visible / Available Offline / Online Fallback / Excluded by Default** helps quickly check what will go into the offline package, fallback script, or be excluded
+   - The filter [All Visible / Available Offline / Online Fallback / Excluded by Default] helps quickly check what will go into the offline package, fallback script, or be excluded
 4. Select export mode:
-   - **Online Script** — creates a \`.bat\` or \`.ps1\` file for auto-installation via winget (recommended)
-   - **Offline Package** — creates a hybrid set: downloads available distributions and adds an online fallback script for unsupported applications if necessary
+   - Online Script — creates a \`.bat\` or \`.ps1\` file for auto-installation via winget (recommended)
+   - Offline Package — creates a hybrid set: downloads available distributions and adds an online fallback script for unsupported applications if necessary
 5. Click the export button and specify the save location
-6. After completion, use the summary of the last export and the **Open Export Folder** button
+6. After completion, use the summary of the last export and the [Open Export Folder] button
 
 ### Restoring Applications
 
-#### "Online Script" Mode
+#### Online Script Mode
 1. Copy the created \`RestoreApps.bat\` or \`RestoreApps.ps1\` file to the new system
 2. Run the file as administrator
 3. Wait for all applications to be installed automatically
 
-#### "Offline Package" Mode
+#### Offline Package Mode
 1. Copy the folder with downloaded distributions to the new system
 2. Run \`install_all.bat\` as administrator
 3. If \`RestoreOnlineFallback.bat\` was created, run it after offline installation on a machine with internet access
 4. Applications available for offline will be installed from local files, while unsupported ones will be delivered via \`winget install\`
 
-## 🏗️ Building from Source
+## Building from Source
 
 ### Development Requirements
 
@@ -138,11 +222,11 @@ dotnet run
 dotnet publish -c Release
 \`\`\`
 
-The final \`.exe\` file will be located in \`dist\\PAS.exe\`
+The final executable file will be located in \`dist\\\\PAS.exe\`
 
-## 📂 Project Structure
+## Project Structure
 
-\`\`\`
+\`\`\`text
 PAS/
 ├── Models/              # Data models
 │   ├── InstalledApp.cs
@@ -157,7 +241,7 @@ PAS/
 │   ├── LoggingService.cs
 │   ├── CacheService.cs
 │   └── OfflineCompatibilityService.cs
-├── ViewModels/          # MVVM ViewModels
+├── ViewModels/          # ViewModels
 │   ├── MainViewModel.cs
 │   └── RelayCommand.cs
 ├── Views/               # UI views
@@ -168,89 +252,181 @@ PAS/
 ├── Converters/          # XAML converters
 │   └── ValueConverters.cs
 ├── App.xaml             # Entry point
-├── App.xaml.cs
-├── AssemblyInfo.cs
+│   └── App.xaml.cs
 └── icon.ico             # Application icon
 \`\`\`
 
-## ⚠️ Important Notes
+## Important Notes
 
 ### Application Filtering
 
 By default, the application hides:
-- **Microsoft Store Apps** (MSIX packages: Calculator, Photos, Xbox, etc.)
-- **System Components** (Visual C++ Redistributable, .NET Runtime, drivers)
-- **Technical Dependencies** (WindowsAppRuntime, VCLibs, etc.)
+- Microsoft Store Apps (MSIX packages)
+- System Components (Redistributables, Runtimes, drivers)
+- Technical Dependencies (WindowsAppRuntime, etc.)
 
-Only **user desktop applications** installed via \`.exe\` or \`.msi\` installers are displayed in the list.
-💡 **If you need hidden packages:** you can instantly disable this filter in the interface by checking *"Show system and hidden applications"*.
+Only user desktop applications installed via \`.exe\` or \`.msi\` installers are displayed in the list.
+Check "Show system and hidden applications" to disable this filter.
 
-Service components and updater packages, such as \`Microsoft Edge Update\`, are excluded from export by default. They don't disappear completely: enable system/hidden apps and select the **Excluded by Default** filter to see what exactly was excluded.
+### Security and Reliability
 
-### Winget Check
+- Injection Protection: All interaction with Winget CLI passes through strict package ID validation.
+- Process Stability: Hard timeouts are implemented for all external calls.
+- Data Integrity: Caching system is protected from corrupted data.
+- Log Rotation: Automatic log size management prevents uncontrolled disk usage.
+- DI Architecture: Dependency Injection ensures service isolation.
 
-In older Windows 10 builds, Winget might be missing. Scripts automatically check for its presence and provide instructions for installing App Installer from the Microsoft Store.
+## License
 
-### Offline Mode Limitations
+This project is distributed under the MIT License.`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-**Not all applications support downloading distributions** via \`winget download\`. Examples:
-- **Visual Studio Code** (\`Microsoft.VisualStudioCode\`)
-- **Git** (\`Git.Git\`)
-- **Android Studio** (\`Google.AndroidStudio\`)
-- And other applications where manufacturers restricted direct downloading
+# PAS (Portable App Sync)
 
-For such applications, PAS now uses a **hybrid offline mode**:
-- ✅ Supported packages are downloaded locally to the selected folder
-- ✅ An \`RestoreOnlineFallback.bat\` is automatically created for unsupported packages
-- ✅ As a result, export doesn't fail due to these apps: they are marked as \`Skipped\` and moved to the fallback script
+**Портативная утилита для автоматизации резервного копирования и восстановления установленных приложений Windows**
 
-Recommended restore order:
-1. Run \`install_all.bat\`
-2. Then, if it was created, run \`RestoreOnlineFallback.bat\` on a machine with internet
+- Автоматическое логирование всех операций
+- Портативность — не требует установки, один исполняемый файл
+- Современный Fluent UI — на базе WPF-UI 4.3.0 с поддержкой темной/светлой тем
+- Умная фильтрация — скрывает системные компоненты по умолчанию
+- Детальная информация — фоновая загрузка описаний пакетов
 
-**Recommendation**: Use the "📄 Online Script" mode if you want a single universal scenario without separating into offline and fallback.
+## Технологии
 
-### 🛡️ Security and Reliability
+- .NET 10.0 — современная платформа разработки
+- WPF & WPF-UI (v4.3.0) — система дизайна Fluent и современные элементы управления
+- Winget — диспетчер пакетов Windows
+- MVVM — архитектурный паттерн разделения логики и представления
 
-The project is designed with a focus on industrial-grade stability and security:
+## Системные требования
 
-- 🛡️ **Injection Protection**: All interaction with Winget CLI passes through strict package ID validation (\`SafeIdPattern\`). This eliminates the possibility of executing arbitrary commands through app name manipulation.
-- ⚙️ **Process Stability**: Hard timeouts (120s) are implemented for all external calls. If a Winget process hangs, the application correctly terminates its process tree, leaving no "zombie" processes.
-- 💾 **Data Integrity**: The caching system is protected from corrupted data and memory overflow (50 MB limit per file). JSON structure is validated before reading.
-- 🔄 **Log Rotation**: Automatic log file size management (5 MB limit) prevents uncontrolled disk data growth.
-- 🏗️ **DI Architecture (Dependency Injection)**: Use of a dependency container ensures component isolation, simplifies testing, and eliminates service initialization errors.
-- 🚦 **Thread Safety**: All interface updates and background tasks are synchronized, eliminating crashes during parallel description loading or app installation.
+- ОС: Windows 10 (версия 1809+) или Windows 11
+- Winget: Должен быть установлен в системе
+- .NET Runtime: Не требуется (автономная сборка)
 
-All operations are transparent and logged in \`PAS.log\` in real-time.
+## Использование
 
-## 📝 Logging
+### Создание резервной копии
 
-All operations are recorded in the \`PAS.log\` file in the \`%LocalAppData%\\PAS\\\` folder. The log contains:
-- Information messages on progress
-- Warnings about issues
-- Errors with full stack traces
-- Fatal exceptions (if the application crashed)
+1. Запустите \`PAS.exe\`
+2. Дождитесь завершения сканирования системы
+3. Выберите приложения для сохранения
+4. Выберите режим экспорта:
+   - Онлайн-скрипт — создает файл \`.bat\` или \`.ps1\` для автоустановки через winget
+   - Офлайн-пакет — скачивает дистрибутивы и создает локальный скрипт установки
+5. Нажмите кнопку экспорта и укажите путь сохранения
 
-## 🤝 Contributing
+### Восстановление приложений
 
-Any improvements are welcome! Please:
-1. Fork the project
-2. Create a branch for your changes
-3. Submit a Pull Request
+#### Режим онлайн-скрипта
+1. Скопируйте файл \`RestoreApps.bat\` на новую систему
+2. Запустите файл от имени администратора
 
-## 📄 License
+#### Режим офлайн-пакета
+1. Скопируйте папку с дистрибутивами на новую систему
+2. Запустите \`install_all.bat\` от имени администратора
 
-This project is distributed under the MIT License. See the \`LICENSE\` file for details.
+## Сборка из исходников
 
-## 🙏 Acknowledgments
+### Требования к разработке
 
-- Microsoft for [Winget](https://github.com/microsoft/winget-cli)
-- .NET Community for excellent development tools
+- .NET 10 SDK
+- Visual Studio 2022 или JetBrains Rider (опционально)
 
----
+### Команды сборки
 
-**Note**: This application uses the official Windows Package Manager (Winget) and contains no malicious code. All operations are transparent and can be verified in the source code.
-`
+\`\`\`powershell
+# Клонировать репозиторий
+git clone https://github.com/Almanex/Almanex-PAS_Portable-App-Sync.git
+cd PAS
+
+# Собрать проект
+dotnet build
+
+# Запустить приложение
+dotnet run
+
+# Опубликовать как один файл (Portable)
+dotnet publish -c Release
+\`\`\`
+
+## Лицензия
+
+Этот проект распространяется под лицензией MIT.`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# PAS (Portable App Sync)
+
+**Ein portables Dienstprogramm zur Automatisierung der Sicherung und Wiederherstellung installierter Windows-Anwendungen**
+
+- Automatische Protokollierung aller Vorgänge
+- Portabel — keine Installation erforderlich, einzelne ausführbare Datei
+- Modernes Fluent UI — basierend auf WPF-UI 4.3.0, unterstützt Hell/Dunkel-Designs
+- Intelligente Filterung — filtert standardmäßig Systemkomponenten heraus
+- Detaillierte Informationen — Hintergrundladen von Paketbeschreibungen
+
+## Technologien
+
+- .NET 10.0 — moderne Entwicklungsplattform
+- WPF & WPF-UI (v4.3.0) — Fluent-Designsystem und moderne Steuerelemente
+- Winget — Windows Package Manager
+- MVVM — Architekturmuster zur Trennung von Logik und Präsentation
+
+## Systemanforderungen
+
+- Betriebssystem: Windows 10 (Version 1809+) oder Windows 11
+- Winget: Muss installiert sein
+- .NET-Laufzeitumgebung: Nicht erforderlich (Self-Contained Build)
+
+## Verwendung
+
+### Sicherung erstellen
+
+1. Führen Sie \`PAS.exe\` aus
+2. Warten Sie, bis der Systemscan abgeschlossen ist
+3. Wählen Sie die Anwendungen aus, die Sie speichern möchten
+4. Wählen Sie den Exportmodus:
+   - Online-Skript — erstellt eine \`.bat\`- oder \`.ps1\`-Datei zur automatischen Installation via winget
+   - Offline-Paket — lädt Setups herunter und erstellt ein lokales Installationsskript
+5. Klicken Sie auf die Export-Schaltfläche und wählen Sie den Speicherort
+
+### Anwendungen wiederherstellen
+
+#### Online-Skript-Modus
+1. Kopieren Sie die Datei \`RestoreApps.bat\` auf das neue System
+2. Führen Sie die Datei als Administrator aus
+
+#### Offline-Paket-Modus
+1. Kopieren Sie den Ordner mit den Setups auf das neue System
+2. Führen Sie \`install_all.bat\` als Administrator aus
+
+## Build aus Quellcode
+
+### Anforderungen
+
+- .NET 10 SDK
+- Visual Studio 2022 oder JetBrains Rider (optional)
+
+### Build-Befehle
+
+\`\`\`powershell
+# Repository klonen
+git clone https://github.com/Almanex/Almanex-PAS_Portable-App-Sync.git
+cd PAS
+
+# Projekt erstellen
+dotnet build
+
+# Anwendung ausführen
+dotnet run
+
+# Als einzelne Datei veröffentlichen (Portable)
+dotnet publish -c Release
+\`\`\`
+
+## Lizenz
+
+Dieses Projekt lizenziert unter der MIT-Lizenz.`
   },
   "ru-privatezilla": {
     title: "Ru-Privatezilla",
@@ -372,390 +548,144 @@ You can [buy me a coffee or donut, some banana, a shirt, Taycan or Tesla, the st
     license: "MIT",
     github: "https://github.com/Almanex/MushroomSpot",
     image: "images/projects/mushroom-spot.jpg",
-    readme: `# 🍄 MushroomSpot
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
-[![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=24)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.0-blue.svg)](https://kotlinlang.org)
-[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-1.5.0-blue.svg)](https://developer.android.com/jetpack/compose)
+# MushroomSpot
 
-> **Профессиональное Android-приложение для отслеживания грибных поездок с высокоточным GPS-позиционированием**
+**Android application for mushroom foragers to catalog and discover spotting sites**
 
-Мобильное приложение для планирования, отслеживания и документирования поездок за грибами. Приложение обеспечивает высокоточное определение местоположения (3-8 метров), интеллектуальную фильтрацию GPS-данных и современный пользовательский интерфейс.
+An Android application for planning, tracking, and documenting mushroom foraging trips. The app provides high-precision location tracking (3-8 meters), intelligent GPS filtering, and a modern user interface.
 
-## 📋 Содержание
+## Key Features
 
-- [🚀 Основные функции](#-основные-функции)
-- [📱 Скриншоты](#-скриншоты)
-- [🎯 GPS точность](#-gps-точность-и-качество-координат)
-- [🛠️ Технологии](#️-технологии)
-- [⚙️ Установка](#️-установка)
-- [🔧 Сборка проекта](#-сборка-проекта)
-- [📊 Архитектура](#-архитектура)
-- [🗺️ Карты и навигация](#️-карты-и-навигация)
-- [📄 API документация](#-api-документация)
-- [🔄 Статус разработки](#-статус-разработки)
-- [🤝 Участие в проекте](#-участие-в-проекте)
-- [📄 Лицензия](#-лицензия)
+- Trip management: Create, list, and view trip details with auto GPS tracking
+- Mushroom logging: Add findings with photos, notes, and high-precision GPS coordinates
+- GPS signal indicators: Blue (Excellent), Orange (Good/Acceptable), Red (Poor - saving blocked)
+- Export & Import: Full data structure support in JSON and CSV formats
+- Google Maps Integration: View routes and navigation waypoints (up to 23 waypoints)
 
-## 🚀 Основные функции
+## Technology Stack
 
-### 📍 Управление поездками
-- ✅ **Создание поездок** - планируйте новые грибные экспедиции
-- ✅ **Список поездок** - просматривайте все ваши поездки
-- ✅ **Детали поездки** - подробная информация о каждой поездке
-- ✅ **GPS-трекинг** - автоматическое отслеживание маршрута поездки
-- ✅ **Опциональный трекинг** - возможность отключения GPS-трекинга для экономии батареи
+- Language: Kotlin (1.9.0)
+- UI Framework: Jetpack Compose (1.5.0)
+- Database: Room Database (local storage)
+- Concurrency: Kotlin Coroutines & Flow
+- Dependency Injection: Hilt
 
-### 🍄 Учет грибов с высокой точностью
-- ✅ **Добавление находок** - отмечайте найденные грибы прямо на месте
-- ✅ **Удаление записей** - безопасное удаление записей с подтверждением
-- ✅ **Фотографии** - делайте снимки грибов через камеру или выбирайте из галереи
-- ✅ **Высокоточные GPS-координаты** - точность до 3-8 метров
-- ✅ **Интеллектуальная фильтрация** - сохранение только точных координат (≤8м)
-- ✅ **Визуальные индикаторы точности** - цветовая индикация качества GPS-сигнала
-- ✅ **Кнопка обновления координат** - принудительное получение более точных координат
-- ✅ **Заметки** - добавляйте описания и комментарии к находкам
+## System Requirements
 
-### 📊 Экспорт и импорт данных
-- ✅ **JSON экспорт/импорт** - полная структура данных
-- ✅ **CSV экспорт/импорт** - совместимость с Excel и Google Sheets
-- ✅ **Валидация данных** - проверка целостности при импорте
-- 🔄 **GPX экспорт** - для GPS-навигаторов (в разработке)
+- OS: Android 7.0 (API level 24) or higher
+- Hardware: GPS module and Camera
 
-### 🗺️ Картографические функции
- - ✅ **Маршрут выбранной поездки** — открытие Google Maps с метками A, B, C…
- - ✅ **Google Maps (Directions)** — origin/waypoints/destination, метки по порядку
- - ✅ **Настраиваемый сэмплинг точек маршрута** — контроль количества промежуточных точек (до 23 waypoint'ов в Directions; умное сэмплирование до 50 точек для длинных треков)
+## Building from Source
 
- #### Как пользоваться картой
- - На главном экране в карточке нужной поездки нажмите кнопку \`Маршрут\` (иконка «Directions»).
- - Откроется Google Maps в режиме построения маршрута с метками A, B, C… по точкам поездки.
- - Для длинных треков используется умное сэмплирование точек; количество промежуточных точек маршрута ограничено правилами Google (до 23 waypoint'ов).
-
-## 📱 Скриншоты
-
-> 📸 **Скриншоты будут добавлены в ближайшее время**
-> 
-> Планируется добавить:
-> - Главный экран со списком находок
-> - Экран добавления гриба с GPS-индикаторами
-> - Карта с маршрутами и маркерами
-> - Экран настроек и экспорта данных
-
-## 🎯 GPS точность и качество координат
-
-### 🎯 Высокоточное позиционирование
-- **Точность**: 3-8 метров (вместо стандартных 10-20 метров)
-- **Интеллектуальная фильтрация**: Сохранение только координат с точностью ≤8 метров
-- **Агрессивные настройки GPS**:
-  - Интервал обновления: 1 секунда
-  - Минимальный интервал: 0.5 секунды
-  - Минимальное расстояние: 0.5 метра
-  - Максимальный возраст данных: 5 секунд
-
-### 🚦 Визуальные индикаторы точности
-| Точность | Цвет | Статус | Действие |
-|----------|------|--------|----------|
-| ≤ 3м | 🟢 Синий | Отличная | Сохранение разрешено |
-| ≤ 5м | 🟡 Оранжевый | Хорошая | Сохранение разрешено |
-| ≤ 8м | 🟠 Оранжевый | Приемлемая | Сохранение разрешено |
-| > 8м | 🔴 Красный | Низкая | Сохранение заблокировано |
-
-### 💡 Рекомендации для лучшей точности
-- Используйте приложение на открытом пространстве
-- Избегайте густых лесов и высоких зданий
-- Дождитесь получения точности ≤8 метров перед сохранением
-- Используйте кнопку "Обновить" для получения более точных координат
-
-## 🛠️ Технологии
-
-### 🏗️ Архитектура и фреймворки
-- **MVVM** - современная архитектура Android
-- **Jetpack Compose** - декларативный UI
-- **Room Database** - локальное хранение данных
-- **Coroutines** - асинхронное программирование
-- **Hilt** - dependency injection
-
-### 📦 Основные зависимости
-\`\`\`kotlin
-// UI и архитектура
-implementation "androidx.compose.ui:ui:$compose_version"
-implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-implementation "androidx.hilt:hilt-navigation-compose:$hilt_version"
-
-// База данных
-implementation "androidx.room:room-runtime:$room_version"
-implementation "androidx.room:room-ktx:$room_version"
-
-// Геолокация и карты
-implementation "com.google.android.gms:play-services-location:$location_version"
-
-// Камера и изображения
-implementation "androidx.camera:camera-camera2:$camerax_version"
-implementation "io.coil-kt:coil-compose:$coil_version"
-\`\`\`
-
-### 🔐 Разрешения
-\`\`\`xml
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-\`\`\`
-
-## ⚙️ Установка
-
-### 📋 Системные требования
-- **Android Studio**: Arctic Fox (2020.3.1) или новее
-- **Android SDK**: API 24+ (Android 7.0)
-- **Kotlin**: 1.9.0+
-- **Gradle**: 8.0+
-- **Устройство**: с поддержкой GPS и камеры
-
-### 📱 Требования к устройству
-- Android 7.0 (API level 24) или выше
-- GPS модуль
-- Камера
-- Минимум 100 МБ свободного места
-
-## 🔧 Сборка проекта
-
-### 1️⃣ Клонирование репозитория
 \`\`\`bash
+# Clone the repository
 git clone https://github.com/Almanex/MushroomSpot.git
 cd MushroomSpot
+
+# Build debug APK
+./gradlew assembleDebug
+
+# Install on device
+./gradlew installDebug
 \`\`\`
 
-### 2️⃣ Сборка и установка
+## License
+
+This project is licensed under the MIT License.`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# MushroomSpot
+
+**Android-приложение для грибников для каталогизации и поиска мест находок**
+
+Мобильное приложение для планирования, отслеживания и документирования поездок за грибами. Обеспечивает высокоточное определение местоположения (3-8 метров), интеллектуальную фильтрацию GPS-данных и современный интерфейс.
+
+## Основные функции
+
+- Управление поездками: Создание, просмотр списка и деталей поездок с автоматическим GPS-трекингом
+- Учет грибов: Добавление находок с фото, заметками и высокоточными координатами
+- Индикация точности GPS: Синий (Отличная), Оранжевый (Хорошая), Красный (Низкая - сохранение заблокировано)
+- Экспорт и импорт: Поддержка структуры данных в форматах JSON и CSV
+- Интеграция с картами: Маршруты в Google Maps с промежуточными точками навигации
+
+## Технологический стек
+
+- Язык: Kotlin (1.9.0)
+- UI-платформа: Jetpack Compose (1.5.0)
+- База данных: Room Database (локальное хранение)
+- Асинхронность: Kotlin Coroutines & Flow
+- Внедрение зависимостей: Hilt
+
+## Системные требования
+
+- ОС: Android 7.0 (API 24) или выше
+- Устройство: с модулем GPS и камерой
+
+## Сборка проекта
+
 \`\`\`bash
-# Debug сборка
+# Клонирование репозитория
+git clone https://github.com/Almanex/MushroomSpot.git
+cd MushroomSpot
+
+# Сборка debug APK
 ./gradlew assembleDebug
 
 # Установка на подключенное устройство
 ./gradlew installDebug
-
-# Release сборка (требует настройки подписи)
-./gradlew assembleRelease
 \`\`\`
 
-### 3️⃣ Запуск приложения
+## Лицензия
+
+Этот проект распространяется под лицензией MIT.`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# MushroomSpot
+
+**Android-Anwendung für Pilzsammler zur Katalogisierung und Entdeckung von Fundorten**
+
+Eine mobile Android-Anwendung zur Planung, Verfolgung und Dokumentation von Pilzsammelrunden. Die App bietet hochpräzise Standortbestimmung (3-8 Meter), intelligente GPS-Filterung und eine moderne Benutzeroberfläche.
+
+## Hauptfunktionen
+
+- Runden-Management: Erstellen, Auflisten und Anzeigen von Runden-Details mit automatischem GPS-Tracking
+- Pilz-Protokollierung: Fundorte mit Fotos, Notizen und hochpräzisen GPS-Koordinaten markieren
+- GPS-Signalindikatoren: Blau (Ausgezeichnet), Orange (Gut/Akzeptabel), Rot (Schlecht - Speichern blockiert)
+- Export & Import: Volle Unterstützung der Datenstruktur in den Formaten JSON und CSV
+- Google Maps Integration: Routenverlauf und Navigations-Wegpunkte anzeigen
+
+## Technologie-Stack
+
+- Sprache: Kotlin (1.9.0)
+- UI-Framework: Jetpack Compose (1.5.0)
+- Datenbank: Room Database (lokaler Speicher)
+- Asynchronität: Kotlin Coroutines & Flow
+- Dependency Injection: Hilt
+
+## Systemanforderungen
+
+- Betriebssystem: Android 7.0 (API-Level 24) oder höher
+- Hardware: GPS-Modul und Kamera
+
+## Build aus Quellcode
+
 \`\`\`bash
-# Запуск через ADB
-adb shell am start -n com.mushroomspot.app/.MainActivity
+# Repository klonen
+git clone https://github.com/Almanex/MushroomSpot.git
+cd MushroomSpot
 
-# Или запустите из Android Studio
+# Debug-APK erstellen
+./gradlew assembleDebug
+
+# Auf Gerät installieren
+./gradlew installDebug
 \`\`\`
 
-### 🧪 Тестирование
-\`\`\`bash
-# Запуск unit тестов
-./gradlew test
+## Lizenz
 
-# Запуск инструментальных тестов
-./gradlew connectedAndroidTest
-
-# Генерация отчета о покрытии
-./gradlew jacocoTestReport
-\`\`\`
-
-## 📊 Архитектура
-
-### 🏛️ Структура проекта
-\`\`\`
-app/
-├── src/main/java/com/mushroomspot/
-│   ├── data/           # Слой данных
-│   │   ├── database/   # Room база данных
-│   │   ├── repository/ # Репозитории
-│   │   └── models/     # Модели данных
-│   ├── domain/         # Бизнес-логика
-│   │   └── usecases/   # Use cases
-│   ├── presentation/   # UI слой
-│   │   ├── screens/    # Compose экраны
-│   │   ├── viewmodels/ # ViewModels
-│   │   └── components/ # Переиспользуемые компоненты
-│   ├── di/            # Dependency Injection
-│   ├── navigation/    # Навигация
-│   └── utils/         # Утилиты
-\`\`\`
-
-### 🗄️ Структура базы данных
-
-#### Trip (Поездка)
-\`\`\`kotlin
-@Entity(tableName = "trips")
-data class Trip(
-    @PrimaryKey val id: String,
-    val name: String,
-    val startTime: Long,
-    val endTime: Long?,
-    val description: String?
-)
-\`\`\`
-
-#### Mushroom (Гриб)
-\`\`\`kotlin
-@Entity(tableName = "mushrooms")
-data class Mushroom(
-    @PrimaryKey val id: String,
-    val tripId: String,
-    val name: String,
-    val latitude: Double,
-    val longitude: Double,
-    val photoPath: String?,
-    val notes: String?,
-    val timestamp: Long,
-    val accuracy: Float
-)
-\`\`\`
-
-#### TrackPoint (Точка маршрута)
-\`\`\`kotlin
-@Entity(tableName = "track_points")
-data class TrackPoint(
-    @PrimaryKey val id: String,
-    val tripId: String,
-    val latitude: Double,
-    val longitude: Double,
-    val altitude: Double?,
-    val accuracy: Float,
-    val timestamp: Long
-)
-\`\`\`
-
-## 🗺️ Карты и навигация
-
-Приложение использует встроенные возможности Android для работы с картами:
-
-- **🎯 GPS трекинг**: Google Play Services Location для высокоточных координат
-- **🗺️ Навигация**: Интеграция с Google Maps через Intent
-- **🔧 Простота**: Не требует API ключей или сложной настройки
-- **📱 Совместимость**: Работает на всех Android устройствах
-
-### Функции карты в приложении
-- **Маршрут по выбранной поездке**: отображение в Google Maps через \`Directions\` (origin/waypoints/destination) с метками A, B, C… с настраиваемым количеством промежуточных точек.
-
-## 📄 API документация
-
-### 🔍 Основные компоненты
-
-#### LocationService
-\`\`\`kotlin
-class LocationService {
-    suspend fun getCurrentLocation(): Location?
-    fun startLocationTracking(tripId: String)
-    fun stopLocationTracking()
-}
-\`\`\`
-
-#### MushroomRepository
-\`\`\`kotlin
-interface MushroomRepository {
-    suspend fun getAllMushrooms(): Flow<List<Mushroom>>
-    suspend fun insertMushroom(mushroom: Mushroom)
-    suspend fun deleteMushroom(mushroom: Mushroom)
-    suspend fun exportToJson(): String
-    suspend fun importFromJson(json: String): Result<Unit>
-}
-\`\`\`
-
-## 🔄 Статус разработки
-
-### ✅ Реализовано (v1.2.0)
-- [x] Базовая архитектура приложения (MVVM + Compose)
-- [x] Система навигации между экранами
-- [x] Управление поездками (создание, просмотр, детали)
-- [x] **Высокоточное GPS-позиционирование** (3-8 метров)
-- [x] **Интеллектуальная фильтрация координат** (≤8м)
-- [x] **Визуальные индикаторы точности GPS**
-- [x] Добавление грибов с фото и GPS
-- [x] Интеграция с камерой и галереей
-- [x] **Удаление записей с подтверждением**
-- [x] **Экспорт/импорт JSON и CSV**
-- [x] **Интеграция с картами**
-- [x] Foreground Service для фонового трекинга
-- [x] Room Database для локального хранения
-
-### 🔄 В разработке (v1.3.0)
-- [ ] Отображение карт с маршрутами внутри приложения
-- [ ] Расширенная статистика поездок
-- [ ] Поиск и фильтрация находок
-- [ ] Экспорт в GPX формат
-
-### 📋 Планируется (v2.0.0)
-- [ ] Синхронизация с облачными сервисами
-- [ ] Социальные функции (обмен находками)
-- [ ] Машинное обучение для распознавания грибов
-- [ ] Оффлайн карты
-
-## 🤝 Участие в проекте
-
-Мы приветствуем вклад в развитие проекта! 
-
-### 🚀 Как начать
-1. Форкните репозиторий
-2. Создайте ветку для новой функции (\`git checkout -b feature/amazing-feature\`)
-3. Зафиксируйте изменения (\`git commit -m 'Add amazing feature'\`)
-4. Отправьте в ветку (\`git push origin feature/amazing-feature\`)
-5. Откройте Pull Request
-
-### 📝 Правила участия
-- Следуйте существующему стилю кода
-- Добавляйте тесты для новой функциональности
-- Обновляйте документацию при необходимости
-- Используйте понятные commit сообщения
-
-### 🐛 Сообщения об ошибках
-Используйте [GitHub Issues](https://github.com/Almanex/MushroomSpot/issues) для сообщения об ошибках.
-
-### 💡 Предложения функций
-Мы открыты для новых идей! Создайте Issue с тегом \`enhancement\`.
-
-## 📄 Лицензия
-
-Этот проект распространяется под лицензией MIT. Подробности в файле [LICENSE](LICENSE).
-
-\`\`\`
-MIT License
-
-Copyright (c) 2024 MushroomSpot
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-\`\`\`
-
----
-
-## 🎯 Ключевые преимущества
-
-- 🎯 **Высочайшая точность GPS** - координаты с точностью до 3-8 метров
-- 🧠 **Интеллектуальная система** - автоматическая фильтрация неточных данных
-- 🎨 **Современный UI** - Jetpack Compose с Material Design 3
-- 🔋 **Оптимизация батареи** - опциональный GPS-трекинг
-- 📱 **Надежность** - работа в офлайн режиме
-- 📊 **Экспорт данных** - JSON, CSV форматы
-- 🗺️ **Интеграция с картами** - без необходимости в API ключах
-
----
-
-<div align="center">
-
-**Удачных грибных походов с точными координатами! 🍄🌲📍**
-
-[⬆ Наверх](#-mushroomspot)
-
-</div>`
+Dieses Projekt lizenziert unter der MIT-Lizenz.`
   },
   "gemma-local-desktop": {
     title: "Gemma Local Desktop",
@@ -767,109 +697,112 @@ copies or substantial portions of the Software.
     license: "MIT",
     github: "https://github.com/Almanex/Gemma-Local-Desktop-",
     image: "images/projects/gemma-local-desktop.jpg",
-    readme: `# Gemma Local Desktop
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-<p align="center">
-  <img src="GemmaChatCsharp/Assets/gemma-logo.png" alt="Gemma Local Desktop" width="128" />
-</p>
+# Gemma Local Desktop
 
-<h1 align="center">Gemma Local Desktop</h1>
+Native Windows AI assistant and coding workspace. Powered by Google's Gemma via llama.cpp. Works 100% offline without API keys.
 
-<p align="center">
-  <strong>Native Windows AI assistant and coding workspace.</strong><br/>
-  Powered by Google's Gemma via llama.cpp.<br/>
-  No API keys. No cloud. Works 100% offline.
-</p>
+## Experimental Project Status
 
----
+This is an experimental project designed to push the boundaries of local AI development on Windows.
 
-## 🚀 Experimental Project Status
+### Model Performance Notes
 
-This is an **experimental project** designed to push the boundaries of local AI development on Windows. Despite its experimental nature, the application is **fully functional** and provides a stable environment for local LLM interaction.
-
-### Model Performance Notes:
-- **Small Models (E2B / E4B)**: Great for quick tests and low-latency interactions. While capable, they have natural limitations due to their parameter count—operate within reasonable expectations.
-- **Large Models (26B / 31B)**: These models handle complex coding tasks, logic, and creative requests **perfectly**, as originally intended. They provide a good level of performance on consumer hardware.
-
----
-
-## 📸 Screenshots
-
-<p align="center">
-  <img src="GemmaChatCsharp/Assets/gemma-chat-win_1.png" alt="Setup Screen" width="32%" />
-  <img src="GemmaChatCsharp/Assets/gemma-chat-win_2.png" alt="Chat & Build Workspace" width="32%" />
-  <img src="GemmaChatCsharp/Assets/gemma-chat-win_3.png" alt="Code & Preview" width="32%" />
-</p>
-
----
+- Small Models (E2B / E4B): Good for quick testing and low-latency interaction.
+- Large Models (26B / 31B): Perfect for complex coding, logic, and reasoning on consumer hardware.
 
 ## Key Features
 
-- 💬 **Chat Mode** — Optimized for pure dialogue and reasoning.
-- 🛠 **Build Mode** — Specialized workspace for generating code, web apps, and artifacts with a 720px live preview.
-- 🚀 **One-Click Templates** — Instant high-fidelity starters like *Mega Tetris* and *Dynamic Weather Dashboard*.
-- 🖥 **Full-Screen Preview** — One button to view your creation in your default system browser.
-- 📂 **Workspace Persistence** — Per-chat projects saved on disk. The model can read and edit existing files iteratively.
-- 🎨 **Modern UX** — Clean Windows design with glassmorphism, resizable canvas, and dark mode.
-- 🎮 **GPU Acceleration** — Intelligent NVIDIA GPU detection with partial offloading for large models (MoE 26B).
-- 📦 **Zero Config** — Fully automated environment setup: downloads runtimes and models on first start.
+- Chat Mode: Optimized for dialogue and step-by-step reasoning.
+- Build Mode: Specialized workspace for generating code and web apps with a live preview.
+- One-Click Templates: Ready-to-use starters like Tetris and weather dashboards.
+- GPU Acceleration: NVIDIA GPU detection with CUDA offloading for large models.
+- Zero Config: Automated setup downloads llama.cpp and models on first startup.
 
 ## Requirements
 
-- **Windows 10/11** (64-bit)
-- **NVIDIA GPU** (optional, for CUDA acceleration) or CPU
-- **4GB+ RAM** for Gemma 2B model
+- Windows 10/11 (64-bit)
+- NVIDIA GPU (optional, for CUDA acceleration) or CPU
+- 4GB+ RAM for 2B model
 
 ## Quick Start
 
-1. Clone the repository.
-2. Ensure you have the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) installed.
-3. Run the application:
-   \`\`\`powershell
-   cd GemmaChatCsharp
-   dotnet run
-   \`\`\`
-   \`\`\`
-
-On first launch, the app will:
-1. Detect your hardware (CPU vs NVIDIA GPU).
-2. Download the appropriate \`llama.cpp\` server binaries.
-3. Download the recommended Gemma model (~1.6GB).
-4. Initialize your local workspace.
-
-## Build & Publish
-
-If you want to create a standalone executable:
-
-### Standard Build
 \`\`\`powershell
-dotnet build -c Release
+# Ensure .NET 10 SDK is installed
+cd GemmaChatCsharp
+dotnet run
 \`\`\`
-
-### Create Single EXE (Portable)
-To generate a single \`.exe\` file that includes everything (self-contained):
-\`\`\`powershell
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-\`\`\`
-The output will be in \`bin/Release/net10.0-windows/win-x64/publish/\`.
-
-## Tech Stack
-
-| Layer | Tech |
-|-------|------|
-| App Shell | WPF (.NET 10) + CommunityToolkit.Mvvm |
-| WebView | Microsoft.Web.WebView2 |
-| Markdown | Markdig.Wpf |
-| Model Runtime | [llama.cpp](https://github.com/ggml-org/llama.cpp) (local server) |
-| persistence | Local JSON state + Workspace filesystem |
-
-## Shortcuts
-
-- \`Ctrl + N\`: New chat
-- \`Ctrl + B\`: Toggle Chat/Build mode
-- \`Ctrl + \\\`: Toggle Canvas (Preview/Code)
 
 ## License
+
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Gemma Local Desktop
+
+Нативный ИИ-ассистент и среда разработки для Windows. Работает локально на базе Google Gemma и llama.cpp. Полный офлайн, ключи API не требуются.
+
+## Статус проекта
+
+Экспериментальный проект для локального запуска больших языковых моделей на потребительском железе Windows.
+
+## Основные функции
+
+- Режим чата: Оптимизирован для диалогов и рассуждений.
+- Режим сборки: Специальное рабочее пространство для генерации кода с живым превью.
+- Готовые шаблоны: Мгновенный запуск мини-игр и виджетов.
+- GPU-ускорение: Поддержка NVIDIA CUDA для быстрого инференса.
+- Быстрый старт: Автоматическое скачивание llama.cpp и весов моделей.
+
+## Системные требования
+
+- Windows 10/11 (64-bit)
+- Видеокарта NVIDIA (опционально, для ускорения) или CPU
+- От 4 ГБ ОЗУ
+
+## Быстрый запуск
+
+\`\`\`powershell
+cd GemmaChatCsharp
+dotnet run
+\`\`\`
+
+## Лицензия
+
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Gemma Local Desktop
+
+Nativer Windows KI-Assistent und Coding-Workspace. Unterstützt durch Google Gemma via llama.cpp. Funktioniert 100% offline ohne API-Keys.
+
+## Projektstatus
+
+Experimentelles Projekt zur lokalen Ausführung von LLMs auf Windows-Consumer-Hardware.
+
+## Hauptfunktionen
+
+- Chat-Modus: Optimiert für Dialoge und logische Schlussfolgerungen.
+- Build-Modus: Arbeitsbereich zur Codegenerierung mit Live-Vorschau.
+- One-Click-Vorlagen: Sofortiger Start von Mini-Spielen und Dashboards.
+- GPU-Beschleunigung: NVIDIA CUDA-Unterstützung für große Modelle.
+- Zero Config: Automatisches Herunterladen von llama.cpp und Modellen beim ersten Start.
+
+## Systemanforderungen
+
+- Windows 10/11 (64-bit)
+- NVIDIA-Grafikkarte (optional) oder CPU
+- Mindestens 4 GB RAM
+
+## Schnellstart
+
+\`\`\`powershell
+cd GemmaChatCsharp
+dotnet run
+\`\`\`
+
+## Lizenz
 
 MIT`
   },
@@ -883,96 +816,120 @@ MIT`
     license: "MIT",
     github: "https://github.com/Almanex/icoboo",
     image: "images/projects/icoboo.jpg",
-    readme: `# IconForge — Нативный генератор иконок для Windows 11
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-**IconForge** — это легкое нативное Windows-приложение (утилита), разработанное на фреймворке **WinUI 3 (Windows App SDK)** и C#. Оно предназначено для пакетной генерации наборов иконок для Windows (\`.ico\`, \`Assets\`) и Android (\`Adaptive Icons\`) из одного исходного изображения (формата PNG или SVG).
----
+# IconForge
+
+**Native icon generator for Windows 11 styled in Fluent design**
+
+Lightweight Windows utility built with WinUI 3 (Windows App SDK) and C# to generate Windows icon packs, modern assets, and Android adaptive icons from a single PNG/SVG source.
+
+## Key Features
+
+- Windows Icon Generation: Creates multi-format .ico files (16px to 256px) with automatic sharpening filters for small sizes.
+- Windows Modern Assets: Exports scaled PNG assets (Square44x44, Square150x150, StoreLogo) for modern app manifests.
+- Android Icons: Generates mipmap folder structures for adaptive and legacy round icons.
+- Windows 11 Fluent UI: Features Mica Alt material, light/dark themes, and interactive drag-and-drop zones.
+- Shell Integration: Right-click context menu integration via registry keys (no admin rights required).
+
+## Technology Stack
+
+- Language: C# (.NET 8.0)
+- UI Platform: WinUI 3 (Windows App SDK 2.2.0)
+- Graphics: SkiaSharp (Lanczos3 resize) and Svg.Skia (vector rasterization)
+
+## Getting Started
+
+### Requirements
+- .NET 8.0 SDK or newer
+
+### Build & Run
+\`\`\`bash
+git clone https://github.com/Almanex/icoboo.git
+cd icoboo
+dotnet build
+dotnet run
+\`\`\`
+
+## License
+
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# IconForge
+
+**Нативный генератор иконок для Windows 11 в стиле Fluent**
+
+Легкая утилита Windows на базе WinUI 3 (Windows App SDK) и C# для генерации пакетов иконок Windows (.ico), современных ассетов приложений и адаптивных иконок Android из одного исходного изображения PNG или SVG.
 
 ## Основные возможности
 
-### 📦 Генерация пакетов иконок
-* **Windows (Классический .ico):**
-  * Сборка мультиформатного \`.ico\` файла, содержащего разрешения: \`16x16\`, \`24x24\`, \`32x32\`, \`48x48\`, \`64x64\`, \`128x128\`, \`256x256\` пикселей.
-  * **Микро-шарпинг:** Для мелких размеров (16-48px) автоматически применяется специальный контурный фильтр резкости, чтобы иконка не "мылилась" в Проводнике.
-* **Windows Modern Assets (PNG):**
-  * Экспорт отдельных изображений для манифеста современных Windows-приложений (\`Square44x44Logo\`, \`Square150x150Logo\`, \`StoreLogo\`) во всех системных масштабах: \`scale-100\`, \`scale-125\`, \`scale-150\`, \`scale-200\`, \`scale-400\`.
-* **Android (Adaptive & Legacy Icons):**
-  * Разделение слоев: логотип автоматически позиционируется внутри безопасной зоны (safe-zone 72dp) слоя **Foreground.png**, а слой **Background.png** заливается выбранным цветом или текстурным файлом.
-  * Экспорт по структуре папок проекта (\`mipmap-mdpi\` до \`mipmap-xxxhdpi\`).
-  * Генерация круглой **Legacy-иконки** (\`ic_launcher.png\`) путем маскирования и наложения слоев.
-  * Экспорт промо-иконки для Google Play Console в размере \`512x512\` пикселей.
-
-### 🎨 Современный интерфейс Windows 11 (UI/UX)
-* Использование системного полупрозрачного материала **Mica Alt** (адаптируется под обои рабочего стола).
-* Полная поддержка системной Темной/Светлой темы Windows 11.
-* Интерактивная зона **Drag-and-Drop** с динамическим изменением цвета границ и встроенным превью для PNG/SVG файлов.
-* Быстрые палитры (свотчи) для выбора фонового цвета Android-иконки.
-
-### ⚙️ Системная интеграция (Shell Integration)
-* **Контекстное меню Проводника:** Опция встраивания пункта *"Сгенерировать иконки в IconForge"* прямо в меню проводника Windows при правом клике на PNG/SVG. Регистрация происходит локально в кусте \`HKEY_CURRENT_USER\` и **не требует прав администратора (UAC)**.
-* **Всплывающие уведомления (Toast):** По окончании работы приложение отправляет нативное всплывающее уведомление Windows 11 с интерактивной кнопкой «Открыть папку».
-
----
+- Генерация иконок Windows: Создание мультиформатных .ico файлов (от 16px до 256px) с авто-резкостью для мелких размеров.
+- Современные ассеты Windows: Экспорт PNG-ассетов во всех системных масштабах для манифестов приложений.
+- Иконки Android: Создание структуры папок mipmap для адаптивных и классических круглых значков.
+- Интерфейс Windows 11: Эффект Mica Alt, поддержка темной/светлой тем, Drag-and-Drop.
+- Интеграция в систему: Встраивание пункта генерации в контекстное меню проводника Windows без прав администратора.
 
 ## Стек технологий
-* **Язык:** C# (.NET 8.0)
-* **UI-платформа:** WinUI 3 (Windows App SDK 2.2.0)
-* **Графика:** SkiaSharp ( Lanczos3-ресайз и фильтрация) + Svg.Skia (отрисовка векторной графики в растр).
-* **Архитектурный тип:** Unpackaged Self-Contained (приложение поставляется со всеми библиотеками и работает без необходимости глобальной установки Windows App Runtime на компьютер пользователя).
 
----
+- Язык: C# (.NET 8.0)
+- UI-платформа: WinUI 3 (Windows App SDK 2.2.0)
+- Графика: SkiaSharp (Lanczos3 ресайз) + Svg.Skia (векторная отрисовка)
 
-## Структура экспорта файлов
-
-После генерации в выбранной папке создается следующая структура каталогов:
-
-\`\`\`text
-[Папка_Назначения]/
-├── Windows/
-│   ├── app_icon.ico
-│   └── Assets/
-│       ├── Square44x44Logo.scale-100.png
-│       ├── Square44x44Logo.scale-200.png
-│       └── ... (все логотипы во всех масштабах)
-└── Android/
-    ├── play_store_512.png
-    └── res/
-        ├── mipmap-mdpi/
-        │   ├── ic_launcher.png
-        │   ├── ic_launcher_background.png
-        │   └── ic_launcher_foreground.png
-        └── mipmap-xxxhdpi/ ...
-\`\`\`
-
----
-
-## Как собрать и запустить
+## Сборка и запуск
 
 ### Требования
-* [.NET 8.0 SDK](https://dotnet.microsoft.com/download) или новее.
+- .NET 8.0 SDK или новее
 
-### Сборка и запуск из консоли
-1. Клонируйте репозиторий:
-   \`\`\`bash
-   git clone https://github.com/Almanex/icoboo.git
-   cd icoboo
-   \`\`\`
-2. Скомпилируйте проект:
-   \`\`\`bash
-   dotnet build
-   \`\`\`
-3. Запустите приложение:
-   \`\`\`bash
-   dotnet run
-   \`\`\`
-
-### Публикация (Self-Contained EXE)
-Для генерации единого исполняемого пакета (все зависимости будут скопированы в папку \`publish\`):
+### Команды
 \`\`\`bash
-dotnet publish -c Release -r win-x64 --self-contained true
+git clone https://github.com/Almanex/icoboo.git
+cd icoboo
+dotnet build
+dotnet run
 \`\`\`
-После этого готовую программу можно запускать на любом компьютере с Windows 10/11 без предварительной установки каких-либо библиотек.
-`
+
+## Лицензия
+
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# IconForge
+
+**Nativer Symbolgenerator für Windows 11 im Fluent-Design**
+
+Leichtes Windows-Dienstprogramm, entwickelt mit WinUI 3 (Windows App SDK) und C#, um Windows-Symbolpakete, moderne Assets und adaptive Android-Symbole aus einem einzigen PNG/SVG-Bild zu erstellen.
+
+## Hauptfunktionen
+
+- Windows ICO-Generierung: Erstellt Multiformat-.ico-Dateien (16px bis 256px) mit automatischem Schärfefilter für kleine Symbole.
+- Windows App Assets: Exportiert skalierte PNG-Grafiken für moderne App-Manifeste.
+- Android-Symbole: Erstellt mipmap-Ordnerstrukturen für adaptive und klassische runde Symbole.
+- Windows 11 Design: Mica-Alt-Effekt, Unterstützung von hellem/dunklem System-Design, Drag-and-Drop.
+- Shell-Integration: Kontextmenü-Eintrag im Windows Explorer ohne Administratorrechte.
+
+## Technologie-Stack
+
+- Sprache: C# (.NET 8.0)
+- UI-Plattform: WinUI 3 (Windows App SDK 2.2.0)
+- Grafik: SkiaSharp (Lanczos3) und Svg.Skia (Vektor-Rasterung)
+
+## Build & Ausführung
+
+### Anforderungen
+- .NET 8.0 SDK oder neuer
+
+### Befehle
+\`\`\`bash
+git clone https://github.com/Almanex/icoboo.git
+cd icoboo
+dotnet build
+dotnet run
+\`\`\`
+
+## Lizenz
+
+MIT`
   },
   "lingospaced": {
     title: "LingoSpaced",
@@ -984,56 +941,108 @@ dotnet publish -c Release -r win-x64 --self-contained true
     license: "MIT",
     github: "https://github.com/Almanex/LingoSpaced-",
     image: "images/projects/lingospaced.jpg",
-    readme: `# LingoSpaced 🇩🇪 ✨
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-LingoSpaced — это премиальное мобильное приложение для изучения немецкого языка на платформе Android 16 (API 36). В его основе лежит **умный автоматический алгоритм интервального повторения**, который подстраивается под память пользователя без ручных оценок сложности («легко», «трудно»), используя неявные сигналы: скорость ответа, использование подсказок, ошибки и опечатки.
+# LingoSpaced
 
-Интерфейс приложения выполнен по стандартам **Taste Rules**: эффект жидкого матового стекла (Glassmorphism), анимации на основе физики пружин (Spring Physics) и динамическая палитра HSL, адаптирующаяся под светлую и темную темы.
+**Android flashcard application utilizing spaced repetition for language learning**
 
----
+LingoSpaced is a mobile application for learning German on Android 16 (API 36). It uses an automated spaced repetition algorithm that adapts to user memory based on implicit signals like response speed, mistakes, and hints, without manual difficulty ratings.
 
-## 📂 Документация проекта
+## UI/UX Design
 
-Для удобства подробная документация разделена на две части:
+The interface follows Taste Rules standards, featuring a fluid glassmorphism effect, spring physics animations, and a dynamic HSL color palette adapting to light/dark themes.
 
-* 📖 **[Руководство пользователя](file:///d:/Develop/int/docs/USER_GUIDE.md)**
-  * Как устроен цикл обучения (Интенсив ➡️ Интервалы).
-  * Описание игровых механик (3 типа заданий) и системы подсказок.
-  * Тонкая настройка скорости интервалов и свободная тренировка.
-  * Аналитика прогресса и статистика.
+## Quick Start
 
-* 🛠️ **[Руководство разработчика](file:///d:/Develop/int/docs/DEVELOPER.md)**
-  * Архитектура проекта и структура каталогов.
-  * Схема хранения данных (\`words.json\`).
-  * Математическая модель алгоритма интервальных повторений.
-  * Применение дизайн-системы (динамический HSL, затухающие пружины, размытие).
-  * Инструкция по сборке, тестированию и запуску.
+### Requirements
+- Android Studio (Koala / Ladybug or newer)
+- Android SDK 36 (Android 16)
+- JDK 17
 
----
-
-## 🚀 Быстрый запуск для разработчиков
-
-### Требования
-* **Android Studio** (Koala / Ladybug или новее)
-* **Android SDK 36** (Android 16 DP/Beta)
-* **JDK 17** (рекомендуется использовать встроенный в Android Studio JBR)
-
-### Сборка и запуск тестов из терминала
-Перед сборкой убедитесь, что переменная \`JAVA_HOME\` указывает на JDK Android Studio:
-
+### Build & Run
 \`\`\`powershell
-# Настройка JAVA_HOME в Windows (PowerShell)
-$env:JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jbr"
+# Set JDK environment variable
+\$env:JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jbr"
 
-# Запуск модульных тестов
+# Run unit tests
 .\\gradlew.bat test
 
-# Сборка отладочного APK
+# Build debug APK
 .\\gradlew.bat assembleDebug
 \`\`\`
 
-Отладочный APK-файл будет сохранен по пути: \`app/build/outputs/apk/debug/app-debug.apk\`.
-`
+Output APK path: \`app/build/outputs/apk/debug/app-debug.apk\`
+
+## License
+
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# LingoSpaced
+
+**Мобильное приложение для изучения немецкого языка с умным интервальным повторением**
+
+LingoSpaced — мобильное приложение под Android 16 (API 36) для эффективного запоминания немецких слов. В основе лежит алгоритм интервальных повторений, адаптирующийся под память пользователя на основе скорости ответа, опечаток и ошибок без ручной оценки сложности.
+
+## Дизайн UI/UX
+
+Интерфейс спроектирован по канонам нео-брутализма и Glassmorphism: эффект жидкого матового стекла, анимации на основе физики пружин и динамическая HSL-палитра, адаптирующаяся под светлую и темную темы.
+
+## Быстрый старт
+
+### Требования
+- Android Studio (Koala / Ladybug или новее)
+- Android SDK 36 (Android 16)
+- JDK 17
+
+### Команды консоли
+\`\`\`powershell
+\$env:JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jbr"
+
+# Запуск тестов
+.\\gradlew.bat test
+
+# Сборка APK
+.\\gradlew.bat assembleDebug
+\`\`\`
+
+## Лицензия
+
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# LingoSpaced
+
+**Android-Karteikarten-App mit Spaced Repetition zum Sprachenlernen**
+
+LingoSpaced is eine mobile App zum Deutschlernen für Android 16 (API 36). Sie nutzt einen automatischen Spaced-Repetition-Algorithmus, der sich anhand impliziter Signale (Antwortgeschwindigkeit, Fehler, Nutzung von Hinweisen) an das Gedächtnis des Nutzers anpasst.
+
+## UI/UX-Design
+
+Das Interface folgt modernen Design-Standards und bietet Glassmorphismus-Effekte, Physik-basierte Animationen sowie eine dynamische HSL-Farbpalette für helle und dunkle System-Designs.
+
+## Schnellstart
+
+### Anforderungen
+- Android Studio (Koala / Ladybug oder neuer)
+- Android SDK 36 (Android 16)
+- JDK 17
+
+### Build & Test
+\`\`\`powershell
+\$env:JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jbr"
+
+# Tests ausführen
+.\\gradlew.bat test
+
+# Debug-APK erstellen
+.\\gradlew.bat assembleDebug
+\`\`\`
+
+## Lizenz
+
+MIT`
   },
   "rokey": {
     title: "Rokey",
@@ -1045,71 +1054,115 @@ $env:JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jbr"
     license: "MIT",
     github: "https://github.com/Almanex/Rokey",
     image: "images/projects/rokey.jpg",
-    readme: `# Roke — Конвертер раскладки клавиатуры (Windows 11 Style)
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-Утилита для быстрого перевода выделенного текста из неверной раскладки клавиатуры в нужную (EN ↔ RU) в любом текстовом поле Windows.
+# Roke
 
----
+**Keyboard layout converter utility styled in Windows 11 design**
 
-## ✨ Особенности и архитектура
+Roke is a system utility to instantly convert selected text from incorrect keyboard layout to the correct one (EN <-> RU) in any active Windows text field.
 
-Проект разделен на два независимых компонента для экономии системных ресурсов:
-1. **Roke.exe** — сверхлегковесный фоновый процесс (~1.5 МБ ОЗУ) на чистом Win32 C++, который отслеживает глобальный хук клавиатуры и управляет иконкой в системном трее.
-2. **RokeSettings.exe** — современное окно настроек в Fluent-стиле Windows 11, разработанное на **WinUI 3 (Windows App SDK)** и **C++/WinRT**. Настройки запускаются из трея по запросу и автоматически закрываются после сохранения, полностью освобождая системную память.
+## Architecture
 
----
+To save system resources, the project is split into two independent components:
+- Roke.exe: A lightweight background process (uses ~1.5 MB RAM) written in pure Win32 C++ that monitors keyboard layout hooks and manages the system tray icon.
+- RokeSettings.exe: A Fluent settings window built with WinUI 3 (Windows App SDK) and C++/WinRT. It opens on demand from the tray and exits completely after saving settings, freeing system memory.
 
-## 🚀 Использование
+## Usage
 
-1. Выделите текст с неверной раскладкой в любом приложении.
-2. Нажмите горячую клавишу (по умолчанию **Ctrl+Shift+Q**).
+1. Select text with incorrect layout in any application.
+2. Press the hotkey combination (default: Ctrl+Shift+Q).
+3. The text is automatically replaced with the correct layout translation.
+
+Examples:
+- \`ghbdtn\` <-> \`привет\`
+- \`rhjcnf\` <-> \`работа\`
+
+## Building from Source
+
+### Requirements
+- Visual Studio 2022 with Desktop Development with C++ workload.
+- Windows 11 SDK (10.0.26100.0 or newer).
+
+### Build Script
+\`\`\`cmd
+.\\build.bat
+\`\`\`
+The script resolves NuGet dependencies (Windows App SDK, C++/WinRT) and builds the application in Release x64 mode. Output binaries are saved to \`bin\\Release\\\`.
+
+## License
+
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Roke
+
+**Утилита автоматической конвертации раскладки клавиатуры в стиле Windows 11**
+
+Быстрый перевод выделенного текста из неверной раскладки клавиатуры в нужную (EN ↔ RU) в любом текстовом поле Windows.
+
+## Архитектура проекта
+
+Проект разделен на два компонента для оптимизации ресурсов:
+- Roke.exe — фоновый процесс (~1.5 МБ ОЗУ) на чистом Win32 C++, отслеживающий глобальный хук клавиатуры и управляющий иконкой трея.
+- RokeSettings.exe — современное окно настроек на WinUI 3 (Windows App SDK) и C++/WinRT, которое запускается по запросу и закрывается после сохранения настроек, освобождая ОЗУ.
+
+## Использование
+
+1. Выделите текст с неверной раскладкой.
+2. Нажмите комбинацию клавиш (по умолчанию Ctrl+Shift+Q).
 3. Текст автоматически заменится на правильный.
 
-**Примеры:**
-- \`ghbdtn\` ⇄ \`привет\`
-- \`rhjcnf\` ⇄ \`работа\`
-- \`dcf\` ⇄ \`все\`
-
----
-
-## 🛠️ Сборка проекта
+## Сборка проекта
 
 ### Требования
-- **Visual Studio 2022** или **Visual Studio Build Tools 2022** с установленной рабочей нагрузкой «Разработка классических приложений на C++».
-- Установленный пакет SDK для Windows (рекомендуется Windows 11 SDK 10.0.26100.0 или новее).
+- Visual Studio 2022 с нагрузкой «Разработка классических приложений на C++».
+- Windows 11 SDK (10.0.26100.0 или новее).
 
-### Инструкция по сборке
-В корне проекта находится готовый скрипт для автоматической очистки, восстановления зависимостей и сборки проекта:
-1. Откройте консоль PowerShell или командную строку Windows.
-2. Перейдите в папку проекта и выполните:
-   \`\`\`cmd
-   .\\build.bat
-   \`\`\`
-
-Скрипт автоматически найдет среду сборки Visual Studio, загрузит необходимые NuGet-пакеты (Windows App SDK и C++/WinRT) и скомпилирует приложение в режиме **Release x64**.
-
-Результат сборки будет находиться в папке:
-\`\`\`text
-bin\\Release\\
+### Сборка
+\`\`\`cmd
+.\\build.bat
 \`\`\`
+Скрипт скомпилирует проект в режиме Release x64. Исполняемые файлы будут сохранены в папке \`bin\\Release\\\`.
 
----
+## Лицензия
 
-## 📦 Развертывание (Self-Contained)
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-Проект настроен для сборки в автономном режиме без упаковки (**Unpackaged Self-Contained**):
-- Приложение не требует установки пакета MSIX.
-- Приложение не требует предустановленного в системе рантайма Windows App Runtime (все необходимые зависимости извлекаются при сборке прямо в папку \`bin\\Release\\\`).
-- Для переноса приложения на другую машину достаточно скопировать всё содержимое папки \`bin\\Release\\\`.
+# Roke
 
----
+**Tastaturlayout-Konverter im Windows 11 Design**
 
-## ⚙️ Настройки и автозапуск
+Roke ist ein Systemprogramm zum sofortigen Konvertieren von markiertem Text aus einem falschen Tastaturlayout in das richtige (EN <-> RU) in jedem aktiven Windows-Textfeld.
 
-Все конфигурации приложения (выбранная комбинация горячих клавиш, состояние автозапуска) сохраняются в системный реестр Windows по пути:
-\`HKEY_CURRENT_USER\\Software\\Roke\`
+## Architektur
 
-`
+Um Systemressourcen zu sparen, ist das Projekt in zwei Komponenten unterteilt:
+- Roke.exe: Ein leichtgewichtiger Hintergrundprozess (~1,5 MB RAM) in reinem Win32 C++, der Tastatur-Hooks überwacht und das System-Tray-Symbol verwaltet.
+- RokeSettings.exe: Ein modernes Einstellungsfenster, entwickelt mit WinUI 3 (Windows App SDK) und C++/WinRT. Es wird bei Bedarf geöffnet und nach dem Speichern geschlossen, um Arbeitsspeicher freizugeben.
+
+## Verwendung
+
+1. Markieren Sie fehlerhaft eingegebenen Text.
+2. Drücken Sie den Hotkey (Standard: Ctrl+Shift+Q).
+3. Der Text wird automatisch übersetzt und ersetzt.
+
+## Build aus Quellcode
+
+### Anforderungen
+- Visual Studio 2022 mit C++-Desktopentwicklung.
+- Windows 11 SDK (10.0.26100.0 oder neuer).
+
+### Ausführung
+\`\`\`cmd
+.\\build.bat
+\`\`\`
+Das Skript lädt Abhängigkeiten und kompiliert die Anwendung im Release-x64-Modus unter \`bin\\Release\\\`.
+
+## Lizenz
+
+MIT`
   },
   "screentation-v2": {
     title: "Screentation V2",
@@ -1121,87 +1174,131 @@ bin\\Release\\
     license: "MIT",
     github: "https://github.com/Almanex/Screentation-V2",
     image: "images/projects/screentation-v2.jpg",
-    readme: `# Screentation 📸✨
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-**Screentation** — это легкое, быстрое и современное десктопное приложение для потоковой аннотации скриншотов и их пакетного сохранения. Создано для технических писателей, тестировщиков, разработчиков и всех, кому нужно быстро готовить иллюстрации для инструкций, баг-репортов и документации.
+# Screentation
 
-Приложение автоматически перехватывает новые скриншоты из буфера обмена (например, сделанные через стандартные \`Win + Shift + S\` в Windows) и позволяет в пару кликов добавить рамки, стрелки, нумерацию шагов и размыть конфиденциальные данные.
+**Desktop screenshot capture, annotation, and batch-saving tool**
 
----
+Screentation is a lightweight and modern desktop application for screenshot annotation and batch export, designed for technical writers, developers, and QA engineers. The app intercepts new screenshots from the clipboard and lets you add borders, arrows, steps, and blur private data in a few clicks.
 
-## ✨ Ключевые возможности
+## Key Features
 
-* 📋 **Автозахват из буфера обмена**: Просто сделайте скриншот штатными средствами Windows, и он мгновенно появится в Screentation. Также поддерживается вставка по \`Ctrl + V\` (независимо от текущей раскладки клавиатуры) и обычный Drag-and-Drop файлов.
-* 🛠️ **Инструменты аннотирования (Konva.js)**:
-  * **Rect (Рамка)**: Выделение областей прямоугольниками с настраиваемым цветом и толщиной. Включает опцию полупрозрачной заливки в тон рамки (можно легко отключить для получения полностью прозрачного фона).
-  * **Arrow (Стрелка)**: Указание на важные элементы с аккуратными наконечниками.
-  * **Step (Шаг)**: Быстрая нумерация шагов (цифровые кружки) — номера увеличиваются автоматически при каждом новом клике.
-  * **Blur (Размытие)**: Качественное скрытие личных или секретных данных на скриншоте с помощью эффекта размытия.
-  * **Eraser (Умный ластик)**: Закрашивание областей фоновым текстурным рисунком (принцип Clone Stamp). Позволяет бесследно стереть конфиденциальные надписи или иконки (например, на панели задач), восстанавливая оригинальный фон за ними. Область-источник ("Source") можно перетаскивать независимо для идеального совмещения текстур.
-* 🔄 **Сохранение истории действий**: Поддержка \`Undo\` (\`Ctrl + Z\`) и \`Redo\` (\`Ctrl + Y\` / \`Ctrl + Shift + Z\`) для всех графических элементов.
-* 📦 **Пакетный экспорт**:
-  * Выгрузка одного или всех скриншотов одновременно.
-  * Конвертация в форматы **PNG, JPEG, WebP**.
-  * Настройка качества сжатия (для JPEG/WebP).
-  * Удобный шаблон именования файлов (например, \`screen_{number}\`, \`step_{datetime}\`).
-* ⌨️ **Независимость от раскладки**: Все горячие клавиши (инструменты, буфер обмена, история) корректно работают как на английской, так и на русской раскладке клавиатуры.
-* 📥 **Работа в фоновом режиме (Трей)**: При закрытии приложение сворачивается в системный трей Windows и продолжает мониторить буфер обмена. Полный выход осуществляется через контекстное меню трея.
-* 🚀 **Готовый инсталлятор**: Быстрая сборка полноценного Windows-установщика (\`.exe\`) с собственной иконкой.
+- Clipboard Auto-Capture: Instantly loads screenshots from clipboard or supports drag-and-drop.
+- Annotation Tools (Konva.js): Rectangles (hollow/filled), Arrows, step numbers (auto-incrementing), and high-quality blur.
+- Smart Eraser: Clone stamp utility to clean text or icons while restoring the original background behind them.
+- Batch Export: Exports screenshots to PNG, JPEG, or WebP with customizable quality and filename naming templates.
+- Tray Support: Minimizes to system tray and continues background clipboard monitoring.
 
----
+## Technology Stack
 
-## 🛠️ Технологический стек
+- Core Shell: Electron, Node.js
+- Frontend Framework: React, TypeScript, Vite
+- Canvas Library: Konva.js (react-konva)
+- Image Processing: sharp (for high-speed server-side compression)
 
-* **Core**: Electron, Node.js
-* **Frontend**: React, TypeScript, Vite
-* **Graphics**: Konva.js (\`react-konva\`) для интерактивного холста
-* **Image Processing**: \`sharp\` для быстрого и качественного сжатия изображений в главном процессе
-* **Build System**: \`electron-vite\` для быстрой сборки и перезапуска в режиме разработки
+## Quick Start
 
----
+### Requirements
+- Node.js (LTS 18+)
+- Git
 
-## 🚀 Быстрый старт
-
-### Требования
-* Установленный **Node.js** (рекомендуется версия LTS 18+)
-* **Git**
-
-### 1. Клонирование репозитория
+### Build & Run
 \`\`\`bash
 git clone https://github.com/Almanex/Screentation.git
 cd Screentation
-\`\`\`
-
-### 2. Установка зависимостей
-Установите библиотеки проекта. Нативные модули (включая \`sharp\`) будут автоматически перекомпилированы под вашу версию Electron:
-\`\`\`bash
 npm install
-\`\`\`
-
-### 3. Запуск в режиме разработки
-Запуск приложения в режиме live-reload для разработки:
-\`\`\`bash
 npm run dev
 \`\`\`
 
-### 4. Сборка дистрибутива
-Скомпилировать исходный код и собрать готовый установщик для Windows (\`dist/Screentation Setup 1.0.0.exe\`):
+### Create Installer
 \`\`\`bash
 npx electron-builder --win
 \`\`\`
 
----
+## License
 
-## 📂 Структура исходного кода
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-Подробное описание архитектуры приложения, каналов IPC, работы интерактивного холста Konva и логики работы в фоне находится в файле [DEV_DOC.md](file:///d:/Develop/screentation/DEV_DOC.md).
+# Screentation
 
----
+**Инструмент для захвата, аннотирования и пакетного сохранения скриншотов**
 
-## 📝 Лицензия
+Screentation — легкое десктопное приложение для редактирования скриншотов и их пакетного экспорта. Полезно для технических писателей, тестировщиков и разработчиков при создании инструкций и баг-репортов. Программа перехватывает скриншоты из буфера обмена и позволяет быстро наложить рамки, стрелки, нумерацию шагов или скрыть личные данные.
 
-Проект распространяется под лицензией MIT.
-`
+## Основные возможности
+
+- Автозахват буфера обмена: Мгновенный импорт скриншотов при создании или через Drag-and-Drop.
+- Графические аннотации (Konva.js): Рамки, указательные стрелки, маркеры шагов с автоувеличением номера, размытие.
+- Умный ластик: Инструмент штампа для стирания конфиденциальных данных с восстановлением текстуры фона.
+- Пакетный экспорт: Сохранение в PNG, JPEG, WebP с настройкой качества сжатия.
+- Фоновый режим: Работа из системного трея Windows.
+
+## Технологический стек
+
+- Ядро: Electron, Node.js
+- Фронтенд: React, TypeScript, Vite
+- Графика: Konva.js (react-konva) для холста
+- Обработка изображений: sharp для сжатия в главном процессе
+
+## Быстрый старт
+
+### Требования
+- Node.js (LTS 18+)
+- Git
+
+### Команды сборки
+\`\`\`bash
+git clone https://github.com/Almanex/Screentation.git
+cd Screentation
+npm install
+npm run dev
+\`\`\`
+
+## Лицензия
+
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# Screentation
+
+**Desktop-Tool zum Erfassen, Kommentieren und Stapelspeichern von Screenshots**
+
+Screentation ist eine leichtgewichtige Desktop-Anwendung zur Screenshot-Annotation und zum Stapel-Export, entwickelt für technische Redakteure, Entwickler und QA-Ingenieure. Die App erfasst Screenshots aus der Zwischenablage und ermöglicht das Hinzufügen von Rahmen, Pfeilen, Schrittnummern und Weichzeichnern.
+
+## Hauptfunktionen
+
+- Automatischer Capture: Lädt Screenshots direkt aus der Zwischenablage oder per Drag-and-Drop.
+- Zeichenwerkzeuge (Konva.js): Rahmen, Pfeile, automatisch inkrementierende Schrittnummern und Weichzeichner.
+- Intelligenter Radierer: Kopierstempel-Werkzeug zum Entfernen vertraulicher Daten unter Wiederherstellung des Hintergrunds.
+- Stapel-Export: Speichern in PNG, JPEG oder WebP mit Qualitätskontrolle.
+- Tray-Modus: Minimiert sich im Windows-System-Tray und läuft im Hintergrund weiter.
+
+## Technologie-Stack
+
+- Kern: Electron, Node.js
+- Frontend: React, TypeScript, Vite
+- Canvas-Bibliothek: Konva.js (react-konva)
+- Bildkomprimierung: sharp (für serverseitige Verarbeitung)
+
+## Schnellstart
+
+### Anforderungen
+- Node.js (LTS 18+)
+- Git
+
+### Befehle
+\`\`\`bash
+git clone https://github.com/Almanex/Screentation.git
+cd Screentation
+npm install
+npm run dev
+\`\`\`
+
+## Lizenz
+
+MIT`
   },
   "shortcutdock": {
     title: "ShortcutDock",
@@ -1213,146 +1310,123 @@ npx electron-builder --win
     license: "MIT",
     github: "https://github.com/Almanex/ShortcutDock",
     image: "images/projects/shortcutdock.jpg",
-    readme: `# ShortcutDock — Кастомная панель ярлыков для Windows 11
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-> [!IMPORTANT]
-> **Доступен первый стабильный релиз!**  
-> Вы можете скачать готовый скомпилированный файл **\`ShortcutDock.exe\`** на странице [Релизов (Releases)](https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) и запустить его на своем компьютере без установки дополнительных библиотек.
+# ShortcutDock
 
-Настольная dock-панель быстрого запуска с поддержкой эффектов Mica/Acrylic/полной прозрачности, автоматическим переключением вертикальной/горизонтальной ориентации, поддержкой Drag-and-Drop, системной интеграцией (AppBar) и интеграцией с системным треем.
+**Customizable shortcut dock panel for Windows 11 desktops**
 
-Подробную инструкцию по установке, запуску и настройке всех функций читайте в [Руководстве пользователя (GUIDE.md)](GUIDE.md).
+A desktop dock panel featuring Mica/Acrylic/transparent backdrops, automatic vertical/horizontal orientation layout, Drag-and-Drop, AppBar reservation workspace, and system tray integration.
 
-## Скриншоты проекта
+## Key Features
 
-<p align="center">
-  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
-  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
-</p>
-<p align="center">
-  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
-  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
-</p>
-<p align="center">
-  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
-</p>
+- Desktop Panel: Drag-and-drop .exe/.lnk files directly to add.
+- Dynamic Orientation: Switches between vertical (left/right screen positions) and horizontal (top/bottom).
+- Modern Backdrop: Support for Mica and Acrylic blur effects in sync with the active Windows system theme.
+- Auto-Hide: Hides the panel behind screen borders to maximize workspace when not focused.
+- Hover Zoom & Indicators: macOS-style icon zoom animation on hover, and active app indicators.
+
+## Technology Stack
+
+- Language: C# (.NET 8.0)
+- UI Library: WPF + WPF-UI 4.3.0
+- MVVM Toolkit: CommunityToolkit.Mvvm
+- Win32 API: P/Invoke integration (user32, dwmapi, shell32)
+
+## Getting Started
+
+### Requirements
+- .NET 8.0 SDK or newer
+
+### Build & Run
+\`\`\`bash
+git clone https://github.com/Almanex/ShortcutDock.git
+cd ShortcutDock
+dotnet build
+dotnet run
+\`\`\`
+
+## License
+
+MIT`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+
+# ShortcutDock
+
+**Кастомная панель быстрого запуска ярлыков для Windows 11**
+
+Настольная dock-панель быстрого запуска с поддержкой эффектов размытия Mica/Acrylic, автоматическим изменением ориентации (вертикальная/горизонтальная), поддержкой Drag-and-Drop и интеграцией в системный трей.
+
+## Основные возможности
+
+- Добавление ярлыков: Drag-and-Drop файлов .exe/.lnk прямо на панель.
+- Автоориентация: Автоматический поворот панели при закреплении на разных сторонах экрана.
+- Эффекты Mica/Acrylic: Интеграция с системным оформлением и автоматическая смена темной/светлой тем.
+- Скрытие (Auto-Hide): Сворачивание панели за границы экрана для экономии места.
+- Анимация при наведении: Плавное увеличение значков в стиле macOS.
 
 ## Стек технологий
 
-| Компонент | Технология | Версия |
-|-----------|-----------|--------|
-| Язык | C# (.NET 8, LTS) | net8.0-windows |
-| UI-фреймворк | WPF + **WPF-UI 4.3.0** (\`FluentWindow\` для настроек, Mica) | 4.3.0 |
-| MVVM | **CommunityToolkit.Mvvm** (\`[ObservableProperty]\`, \`[RelayCommand]\`) | 8.4.2 |
-| Win32 P/Invoke | Ручные \`DllImport\` (user32, dwmapi, shell32) | — |
-| JSON | \`System.Text.Json\` (встроенный) | — |
-| Графика | \`System.Drawing.Common\` (Bitmap → PNG для кэша иконок, загрузка ICO) | 8.0.0 |
+- Язык: C# (.NET 8.0)
+- UI-фреймворк: WPF + WPF-UI 4.3.0
+- Паттерн MVVM: CommunityToolkit.Mvvm
+- Системные вызовы: P/Invoke (user32.dll, dwmapi.dll, shell32.dll)
 
-## Структура проекта
+## Сборка и запуск
 
-\`\`\`
-D:\\Develop\\tsreen\\
-├── ShortcutDock.slnx              # Решение (новый XML-формат, SDK 10)
-├── README.md                       # Этот файл
-└── src\\ShortcutDock\\
-    ├── ShortcutDock.csproj         # net8.0-windows, UseWPF, UseWindowsForms, UseSystemDrawing, ApplicationIcon
-    ├── app.manifest                # PerMonitorV2 DPI, asInvoker, Win10/11 compat
-    ├── App.xaml / App.xaml.cs      # Точка входа, DI (manual), инициализация системного трея (NotifyIcon)
-    ├── MainWindow.xaml / .xaml.cs  # Главная панель, DWM-эффекты размытия, Alt+Tab hide, DnD, переключение ориентации
-    ├── SettingsWindow.xaml / .cs   # Окно настроек (Mica, CardControl, переключатели)
-    ├── app_icon.ico                # Встроенный значок приложения
-    ├── Native\\
-    │   └── Win32.cs                # P/Invoke: GWL_EXSTYLE, DwmSetWindowAttribute, DwmExtendFrame,
-    │                               #         RegisterWindowMessage, MonitorFromWindow
-    ├── Models\\
-    │   ├── Settings.cs            
-    │   ├── PanelSettings.cs        # Position, IconSize, KeepOnTop, BackdropType, ShowAddButton
-    │   └── ShortcutItem.cs         # Id (GUID), Name, TargetPath, IconPath
-    ├── Services\\
-    │   ├── SettingsService.cs      # Load/Save %AppData%\\ShortcutDock\\settings.json
-    │   ├── ProcessLauncher.cs     # Process.Start(UseShellExecute=true, Verb="runas")
-    │   ├── ShortcutResolver.cs     # .lnk → .exe через COM IShellLinkW + IPersistFile
-    │   └── IconExtractor.cs       # SHGetImageList (JUMBO 256→EXTRALARGE 48→32) → PNG cache
-    └── ViewModels\\
-        ├── MainViewModel.cs       # Коллекция ярлыков, AddViaDialog, AddFromFile, настройки, Persist
-        └── ShortcutViewModel.cs   # Launch, RunAsAdmin, Remove команды
+### Требования
+- .NET 8.0 SDK или новее
+
+### Команды
+\`\`\`bash
+git clone https://github.com/Almanex/ShortcutDock.git
+cd ShortcutDock
+dotnet build
+dotnet run
 \`\`\`
 
-## Данные
+## Лицензия
 
-Конфигурация: \`%AppData%\\ShortcutDock\\settings.json\`
+MIT`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-\`\`\`json
-{
-  "PanelSettings": {
-    "Position": "Bottom",
-    "IconSize": 48,
-    "KeepOnTop": true,
-    "BackdropType": "Mica",
-    "ShowAddButton": false,
-    "AutoHide": false,
-    "HoverZoom": true,
-    "ShowRunningIndicators": true
-  },
-  "Shortcuts": [
-    {
-      "Id": "a1b2c3d4-...",
-      "Name": "Google Chrome",
-      "TargetPath": "C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe",
-      "IconPath": "%AppData%\\\\ShortcutDock\\\\Cache\\\\chrome_ABCD1234.png"
-    }
-  ]
-}
+# ShortcutDock
+
+**Anpassbare Shortcut-Dock-Leiste für Windows 11**
+
+Eine Desktop-Dock-Leiste mit Unterstützung für Mica/Acryl/Transparenzeffekte, automatischer Ausrichtung, Drag-and-Drop, AppBar-Arbeitsplatzreservierung und System-Tray-Integration.
+
+## Hauptfunktionen
+
+- Desktop-Panel: Drag-and-Drop von .exe/.lnk-Dateien zum schnellen Hinzufügen.
+- Dynamische Ausrichtung: Wechselt automatisch zwischen vertikal und horizontal je nach Bildschirmrand.
+- Modernes Design: Mica- und Acryl-Effekte, synchronisiert mit dem Windows-Design.
+- Auto-Hide: Blendet das Panel bei Inaktivität aus, um Arbeitsbereich freizugeben.
+- Hover-Effekte: Mac-Style-Symbolvergrößerung und aktive Programmindikatoren.
+
+## Technologie-Stack
+
+- Sprache: C# (.NET 8.0)
+- UI-Bibliothek: WPF + WPF-UI 4.3.0
+- MVVM: CommunityToolkit.Mvvm
+- Win32 API: P/Invoke (user32, dwmapi, shell32)
+
+## Build & Ausführung
+
+### Anforderungen
+- .NET 8.0 SDK oder neuer
+
+### Befehle
+\`\`\`bash
+git clone https://github.com/Almanex/ShortcutDock.git
+cd ShortcutDock
+dotnet build
+dotnet run
 \`\`\`
 
-Кэш иконок: \`%AppData%\\ShortcutDock\\Cache\\*.png\`
+## Lizenz
 
-## Управление и функции
-
-### Главная панель
-| Действие | Как |
-|----------|-----|
-| **Добавить ярлык** | Drag-and-Drop файла \`.exe\` / \`.lnk\` на панель, или кнопка **«+»** (если включена), или ПКМ по панели → «Добавить приложение» |
-| **Запустить/Активировать приложение** | Клик ЛКМ по иконке. Если программа уже запущена (и включены индикаторы), клик сфокусирует и выведет существующее окно на передний план вместо запуска новой копии. |
-| **Запустить от имени администратора** | ПКМ по иконке → «Запустить от имени администратора» |
-| **Удалить с панели** | ПКМ по иконке → «Удалить с панели» |
-| **Открыть настройки** | ПКМ по свободному месту панели → «Настройки панели» или контекстное меню трея |
-| **Закрыть панель** | ПКМ по свободному месту панели → «Закрыть панель» или контекстное меню трея -> Выход |
-
-### Системный трей
-- В области уведомлений Windows (трее) отображается кастомная иконка приложения.
-- Двойной клик по иконке сворачивает / разворачивает док-панель.
-- Контекстное меню позволяет переключить видимость, открыть окно настроек или выйти из приложения.
-
-### Окно настроек
-- **Положение на экране:** Снизу, Сверху, Слева, Справа. При выборе левой или правой стороны панель автоматически переключается на вертикальную ориентацию.
-- **Эффект размытия:** Нет (100% прозрачность с отображением одних лишь значков), Mica, Acrylic.
-- **Размер значков:** 32 px, 40 px, 48 px, 64 px (динамически изменяет размеры).
-- **Поверх всех окон:** Включает/выключает закрепление поверх других окон и резервирование места на рабочем столе (AppBar). При отключении панели другие окна могут перекрывать её.
-- **Показывать кнопку «+» на панели:** Позволяет скрыть кнопку добавления на док-панели для более минималистичного вида.
-- **Автоматически скрывать панель (Auto-Hide):** Панель плавно скрывается за границы экрана при потере фокуса мыши (оставляя 2px полоску для вызова), временно снимая резервирование рабочего пространства AppBar для полного разворачивания сторонних окон.
-- **Эффект увеличения при наведении (Hover Zoom):** Плавное масштабирование иконок при наведении курсора в стиле macOS, образующее интерактивную волну.
-- **Индикаторы запущенных программ:** Отображение точек акцентного цвета под запущенными программами и перенаправление клика на активацию существующего окна.
-
----
-
-## История изменений
-
-| Дата | Изменение |
-|------|-----------|
-| 2026-06-19 | Первичная реализация: проект, модели, сервисы, UI, AppBar |
-| 2026-06-19 | Исправлены XAML-пространства имен WPF-UI и ссылки на \`System.Drawing.Common\` |
-| 2026-06-19 | Исправлена работа Mica/Acrylic за счет перехода к композиции \`AllowsTransparency="False"\` + \`WindowChrome\` + DWM P/Invoke |
-| 2026-06-19 | Исправлена логика AppBar (позиционирование, устранение бесконечного цикла изменения размеров в связке с \`SizeToContent\`) |
-| 2026-06-19 | Разработана форма настроек Fluent-дизайна (SettingsWindow) с полной привязкой настроек в реальном времени |
-| 2026-06-19 | Добавлена интеграция с системным треем (NotifyIcon, ContextMenuStrip) |
-| 2026-06-19 | Реализована поддержка вертикальных ориентаций и адаптивных триггеров XAML |
-| 2026-06-19 | Интегрирована собственная иконка \`app_icon.ico\` для сборки и трея. Очищены временные ресурсы. |
-| 2026-06-24 | Устранена утечка и зависание AppBar при системных событиях \`WM_SETTINGCHANGE\`. Настроен автономный релиз. |
-| 2026-06-28 | Исправлена работа Корзины: выравнивание структуры \`SHQUERYRBINFO\` на x64 системах, запуск папки кликом и сброс кэша значков на старте. |
-| 2026-07-03 | Интегрирована синхронизация с системной темой (\`SystemThemeWatcher\`): фон панели (Mica/Acrylic) и элементы интерфейса теперь нативно меняют тему на темную/светлую. |
-| 2026-07-03 | Добавлен премиум-функционал: автоскрытие (Auto-Hide), эффект увеличения значков (Hover Zoom), индикаторы запущенных приложений с восстановлением окон на передний план и анимации отскока (Bounce). Исправлен краш окна настроек. |
-`
+MIT`
   },
   "shelter-fork": {
     title: "Shelter Fork",
@@ -1364,75 +1438,97 @@ D:\\Develop\\tsreen\\
     license: "GPL-3.0",
     github: "https://github.com/Almanex/Shelter-fork",
     image: "images/projects/shelter-fork.jpg",
-    readme: `Shelter
-===
+    readme: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-Shelter is a Free and Open-Source (FOSS) app that leverages the "Work Profile" feature of Android to provide an isolated space that you can install or clone apps into.
+# Shelter Fork
 
-**🆕 Android 16 Ready**: This fork has been specifically adapted for Android 16 (API 36) with full support for Pixel 9a and modern Android features including Edge-to-Edge UI and Predictive Back Navigation.
+**Security-focused application sandbox fork for Android devices**
 
+Shelter is an open-source app that leverages the Work Profile feature of Android to provide an isolated space where you can clone or install apps.
 
+## Android 16 Optimizations
 
-Features
-===
+This fork includes specific adaptations for Android 16 (API 36) and Pixel 9a devices:
+- Edge-to-Edge UI: Fully compliant with Android 16 mandatory edge-to-edge requirements.
+- Material You: Dynamic color styling and themes.
+- Navigation: Native Predictive Back gesture navigation animations.
+- Display compatibility: Layout fine-tuning for Pixel 9a displays.
 
-- Installing apps inside a work profile for isolation
-- "Freeze" apps inside the work profile to prevent them from running or being woken up when you are not actively using them
-- Installing two copies of the same app on the same device
+## Key Features
 
-Android 16 Enhancements
-===
+- App Isolation: Install apps inside a work profile to prevent sandbox leaks.
+- Freeze Apps: Suspend background activity of isolated apps when not actively in use.
+- Multi-Account: Run two separate copies of the same application on a single device.
+- Unprivileged API: Operates safely without root or ADB privilege abuse.
 
-This fork includes specific optimizations for Android 16 (API 36) and Pixel 9a:
+## Installation & Uninstall
 
-### 🎨 Modern UI
-- **Edge-to-Edge Design**: Full support for Android 16's mandatory edge-to-edge UI
-- **Material You Integration**: Enhanced theming with dynamic colors
-- **Adaptive Icons**: Support for Android 16's adaptive icon system
+To install, build from source using Android 16 SDK.
+To uninstall, delete the Work Profile in Android Settings first, then uninstall the Shelter app normally.
 
-### 🔄 Navigation Improvements
-- **Predictive Back Navigation**: Smooth back gesture animations
-- **Gesture Navigation**: Optimized for modern Android navigation patterns
+## License
 
-### 📱 Pixel 9a Optimization
-- **Display Compatibility**: Optimized for 6.3" display (2424×1080 resolution)
-- **Performance Tuning**: Enhanced for Pixel 9a hardware specifications
-- **Battery Optimization**: Improved power management for extended usage
+GPL-3.0`,
+    readme_ru: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
+# Shelter Fork
 
-Caveats & Known Issues
-===
+**Форк изолированной песочницы приложений для Android с фокусом на безопасности**
 
-- Some caveats and known issues are discussed during the setup process of Shelter. __Please read through text in the setup wizard carefully__.
-- Shelter is only as safe as the Work Profile implementation of the Android OS you are using. For details, see <https://support.google.com/work/android/answer/6191949?hl=en>
+Shelter — приложение с открытым исходным кодом, использующее встроенную функцию «Рабочий профиль» (Work Profile) в Android для создания изолированного пространства под установку или клонирование приложений.
 
-### Android 16 Specific Notes
-- **Minimum Requirements**: This fork requires Android 16 (API 36) or later
-- **Edge-to-Edge UI**: Some older custom ROMs may not fully support the new edge-to-edge requirements
-- **Predictive Back**: Custom launchers may need updates to support the new back navigation system
+## Оптимизации для Android 16
 
-State of the Project, Feature Requests, etc.
-===
+Этот форк адаптирован для Android 16 (API 36) и смартфонов Pixel 9a:
+- Безрамочный интерфейс (Edge-to-Edge): Полная совместимость с обязательными требованиями Android 16.
+- Дизайн Material You: Адаптивная палитра цветов под обои системы.
+- Улучшенная навигация: Поддержка плавных жестов назад (Predictive Back).
+- Совместимость с экранами: Оптимизация верстки под дисплеи Pixel 9a.
 
-Since Shelter simply makes use of the Work Profile APIs exposed by Android, there is a limited set of features that are possible to implement via the app. As we do not intend on leveraging (or "abusing") adb privileges, the features of Shelter can only be a strict subset of the exposed, unprivileged APIs.
+## Основные возможности
 
-As a result, we do not intend on adding a lot of new features to Shelter going forward, unless there is to be big changes in the capabilities of work profile APIs. Shelter is currently in an effective **maintenance mode**. Nevertheless, the author is still committed to regularly **adapting Shelter to all new Android versions as soon as possible after they are released** -- this includes upgrading the target SDK level, adapting to any new features or restrictions introduced by the new Android version, updating all dependencies, and so on. The author still relies on Shelter for his daily life, so Shelter will **not** become abandonware in the forseeable future.
+- Изоляция приложений: Установка приложений в отдельный рабочий профиль для защиты личных данных.
+- Заморозка программ: Приостановка фоновой активности изолированных приложений.
+- Два аккаунта: Запуск двух независимых копий одного приложения на устройстве.
+- Безопасность: Работает через стандартные API без UAC/root/ADB привилегий.
 
-### Android 16 Fork Status
-This fork represents a **proactive adaptation** for Android 16 (API 36), implementing:
-- ✅ **Target SDK 36**: Full compatibility with Android 16 requirements
-- ✅ **Edge-to-Edge UI**: Mandatory design compliance
-- ✅ **Predictive Back**: Modern navigation patterns
-- ✅ **Pixel 9a Support**: Hardware-specific optimizations
+## Удаление приложения
 
-The fork maintains full backward compatibility while embracing Android 16's new capabilities and requirements.
+Чтобы полностью удалить Shelter, сначала удалите рабочий профиль в Настройках системы -> Аккаунты, а затем удалите само приложение Shelter как обычно.
 
+## Лицензия
 
-Uninstalling
-===
+GPL-3.0`,
+    readme_de: `[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-To uninstall Shelter, please delete the work profile first in Settings -> Accounts, and then uninstall the Shelter app normally.
-`
+# Shelter Fork
+
+**Sicherheitsorientierter Anwendungs-Sandbox-Fork für Android-Geräte**
+
+Shelter ist eine Open-Source-App, die das Work-Profil-Feature von Android nutzt, um einen isolierten Bereich bereitzustellen, in dem Apps installiert oder geklont werden können.
+
+## Android 16 Optimierungen
+
+Dieser Fork enthält spezifische Anpassungen für Android 16 (API 36) und Pixel 9a Geräte:
+- Edge-to-Edge UI: Volle Einhaltung der neuen Design-Richtlinien.
+- Material You: Dynamische Farbthemen basierend auf dem System-Hintergrundbild.
+- Navigation: Unterstützung der Predictive Back Navigation für flüssige Zurück-Gesten.
+- Display-Kompatibilität: Layout-Anpassungen für Pixel 9a Displays.
+
+## Hauptfunktionen
+
+- App-Isolation: Apps im Arbeitsprofil installieren, um Datenabfluss zu verhindern.
+- Apps einfrieren: Pausiert Hintergrundaktivitäten isolierter Apps bei Nichtgebrauch.
+- Multi-Account: Führen Sie zwei Kopien derselben App auf einem Gerät aus.
+- Keine Root-Rechte: Nutzt sichere Standard-APIs ohne Root- oder ADB-Eingriffe.
+
+## Deinstallation
+
+Um Shelter zu deinstallieren, löschen Sie zuerst das Arbeitsprofil in den Android-Einstellungen und deinstallieren Sie dann die Shelter-App.
+
+## Lizenz
+
+GPL-3.0`
   }
 };
 if (typeof window !== 'undefined') {

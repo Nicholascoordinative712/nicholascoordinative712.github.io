@@ -737,27 +737,27 @@ const l = pageLabels[lang];
       // Key mappings matching the compact laptop keyboard layout
       const keyMap = {
         "-1": {
-          "-5": "8", "-4": "9", "-3": "0", "-2": "-", "-1": "=",
+          "-6": "7", "-5": "8", "-4": "9", "-3": "0", "-2": "-", "-1": "=",
           // Backspace spans c=0, 1
           "2": "NUM", "3": "/", "4": "*", "5": "-"
         },
         "0": {
-          "-5": "I", "-4": "O", "-3": "P", "-2": "[", "-1": "]",
+          "-6": "U", "-5": "I", "-4": "O", "-3": "P", "-2": "[", "-1": "]",
           // Enter top spans c=0, 1
           "2": "7", "3": "8", "4": "9" // c=5 is vertical +
         },
         "1": {
-          "-6": "K", "-5": "L", "-4": ";", "-3": "'", "-2": "\\",
+          "-7": "J", "-6": "K", "-5": "L", "-4": ";", "-3": "'", "-2": "\\",
           // Enter bottom spans c=-1, 0, 1
           "2": "4", "3": "5", "4": "6" // c=5 is vertical + (skipped)
         },
         "2": {
-          "-6": "N", "-5": "M", "-4": ",", "-3": ".", "-2": "/",
+          "-7": "B", "-6": "N", "-5": "M", "-4": ",", "-3": ".", "-2": "/",
           // Right Shift spans c=-1, 0, 1
           "2": "1", "3": "2", "4": "3" // c=5 is vertical Enter
         },
         "3": {
-          // Spacebar spans c=-6, -5, -4
+          // Spacebar spans c=-7, -6, -5, -4
           "-3": "ALT", "-2": "CTRL",
           "-1": "◀", "0": "▲▼", "1": "▶", // Arrow cluster
           // Numpad 0 spans c=2, 3
@@ -795,14 +795,14 @@ const l = pageLabels[lang];
       };
       renderBackspace();
 
-      // Spacebar: at r=3, c=-6 (spans c=-6, -5, -4) -> width 166px
+      // Spacebar: at r=3, c=-7 (spans c=-7, -6, -5, -4) -> width 224px (extended by 1 key width)
       const renderSpacebar = () => {
-        const key = createKeycap('SPACE', 166, 42, 0.58);
-        key.style.left = `calc(50% + ${-6 * 58 - 25}px)`;
+        const key = createKeycap('SPACE', 224, 42, 0.58);
+        key.style.left = `calc(50% + ${-7 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
         fragment.appendChild(key);
         keys.push({ element: key, baseOpacity: 0.58 });
-        skip(3, -6); skip(3, -5); skip(3, -4);
+        skip(3, -7); skip(3, -6); skip(3, -5); skip(3, -4);
       };
       renderSpacebar();
 
@@ -841,12 +841,17 @@ const l = pageLabels[lang];
 
       // 3. Render standard keycaps:
       for (let r = -1; r <= 3; r++) {
-        for (let c = -6; c <= 5; c++) {
+        for (let c = -7; c <= 5; c++) {
           if (skipped.has(`${r},${c}`)) continue;
 
-          // Calculate radial distance from center of Enter block
+          // Asymmetric opacity: only the left side (c < 0) fades out to transparent at the edge
           const dist = Math.sqrt(c * c + r * r);
-          const opacity = Math.max(0.12, 0.72 - dist * 0.08);
+          let opacity;
+          if (c >= 0) {
+            opacity = Math.max(0.28, 0.75 - dist * 0.065); // Numpad remains bright
+          } else {
+            opacity = Math.max(0.04, 0.72 - dist * 0.095); // Left side fades into background
+          }
 
           const labelText = (keyMap[r] && keyMap[r][c]) || "";
           if (!labelText) continue;

@@ -844,14 +844,9 @@ const l = pageLabels[lang];
         for (let c = -7; c <= 5; c++) {
           if (skipped.has(`${r},${c}`)) continue;
 
-          // Asymmetric opacity: only the left side (c < 0) fades out to transparent at the edge
+          // Symmetric opacity: fades out to transparent towards both left and right edges
           const dist = Math.sqrt(c * c + r * r);
-          let opacity;
-          if (c >= 0) {
-            opacity = Math.max(0.28, 0.75 - dist * 0.065); // Numpad remains bright
-          } else {
-            opacity = Math.max(0.04, 0.72 - dist * 0.095); // Left side fades into background
-          }
+          const opacity = Math.max(0.04, 0.72 - dist * 0.095);
 
           const labelText = (keyMap[r] && keyMap[r][c]) || "";
           if (!labelText) continue;

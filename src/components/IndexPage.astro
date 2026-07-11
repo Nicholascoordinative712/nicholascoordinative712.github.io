@@ -217,9 +217,9 @@ const l = pageLabels[lang];
       <div class="enter-button-wrapper">
         <div id="keyboard-backdrop" class="keyboard-backdrop"></div>
         <a href={getLocalizedPath('/contact')} class="cta keycap-iso-enter">
-          <svg class="keycap-svg" viewBox="0 -8 166 94">
-            <path class="key-shadow" d="M 70,-2 H 158 A 6,6 0 0 1 164,4 V 80 A 6,6 0 0 1 158,86 H 10 A 6,6 0 0 1 4,80 V 52 A 6,6 0 0 1 10,46 H 58 A 6,6 0 0 0 64,40 V 4 A 6,6 0 0 1 70,-2 Z" fill="var(--ink)"></path>
-            <path class="key-face" d="M 66,-8 H 154 A 6,6 0 0 1 160,-2 V 74 A 6,6 0 0 1 154,80 H 6 A 6,6 0 0 1 0,74 V 46 A 6,6 0 0 1 6,40 H 54 A 6,6 0 0 0 60,34 V -2 A 6,6 0 0 1 66,-8 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
+          <svg class="keycap-svg" viewBox="0 -8 174 94">
+            <path class="key-shadow" d="M 70,-2 H 166 A 6,6 0 0 1 172,4 V 80 A 6,6 0 0 1 166,86 H 10 A 6,6 0 0 1 4,80 V 52 A 6,6 0 0 1 10,46 H 58 A 6,6 0 0 0 64,40 V 4 A 6,6 0 0 1 70,-2 Z" fill="var(--ink)"></path>
+            <path class="key-face" d="M 66,-8 H 162 A 6,6 0 0 1 168,-2 V 74 A 6,6 0 0 1 162,80 H 6 A 6,6 0 0 1 0,74 V 46 A 6,6 0 0 1 6,40 H 54 A 6,6 0 0 0 60,34 V -2 A 6,6 0 0 1 66,-8 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
           </svg>
           <div class="keycap-content">
             <div class="keycap-top-stem">
@@ -880,12 +880,14 @@ const l = pageLabels[lang];
     display: inline-flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: 166px !important;
+    width: 174px !important;
     height: 92px !important;
     margin-top: 36px !important;
+    margin-left: 4px !important; /* Offset for right extension */
     z-index: 10 !important;
   }
   .keycap-iso-enter {
+    width: 174px !important;
     top: 10px !important;
   }
   .keyboard-backdrop {

@@ -734,6 +734,12 @@ const l = pageLabels[lang];
         return el;
       };
 
+      // Helper to compute unified, steep distance fading (fades to almost transparent at outer edges)
+      const getOpacity = (r, c) => {
+        const dist = Math.sqrt(c * c + r * r);
+        return Math.max(0.01, 0.70 - dist * 0.11);
+      };
+
       // Key mappings matching the compact laptop keyboard layout
       const keyMap = {
         "-1": {
@@ -771,70 +777,76 @@ const l = pageLabels[lang];
       skip(0, 0); skip(0, 1);
       skip(1, -1); skip(1, 0); skip(1, 1);
 
-      // 2. Custom wide and vertical keycaps:
+      // 2. Custom wide and vertical keycaps (using unified getOpacity at their centers):
       
       // Right Shift: at r=2, c=-1 (spans c=-1, 0, 1) -> width 166px (fits under bottom of Enter)
       const renderShift = () => {
-        const key = createKeycap('SHIFT', 166, 42, 0.62);
+        const opacity = getOpacity(2, 0); // center of Shift is c=0
+        const key = createKeycap('SHIFT', 166, 42, opacity);
         key.style.left = `calc(50% + ${-1 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${2 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.62 });
+        keys.push({ element: key, baseOpacity: opacity });
         skip(2, -1); skip(2, 0); skip(2, 1);
       };
       renderShift();
 
       // Backspace: at r=-1, c=0 (spans c=0, 1) -> width 108px (fits above top of Enter)
       const renderBackspace = () => {
-        const key = createKeycap('←', 108, 42, 0.66);
+        const opacity = getOpacity(-1, 0.5); // center of Backspace is c=0.5
+        const key = createKeycap('←', 108, 42, opacity);
         key.style.left = `calc(50% + ${0 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${-1 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.66 });
+        keys.push({ element: key, baseOpacity: opacity });
         skip(-1, 0); skip(-1, 1);
       };
       renderBackspace();
 
       // Spacebar: at r=3, c=-7 (spans c=-7, -6, -5, -4) -> width 224px (extended by 1 key width)
       const renderSpacebar = () => {
-        const key = createKeycap('SPACE', 224, 42, 0.58);
+        const opacity = getOpacity(3, -5.5); // center of Spacebar is c=-5.5
+        const key = createKeycap('SPACE', 224, 42, opacity);
         key.style.left = `calc(50% + ${-7 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.58 });
+        keys.push({ element: key, baseOpacity: opacity });
         skip(3, -7); skip(3, -6); skip(3, -5); skip(3, -4);
       };
       renderSpacebar();
 
       // Numpad 0: at r=3, c=2 (spans c=2, 3) -> width 108px (sits under Numpad 1 and 2)
       const renderNumpad0 = () => {
-        const key = createKeycap('0', 108, 42, 0.42);
+        const opacity = getOpacity(3, 2.5); // center of Numpad 0 is c=2.5
+        const key = createKeycap('0', 108, 42, opacity);
         key.style.left = `calc(50% + ${2 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.42 });
+        keys.push({ element: key, baseOpacity: opacity });
         skip(3, 2); skip(3, 3);
       };
       renderNumpad0();
 
       // Vertical Numpad +: at r=0, c=5 (spans r=0, 1) -> height 92px
       const renderNumpadPlus = () => {
-        const key = createKeycap('+', 50, 92, 0.35);
+        const opacity = getOpacity(0.5, 5); // center of Plus is r=0.5
+        const key = createKeycap('+', 50, 92, opacity);
         key.style.left = `calc(50% + ${5 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${0 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.35 });
+        keys.push({ element: key, baseOpacity: opacity });
         skip(0, 5); skip(1, 5);
       };
       renderNumpadPlus();
 
       // Vertical Numpad Enter: at r=2, c=5 (spans r=2, 3) -> height 92px
       const renderNumpadEnter = () => {
-        const key = createKeycap('ENT', 50, 92, 0.3);
+        const opacity = getOpacity(2.5, 5); // center of Enter is r=2.5
+        const key = createKeycap('ENT', 50, 92, opacity);
         key.style.left = `calc(50% + ${5 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${2 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.3 });
+        keys.push({ element: key, baseOpacity: opacity });
         skip(2, 5); skip(3, 5);
       };
       renderNumpadEnter();
@@ -844,9 +856,8 @@ const l = pageLabels[lang];
         for (let c = -7; c <= 5; c++) {
           if (skipped.has(`${r},${c}`)) continue;
 
-          // Symmetric opacity: fades out to transparent towards both left and right edges
-          const dist = Math.sqrt(c * c + r * r);
-          const opacity = Math.max(0.04, 0.72 - dist * 0.095);
+          // Symmetric, steep distance fading
+          const opacity = getOpacity(r, c);
 
           const labelText = (keyMap[r] && keyMap[r][c]) || "";
           if (!labelText) continue;

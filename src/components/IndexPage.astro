@@ -217,9 +217,9 @@ const l = pageLabels[lang];
       <div class="enter-button-wrapper">
         <div id="keyboard-backdrop" class="keyboard-backdrop"></div>
         <a href={getLocalizedPath('/contact')} class="cta keycap-iso-enter">
-          <svg class="keycap-svg" viewBox="0 -20 174 90">
-            <path class="key-shadow" d="M 70,-14 H 166 A 6,6 0 0 1 172,-8 V 64 A 6,6 0 0 1 166,70 H 10 A 6,6 0 0 1 4,64 V 40 A 6,6 0 0 1 10,34 H 58 A 6,6 0 0 0 64,28 V -8 A 6,6 0 0 1 70,-14 Z" fill="var(--ink)"></path>
-            <path class="key-face" d="M 66,-20 H 162 A 6,6 0 0 1 168,-14 V 58 A 6,6 0 0 1 162,64 H 6 A 6,6 0 0 1 0,58 V 34 A 6,6 0 0 1 6,28 H 54 A 6,6 0 0 0 60,22 V -14 A 6,6 0 0 1 66,-20 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
+          <svg class="keycap-svg" viewBox="0 -24 174 94">
+            <path class="key-shadow" d="M 70,-18 H 166 A 6,6 0 0 1 172,-12 V 64 A 6,6 0 0 1 166,70 H 10 A 6,6 0 0 1 4,64 V 36 A 6,6 0 0 1 10,30 H 58 A 6,6 0 0 0 64,24 V -12 A 6,6 0 0 1 70,-18 Z" fill="var(--ink)"></path>
+            <path class="key-face" d="M 66,-24 H 162 A 6,6 0 0 1 168,-18 V 58 A 6,6 0 0 1 162,64 H 6 A 6,6 0 0 1 0,58 V 30 A 6,6 0 0 1 6,24 H 54 A 6,6 0 0 0 60,18 V -18 A 6,6 0 0 1 66,-24 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
           </svg>
           <div class="keycap-content">
             <div class="keycap-top-stem">
@@ -892,18 +892,18 @@ const l = pageLabels[lang];
     justify-content: center !important;
     align-items: center !important;
     width: 174px !important;
-    height: 96px !important; /* Adjusted to fit 90px SVG viewBox + shadow */
+    height: 100px !important; /* Adjusted to fit 94px SVG viewBox + shadow */
     margin-top: 55px !important; /* Shifted lower by 5mm (19px) */
     margin-left: 4px !important; /* Offset for right extension */
     z-index: 10 !important;
   }
   .keycap-iso-enter {
     width: 174px !important;
-    height: 96px !important; /* Adjusted to prevent aspect-ratio scaling shrink */
+    height: 100px !important; /* Adjusted to prevent aspect-ratio scaling shrink */
     top: 10px !important;
   }
   .keycap-iso-enter .keycap-bottom-base {
-    top: 35px !important; /* Center text vertically in taller bottom appendix */
+    top: 33px !important; /* Center text vertically in taller bottom appendix */
   }
   .keyboard-backdrop {
     position: absolute !important;

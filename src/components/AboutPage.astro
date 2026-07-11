@@ -789,7 +789,7 @@ const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${pat
   }
 
   /* Inline GitHub Avatar badge inside main header heading */
-  .about-avatar-inline {
+  :global(.about-avatar-inline) {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -804,7 +804,7 @@ const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${pat
     background: var(--paper) !important;
     transform: translateY(-2px) !important;
   }
-  .about-avatar-inline img {
+  :global(.about-avatar-inline img) {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;

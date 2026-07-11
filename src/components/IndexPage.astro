@@ -208,9 +208,8 @@ const l = pageLabels[lang];
       <h1 class="display-name ide-name-container">
         <span class="ide-selection-box">
           <span class="ide-code-declaration"><span class="keyword">const</span> <span class="type">std::string</span> focus = </span>
-          <span class="ide-quote">"</span>open-source<span class="ide-quote">"</span>
+          <span class="ide-quote">"</span>open-source<span class="ide-quote">"</span><span class="ide-blinking-cursor"></span>
         </span>
-        <span class="ide-blinking-cursor"></span>
       </h1>
       <p class="mono-label avail"><span class="dot"></span> {l.heroAvail}</p>
       
@@ -1010,12 +1009,13 @@ const l = pageLabels[lang];
   }
   .ide-blinking-cursor {
     width: 0.035em !important;
-    height: 1.1em !important;
+    height: 0.7em !important; /* Made smaller to match letter height */
     background: var(--ink) !important;
     margin-left: 0.1em !important;
     animation: cursor-blink 1.0s infinite !important;
     display: inline-block !important;
     vertical-align: middle !important;
+    margin-bottom: 0.05em !important; /* Alignment tweak for the lowercase text */
   }
   @keyframes cursor-blink {
     0%, 100% {

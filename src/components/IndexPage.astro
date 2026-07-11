@@ -712,7 +712,7 @@ const l = pageLabels[lang];
       }
     }
 
-    // Dynamic mechanical keyboard background grid (Realistic Layout)
+    // Dynamic mechanical keyboard background grid (Realistic 1800 Compact Layout)
     const backdrop = document.getElementById("keyboard-backdrop");
     if (backdrop) {
       const fragment = document.createDocumentFragment();
@@ -734,118 +734,118 @@ const l = pageLabels[lang];
         return el;
       };
 
-      // Key mappings matching a standard physical layout centered around Enter
+      // Key mappings matching the compact laptop keyboard layout
       const keyMap = {
         "-1": {
-          "-6": "7", "-5": "8", "-4": "9", "-3": "0", "-2": "-", "-1": "=",
-          "2": "PRT", "3": "SCR", "4": "PAU",
-          "5": "NUM", "6": "/", "7": "*", "8": "-"
+          "-5": "8", "-4": "9", "-3": "0", "-2": "-", "-1": "=",
+          // Backspace spans c=0, 1
+          "2": "NUM", "3": "/", "4": "*", "5": "-"
         },
         "0": {
-          "-6": "Y", "-5": "U", "-4": "I", "-3": "O", "-2": "P", "-1": "[",
-          "2": "INS", "3": "HOM", "4": "PGU",
-          "5": "7", "6": "8", "7": "9"
+          "-5": "U", "-4": "I", "-3": "O", "-2": "P", "-1": "[",
+          // Enter top spans c=0, 1
+          "2": "7", "3": "8", "4": "9" // c=5 is vertical +
         },
         "1": {
-          "-6": "H", "-5": "J", "-4": "K", "-3": "L", "-2": ";",
-          "2": "DEL", "3": "END", "4": "PGD",
-          "5": "4", "6": "5", "7": "6"
+          "-5": "J", "-4": "K", "-3": "L", "-2": ";",
+          // Enter bottom spans c=-1, 0, 1 (c=-1 is skipped)
+          "2": "4", "3": "5", "4": "6" // c=5 is vertical + (skipped)
         },
         "2": {
-          "-6": "N", "-5": "M", "-4": ",", "-3": ".", "-2": "/",
-          "3": "▲",
-          "5": "1", "6": "2", "7": "3"
+          "-5": "M", "-4": ",", "-3": ".", "-2": "/",
+          // Right Shift spans c=-1, 0, 1
+          "2": "1", "3": "2", "4": "3" // c=5 is vertical Enter
         },
         "3": {
-          "-6": "ALT",
-          "-2": "ALT", "-1": "WIN", "0": "APP", "1": "CTRL",
-          "2": "◀", "3": "▼", "4": "▶",
-          "7": "."
+          // Spacebar spans c=-5, -4, -3
+          "-2": "ALT",
+          "-1": "◀", "0": "▲▼", "1": "▶", // Arrow cluster
+          // Numpad 0 spans c=2, 3
+          "4": "." // c=5 is vertical Enter (skipped)
         }
       };
 
       // 1. ISO Enter covers:
-      // r=0: c=0, 1
-      // r=1: c=-1, 0, 1
+      // r=0: c=0, 1 (top narrower section)
+      // r=1: c=-1, 0, 1 (bottom wider section)
       skip(0, 0); skip(0, 1);
       skip(1, -1); skip(1, 0); skip(1, 1);
 
-      // 2. Custom wide/vertical keycaps:
+      // 2. Custom wide and vertical keycaps:
       
-      // Right Shift: at r=2, c=-1 (spans c=-1, 0, 1) -> width 166px
+      // Right Shift: at r=2, c=-1 (spans c=-1, 0, 1) -> width 166px (fits under bottom of Enter)
       const renderShift = () => {
-        const key = createKeycap('SHIFT', 166, 42, 0.6);
+        const key = createKeycap('SHIFT', 166, 42, 0.62);
         key.style.left = `calc(50% + ${-1 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${2 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.6 });
+        keys.push({ element: key, baseOpacity: 0.62 });
         skip(2, -1); skip(2, 0); skip(2, 1);
       };
       renderShift();
 
-      // Backspace: at r=-1, c=0 (spans c=0, 1) -> width 108px
+      // Backspace: at r=-1, c=0 (spans c=0, 1) -> width 108px (fits above top of Enter)
       const renderBackspace = () => {
-        const key = createKeycap('←', 108, 42, 0.65);
+        const key = createKeycap('←', 108, 42, 0.66);
         key.style.left = `calc(50% + ${0 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${-1 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.65 });
+        keys.push({ element: key, baseOpacity: 0.66 });
         skip(-1, 0); skip(-1, 1);
       };
       renderBackspace();
 
       // Spacebar: at r=3, c=-5 (spans c=-5, -4, -3) -> width 166px
       const renderSpacebar = () => {
-        const key = createKeycap('SPACE', 166, 42, 0.55);
+        const key = createKeycap('SPACE', 166, 42, 0.58);
         key.style.left = `calc(50% + ${-5 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.55 });
+        keys.push({ element: key, baseOpacity: 0.58 });
         skip(3, -5); skip(3, -4); skip(3, -3);
       };
       renderSpacebar();
 
-      // Numpad 0: at r=3, c=5 (spans c=5, 6) -> width 108px
+      // Numpad 0: at r=3, c=2 (spans c=2, 3) -> width 108px (sits under Numpad 1 and 2)
       const renderNumpad0 = () => {
-        const key = createKeycap('0', 108, 42, 0.4);
-        key.style.left = `calc(50% + ${5 * 58 - 25}px)`;
+        const key = createKeycap('0', 108, 42, 0.42);
+        key.style.left = `calc(50% + ${2 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.4 });
-        skip(3, 5); skip(3, 6);
+        keys.push({ element: key, baseOpacity: 0.42 });
+        skip(3, 2); skip(3, 3);
       };
       renderNumpad0();
 
-      // Vertical Numpad +: at r=0, c=8 (spans r=0, 1) -> height 92px
+      // Vertical Numpad +: at r=0, c=5 (spans r=0, 1) -> height 92px
       const renderNumpadPlus = () => {
-        const key = createKeycap('+', 50, 92, 0.3);
-        key.style.left = `calc(50% + ${8 * 58 - 25}px)`;
+        const key = createKeycap('+', 50, 92, 0.35);
+        key.style.left = `calc(50% + ${5 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${0 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.3 });
-        skip(0, 8); skip(1, 8);
+        keys.push({ element: key, baseOpacity: 0.35 });
+        skip(0, 5); skip(1, 5);
       };
       renderNumpadPlus();
 
-      // Vertical Numpad Enter: at r=2, c=8 (spans r=2, 3) -> height 92px
+      // Vertical Numpad Enter: at r=2, c=5 (spans r=2, 3) -> height 92px
       const renderNumpadEnter = () => {
-        const key = createKeycap('ENT', 50, 92, 0.25);
-        key.style.left = `calc(50% + ${8 * 58 - 25}px)`;
+        const key = createKeycap('ENT', 50, 92, 0.3);
+        key.style.left = `calc(50% + ${5 * 58 - 25}px)`;
         key.style.top = `calc(50% + ${2 * 50 - 21}px)`;
         fragment.appendChild(key);
-        keys.push({ element: key, baseOpacity: 0.25 });
-        skip(2, 8); skip(3, 8);
+        keys.push({ element: key, baseOpacity: 0.3 });
+        skip(2, 5); skip(3, 5);
       };
       renderNumpadEnter();
 
       // 3. Render standard keycaps:
       for (let r = -1; r <= 3; r++) {
-        for (let c = -6; c <= 8; c++) {
+        for (let c = -5; c <= 5; c++) {
           if (skipped.has(`${r},${c}`)) continue;
 
-          // Radial distance from center (0,0)
+          // Calculate radial distance from center of Enter block
           const dist = Math.sqrt(c * c + r * r);
-          // Opacity fade based on distance
           const opacity = Math.max(0.12, 0.72 - dist * 0.08);
 
           const labelText = (keyMap[r] && keyMap[r][c]) || "";

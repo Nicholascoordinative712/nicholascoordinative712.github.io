@@ -892,13 +892,14 @@ const l = pageLabels[lang];
     justify-content: center !important;
     align-items: center !important;
     width: 174px !important;
-    height: 92px !important;
+    height: 112px !important; /* Increased to fit taller SVG without shrinking */
     margin-top: 55px !important; /* Shifted lower by 5mm (19px) */
     margin-left: 4px !important; /* Offset for right extension */
     z-index: 10 !important;
   }
   .keycap-iso-enter {
     width: 174px !important;
+    height: 112px !important; /* Increased to prevent aspect-ratio scaling shrink */
     top: 10px !important;
   }
   .keyboard-backdrop {

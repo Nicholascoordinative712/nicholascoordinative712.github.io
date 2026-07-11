@@ -712,41 +712,30 @@ const l = pageLabels[lang];
       }
     }
 
-    // Dynamic mechanical keyboard background grid
+    // Dynamic mechanical keyboard background grid (Ortholinear 13x6)
     const backdrop = document.getElementById("keyboard-backdrop");
     if (backdrop) {
       const fragment = document.createDocumentFragment();
       const keys = [];
-      const staggers = {
-        "-2": -10,
-        "-1": 0,
-        "0": 15,
-        "1": 30,
-        "2": 45,
-        "3": 20,
-        "4": -10,
-        "5": 0,
-        "6": 10
-      };
 
-      for (let r = -2; r <= 6; r++) {
-        const rowStagger = staggers[r] || 0;
-        for (let c = -10; c <= 10; c++) {
+      for (let r = -1; r <= 4; r++) {
+        for (let c = -6; c <= 6; c++) {
           // Skip keys covered by the ISO Enter button centered at (0, 0)
+          // Top row of Enter (r=0): covers c=0, 1
+          // Bottom row of Enter (r=1): covers c=-1, 0, 1
           if (r === 0 && (c === 0 || c === 1)) continue;
           if (r === 1 && (c === -1 || c === 0 || c === 1)) continue;
 
           // Radial distance from center (0,0)
           const dist = Math.sqrt(c * c + r * r);
-          const opacity = Math.max(0, 0.7 - dist * 0.08); // fade out at dist ~9
-
-          if (opacity <= 0.05) continue;
+          // Opacity fade: center has ~0.7, edges fade down to ~0.15
+          const opacity = Math.max(0.12, 0.72 - dist * 0.095);
 
           const key = document.createElement("div");
           key.className = "bg-keycap";
-          key.style.opacity = opacity;
-          key.style.left = `calc(50% + ${c * 58 + rowStagger - 25}px)`;
-          key.style.top = `calc(50% + ${r * 58 - 25}px)`;
+          key.style.opacity = String(opacity);
+          key.style.left = `calc(50% + ${c * 58 - 25}px)`;
+          key.style.top = `calc(50% + ${r * 50 - 21}px)`;
 
           // Random letters/numbers for the key labels
           const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -770,7 +759,7 @@ const l = pageLabels[lang];
         setTimeout(() => {
           randomKey.element.classList.remove("bg-keycap-pressed");
         }, 300);
-      }, 1000);
+      }, 1200);
     }
   })();
 </script>
@@ -805,7 +794,7 @@ const l = pageLabels[lang];
   .bg-keycap {
     position: absolute !important;
     width: 50px !important;
-    height: 50px !important;
+    height: 42px !important;
     background: var(--paper) !important;
     border: 1.5px solid var(--ink) !important;
     border-radius: 8px !important;

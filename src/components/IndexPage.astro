@@ -712,38 +712,148 @@ const l = pageLabels[lang];
       }
     }
 
-    // Dynamic mechanical keyboard background grid (Ortholinear 13x6)
+    // Dynamic mechanical keyboard background grid (Realistic Layout)
     const backdrop = document.getElementById("keyboard-backdrop");
     if (backdrop) {
       const fragment = document.createDocumentFragment();
       const keys = [];
+      const skipped = new Set();
 
-      for (let r = -1; r <= 4; r++) {
-        for (let c = -6; c <= 6; c++) {
-          // Skip keys covered by the ISO Enter button centered at (0, 0)
-          // Top row of Enter (r=0): covers c=0, 1
-          // Bottom row of Enter (r=1): covers c=-1, 0, 1
-          if (r === 0 && (c === 0 || c === 1)) continue;
-          if (r === 1 && (c === -1 || c === 0 || c === 1)) continue;
+      const skip = (r, c) => skipped.add(`${r},${c}`);
+      const createKeycap = (label, w, h, opacity) => {
+        const el = document.createElement("div");
+        el.className = "bg-keycap";
+        el.style.width = `${w}px`;
+        el.style.height = `${h}px`;
+        el.style.opacity = String(opacity);
+
+        const span = document.createElement("span");
+        span.className = "bg-keycap-label";
+        span.textContent = label;
+        el.appendChild(span);
+        return el;
+      };
+
+      // Key mappings matching a standard physical layout centered around Enter
+      const keyMap = {
+        "-1": {
+          "-6": "7", "-5": "8", "-4": "9", "-3": "0", "-2": "-", "-1": "=",
+          "2": "PRT", "3": "SCR", "4": "PAU",
+          "5": "NUM", "6": "/", "7": "*", "8": "-"
+        },
+        "0": {
+          "-6": "Y", "-5": "U", "-4": "I", "-3": "O", "-2": "P", "-1": "[",
+          "2": "INS", "3": "HOM", "4": "PGU",
+          "5": "7", "6": "8", "7": "9"
+        },
+        "1": {
+          "-6": "H", "-5": "J", "-4": "K", "-3": "L", "-2": ";",
+          "2": "DEL", "3": "END", "4": "PGD",
+          "5": "4", "6": "5", "7": "6"
+        },
+        "2": {
+          "-6": "N", "-5": "M", "-4": ",", "-3": ".", "-2": "/",
+          "3": "▲",
+          "5": "1", "6": "2", "7": "3"
+        },
+        "3": {
+          "-6": "ALT",
+          "-2": "ALT", "-1": "WIN", "0": "APP", "1": "CTRL",
+          "2": "◀", "3": "▼", "4": "▶",
+          "7": "."
+        }
+      };
+
+      // 1. ISO Enter covers:
+      // r=0: c=0, 1
+      // r=1: c=-1, 0, 1
+      skip(0, 0); skip(0, 1);
+      skip(1, -1); skip(1, 0); skip(1, 1);
+
+      // 2. Custom wide/vertical keycaps:
+      
+      // Right Shift: at r=2, c=-1 (spans c=-1, 0, 1) -> width 166px
+      const renderShift = () => {
+        const key = createKeycap('SHIFT', 166, 42, 0.6);
+        key.style.left = `calc(50% + ${-1 * 58 - 25}px)`;
+        key.style.top = `calc(50% + ${2 * 50 - 21}px)`;
+        fragment.appendChild(key);
+        keys.push({ element: key, baseOpacity: 0.6 });
+        skip(2, -1); skip(2, 0); skip(2, 1);
+      };
+      renderShift();
+
+      // Backspace: at r=-1, c=0 (spans c=0, 1) -> width 108px
+      const renderBackspace = () => {
+        const key = createKeycap('←', 108, 42, 0.65);
+        key.style.left = `calc(50% + ${0 * 58 - 25}px)`;
+        key.style.top = `calc(50% + ${-1 * 50 - 21}px)`;
+        fragment.appendChild(key);
+        keys.push({ element: key, baseOpacity: 0.65 });
+        skip(-1, 0); skip(-1, 1);
+      };
+      renderBackspace();
+
+      // Spacebar: at r=3, c=-5 (spans c=-5, -4, -3) -> width 166px
+      const renderSpacebar = () => {
+        const key = createKeycap('SPACE', 166, 42, 0.55);
+        key.style.left = `calc(50% + ${-5 * 58 - 25}px)`;
+        key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
+        fragment.appendChild(key);
+        keys.push({ element: key, baseOpacity: 0.55 });
+        skip(3, -5); skip(3, -4); skip(3, -3);
+      };
+      renderSpacebar();
+
+      // Numpad 0: at r=3, c=5 (spans c=5, 6) -> width 108px
+      const renderNumpad0 = () => {
+        const key = createKeycap('0', 108, 42, 0.4);
+        key.style.left = `calc(50% + ${5 * 58 - 25}px)`;
+        key.style.top = `calc(50% + ${3 * 50 - 21}px)`;
+        fragment.appendChild(key);
+        keys.push({ element: key, baseOpacity: 0.4 });
+        skip(3, 5); skip(3, 6);
+      };
+      renderNumpad0();
+
+      // Vertical Numpad +: at r=0, c=8 (spans r=0, 1) -> height 92px
+      const renderNumpadPlus = () => {
+        const key = createKeycap('+', 50, 92, 0.3);
+        key.style.left = `calc(50% + ${8 * 58 - 25}px)`;
+        key.style.top = `calc(50% + ${0 * 50 - 21}px)`;
+        fragment.appendChild(key);
+        keys.push({ element: key, baseOpacity: 0.3 });
+        skip(0, 8); skip(1, 8);
+      };
+      renderNumpadPlus();
+
+      // Vertical Numpad Enter: at r=2, c=8 (spans r=2, 3) -> height 92px
+      const renderNumpadEnter = () => {
+        const key = createKeycap('ENT', 50, 92, 0.25);
+        key.style.left = `calc(50% + ${8 * 58 - 25}px)`;
+        key.style.top = `calc(50% + ${2 * 50 - 21}px)`;
+        fragment.appendChild(key);
+        keys.push({ element: key, baseOpacity: 0.25 });
+        skip(2, 8); skip(3, 8);
+      };
+      renderNumpadEnter();
+
+      // 3. Render standard keycaps:
+      for (let r = -1; r <= 3; r++) {
+        for (let c = -6; c <= 8; c++) {
+          if (skipped.has(`${r},${c}`)) continue;
 
           // Radial distance from center (0,0)
           const dist = Math.sqrt(c * c + r * r);
-          // Opacity fade: center has ~0.7, edges fade down to ~0.15
-          const opacity = Math.max(0.12, 0.72 - dist * 0.095);
+          // Opacity fade based on distance
+          const opacity = Math.max(0.12, 0.72 - dist * 0.08);
 
-          const key = document.createElement("div");
-          key.className = "bg-keycap";
-          key.style.opacity = String(opacity);
+          const labelText = (keyMap[r] && keyMap[r][c]) || "";
+          if (!labelText) continue;
+
+          const key = createKeycap(labelText, 50, 42, opacity);
           key.style.left = `calc(50% + ${c * 58 - 25}px)`;
           key.style.top = `calc(50% + ${r * 50 - 21}px)`;
-
-          // Random letters/numbers for the key labels
-          const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-          const labelText = chars[Math.floor(Math.random() * chars.length)];
-          const label = document.createElement("span");
-          label.className = "bg-keycap-label";
-          label.textContent = labelText;
-          key.appendChild(label);
 
           fragment.appendChild(key);
           keys.push({ element: key, baseOpacity: opacity });

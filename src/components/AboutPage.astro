@@ -11,7 +11,7 @@ const aboutLabels = {
   en: {
     title: "About — Almanex",
     kicker: "about me!",
-    heading: "Engineer, tinkerer, developer",
+    heading: 'Engineer, <span class="about-avatar-inline"><img src="https://github.com/Almanex.png" alt="Almanex" /></span> tinkerer, developer',
     sub: "Developer building lightweight desktop tools, localizations, and mobile apps.",
     telKicker: "by the numbers // live telemetry",
     telTitle: "System Telemetry",
@@ -48,7 +48,7 @@ const aboutLabels = {
   ru: {
     title: "Обо мне — Almanex",
     kicker: "обо мне!",
-    heading: "Инженер, разработчик, энтузиаст",
+    heading: 'Инженер, <span class="about-avatar-inline"><img src="https://github.com/Almanex.png" alt="Almanex" /></span> разработчик, энтузиаст',
     sub: "Разработчик, создающий легковесные десктопные инструменты, локализации и мобильные приложения.",
     telKicker: "в цифрах // живая телеметрия",
     telTitle: "Системная телеметрия",
@@ -85,7 +85,7 @@ const aboutLabels = {
   de: {
     title: "Über mich — Almanex",
     kicker: "über mich!",
-    heading: "Ingenieur, Entwickler, Bastler",
+    heading: 'Ingenieur, <span class="about-avatar-inline"><img src="https://github.com/Almanex.png" alt="Almanex" /></span> Entwickler, Bastler',
     sub: "Entwickler, der leichtgewichtige Desktop-Tools, Lokalisierungen und mobile Apps baut.",
     telKicker: "in zahlen // live-telemetrie",
     telTitle: "System-Telemetrie",
@@ -128,7 +128,7 @@ const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${pat
 <Layout title={l.title} activeTab="about">
   <header class="page-header">
     <p class="kicker">about me!</p>
-    <h1>{l.heading}</h1>
+    <h1 set:html={l.heading}></h1>
     <p class="sub">{l.sub}</p>
   </header>
 
@@ -786,5 +786,27 @@ const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${pat
     .git-branch-list { padding-left: 36px !important; }
     .branch-marker { left: -36px !important; width: 28px !important; height: 28px !important; }
     .git-branch-list::before { left: 13px !important; }
+  }
+
+  /* Inline GitHub Avatar badge inside main header heading */
+  .about-avatar-inline {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    width: clamp(34px, 5vw, 48px) !important;
+    height: clamp(34px, 5vw, 48px) !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    border: 2px solid var(--ink) !important;
+    box-shadow: 2px 2.5px 0px var(--ink) !important;
+    margin: 0 8px !important;
+    background: var(--paper) !important;
+    transform: translateY(-2px) !important;
+  }
+  .about-avatar-inline img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 </style>

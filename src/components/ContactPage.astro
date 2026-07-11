@@ -1,0 +1,760 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  lang: 'en' | 'ru' | 'de';
+}
+
+const { lang } = Astro.props;
+
+const contactLabels = {
+  en: {
+    title: "Contact — Almanex",
+    kicker: "say hi // dispatch message",
+    heading: "Command & Connect",
+    sub: "[ SECURE TRANSMISSION CHANNEL // OPEN FOR ENGAGEMENT ]",
+    dispatchMsg: "DISPATCH_MSG.SH",
+    selectInquiry: "SELECT_INQUIRY_TYPE // TOPIC",
+    topicCollab: "🛠️ Open Source / Collab",
+    topicCoffee: "☕ Virtual Coffee",
+    topicGeneral: "💬 General Inquiry",
+    yourName: "YOUR_NAME // IDENTIFIER",
+    namePlaceholder: "enter your name or github handle",
+    returnEmail: "RETURN_ADDRESS // EMAIL",
+    emailPlaceholder: "developer@domain.com",
+    transmissionPayload: "TRANSMISSION_PAYLOAD // MESSAGE",
+    msgPlaceholder: "Let's build something extraordinary together...",
+    dispatchBtn: "DISPATCH TRANSMISSION",
+    resetBtn: "[ RESET_FORM ]",
+    consoleLogs: [
+      "> Initializing secure TLS 1.3 socket...",
+      "> Encrypting payload with RSA-4096...",
+      "> Dispatching packet to @Almanex...",
+      '<span class="console-success">> TRANSMISSION SUCCESSFUL [ OK ]</span>',
+      "> Thank you! I will respond within ~48 hours."
+    ],
+    statusActive: "● STATUS: ACTIVE // ONLINE",
+    statusH3: "Collaboration",
+    statusP: "Open for architectural reviews and contributing to open-source projects. Let's build something great together.",
+    responseTime: "Within ~48h",
+    communication: "Async / Email",
+    availability: "1-2 select projects",
+    directEmail: "DIRECT EMAIL",
+    copyAddress: "[ COPY ADDRESS ]",
+    copied: "[ COPIED! ✔ ]",
+    codebase: "CODEBASE & REPOSITORIES",
+    exploreRepos: "[ EXPLORE REPOS ↗ ]",
+    pingLoss: "--- 0% packet loss, 100% passion for coding! 🎉 ---"
+  },
+  ru: {
+    title: "Контакты — Almanex",
+    kicker: "привет // отправить сообщение",
+    heading: "Связь & Команды",
+    sub: "[ ЗАЩИЩЕННЫЙ КАНАЛ СВЯЗИ // ОТКРЫТ ДЛЯ ОБРАЩЕНИЙ ]",
+    dispatchMsg: "DISPATCH_MSG.SH",
+    selectInquiry: "ВЫБЕРИТЕ_ТИП_ЗАПРОСА // ТЕМА",
+    topicCollab: "🛠️ Open Source / Коллаб",
+    topicCoffee: "☕ Виртуальный кофе",
+    topicGeneral: "💬 Общий вопрос",
+    yourName: "ВАШЕ_ИМЯ // ИДЕНТИФИКАТОР",
+    namePlaceholder: "введите ваше имя или github никнейм",
+    returnEmail: "ОБРАТНЫЙ_АДРЕС // EMAIL",
+    emailPlaceholder: "developer@domain.com",
+    transmissionPayload: "СОДЕРЖИМОЕ_ПАКЕТА // СООБЩЕНИЕ",
+    msgPlaceholder: "Давайте создадим что-нибудь потрясающее вместе...",
+    dispatchBtn: "ОТПРАВИТЬ ПАКЕТ ДАННЫХ",
+    resetBtn: "[ СБРОС_ФОРМЫ ]",
+    consoleLogs: [
+      "> Инициализация защищенного TLS 1.3 соединения...",
+      "> Шифрование полезной нагрузки RSA-4096...",
+      "> Отправка пакета адресату @Almanex...",
+      '<span class="console-success">> ПАКЕТ УСПЕШНО ДОСТАВЛЕН [ OK ]</span>',
+      "> Спасибо! Я отвечу вам в течение ~48 часов."
+    ],
+    statusActive: "● СТАТУС: АКТИВЕН // ОНЛАЙН",
+    statusH3: "Сотрудничество",
+    statusP: "Открыт для код-ревью и участия в проектах с открытым исходным кодом. Давайте создадим крутой проект вместе.",
+    responseTime: "В течение ~48ч",
+    communication: "Асинхронно / Email",
+    availability: "1-2 отборных проекта",
+    directEmail: "ПРЯМОЙ EMAIL",
+    copyAddress: "[ КОПИРОВАТЬ АДРЕС ]",
+    copied: "[ СКОПИРОВАНО! ✔ ]",
+    codebase: "ИСХОДНЫЙ КОД И РЕПОЗИТОРИИ",
+    exploreRepos: "[ СМОТРЕТЬ РЕПОЗИТОРИИ ↗ ]",
+    pingLoss: "--- 0% потерь пакетов, 100% страсти к кодингу! 🎉 ---"
+  },
+  de: {
+    title: "Kontakt — Almanex",
+    kicker: "hallo sagen // nachricht senden",
+    heading: "Befehl & Kontakt",
+    sub: "[ SICHERER ÜBERTRAGUNGSKANAL // OFFEN FÜR ANFRAGEN ]",
+    dispatchMsg: "DISPATCH_MSG.SH",
+    selectInquiry: "ANFRAGETYP_WÄHLEN // THEMA",
+    topicCollab: "🛠️ Open Source / Collab",
+    topicCoffee: "☕ Virtueller Kaffee",
+    topicGeneral: "💬 Allgemeine Anfrage",
+    yourName: "IHR_NAME // IDENTIFIKATOR",
+    namePlaceholder: "Geben Sie Ihren Namen oder GitHub-Handle ein",
+    returnEmail: "ANTWORTADRESSE // E-MAIL",
+    emailPlaceholder: "developer@domain.com",
+    transmissionPayload: "DATENLAST // NACHRICHT",
+    msgPlaceholder: "Lass uns etwas Außergewöhnliches zusammen aufbauen...",
+    dispatchBtn: "TRANSMISSION ABSENDEN",
+    resetBtn: "[ ZURÜCKSETZEN ]",
+    consoleLogs: [
+      "> Initialisiere sicheren TLS 1.3 Socket...",
+      "> Verschlüssele Daten mit RSA-4096...",
+      "> Sende Paket an @Almanex...",
+      '<span class="console-success">> ÜBERTRAGUNG ERFOLGREICH [ OK ]</span>',
+      "> Vielen Dank! Ich antworte innerhalb von ~48 Stunden."
+    ],
+    statusActive: "● STATUS: AKTIV // ONLINE",
+    statusH3: "Zusammenarbeit",
+    statusP: "Offen für Architektur-Reviews und Beiträge zu Open-Source-Projekten. Lass uns zusammen etwas Großartiges bauen.",
+    responseTime: "Innerhalb von ~48h",
+    communication: "Async / E-Mail",
+    availability: "1-2 ausgewählte Projekte",
+    directEmail: "DIREKTE E-MAIL",
+    copyAddress: "[ ADRESSE KOPIEREN ]",
+    copied: "[ KOPIERT! ✔ ]",
+    codebase: "CODEBASE & REPOSITORIES",
+    exploreRepos: "[ REPOS DURCHSUCHEN ↗ ]",
+    pingLoss: "--- 0% Paketverlust, 100% Leidenschaft fürs Coden! 🎉 ---"
+  }
+};
+
+const l = contactLabels[lang];
+---
+
+<Layout title={l.title} activeTab="contact" description="Connect with Almanex to collaborate on software tools, localizations, and open source development.">
+  <div id="contact-page-container" data-lang={lang}>
+    <header class="page-header" style="padding: 150px 0 50px;">
+      <p class="kicker" style="font-family: var(--font-hand); font-size: 32px; transform: rotate(-3deg); display: inline-block; color: var(--magenta);">say hi // dispatch message</p>
+      <h1 style="font-family: var(--font-display); font-size: clamp(40px, 6vw, 76px); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase;">{l.heading}</h1>
+      <p class="sub" style="font-family: var(--font-mono); font-size: 15px; color: var(--gray-2); max-width: 580px; margin: 16px auto 0;">{l.sub}</p>
+    </header>
+
+    <section class="contact-hub-section">
+      <div class="contact-hub-grid">
+        
+        <!-- Left Column: Terminal Dispatch Form -->
+        <div class="dispatch-card">
+          <div class="dispatch-topbar">
+            <span class="dispatch-tag"><span class="led"></span> {l.dispatchMsg}</span>
+            <div class="dispatch-win-buttons">
+              <span>─</span><span>❑</span><span class="close-red">✕</span>
+            </div>
+          </div>
+          
+          <form class="dispatch-form" id="terminal-contact-form" action="https://formspree.io/f/yourFormId" method="POST">
+            <input type="hidden" id="cf-topic" name="topic" value="Open Source / Collab">
+            
+            <div class="field-group">
+              <label class="field-label">{l.selectInquiry}</label>
+              <div class="topic-chips">
+                <button type="button" class="topic-chip active" data-topic="Open Source / Collab">{l.topicCollab}</button>
+                <button type="button" class="topic-chip" data-topic="Virtual Coffee">{l.topicCoffee}</button>
+                <button type="button" class="topic-chip" data-topic="General Inquiry">{l.topicGeneral}</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="cf-name" class="field-label">{l.yourName}</label>
+              <div class="input-wrapper">
+                <span class="prompt-prefix">></span>
+                <input id="cf-name" name="name" type="text" placeholder={l.namePlaceholder} required autocomplete="name">
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="cf-email" class="field-label">{l.returnEmail}</label>
+              <div class="input-wrapper">
+                <span class="prompt-prefix">></span>
+                <input id="cf-email" name="email" type="email" placeholder={l.emailPlaceholder} required autocomplete="email">
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="cf-msg" class="field-label">{l.transmissionPayload}</label>
+              <div class="input-wrapper textarea-wrapper">
+                <span class="prompt-prefix">></span>
+                <textarea id="cf-msg" name="message" placeholder={l.msgPlaceholder} required rows="5"></textarea>
+              </div>
+            </div>
+
+            <div class="dispatch-actions">
+              <button class="dispatch-submit" type="submit">
+                <span class="submit-ico">⚡</span>
+                <span>{l.dispatchBtn}</span>
+              </button>
+              <button type="reset" class="dispatch-reset">{l.resetBtn}</button>
+            </div>
+
+            <div id="dispatch-output" class="dispatch-console hidden">
+              <div class="console-top"><span>[ CONSOLE_LOG ]</span></div>
+              <div id="console-lines"></div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column: Status & Channels -->
+        <div class="status-channels-col">
+          <!-- Status Widget -->
+          <div class="status-widget">
+            <div class="status-top">
+              <span class="live-pill">{l.statusActive}</span>
+              <span class="contact-time" id="contact-live-clock">00:00:00</span>
+            </div>
+            <h3 class="status-h3">{l.statusH3}</h3>
+            <p class="status-p">{l.statusP}</p>
+            <div class="status-specs">
+              <div class="status-spec-row"><span>RESPONSE_TIME</span><b>{l.responseTime}</b></div>
+              <div class="status-spec-row"><span>COMMUNICATION</span><b>{l.communication}</b></div>
+              <div class="status-spec-row"><span>AVAILABILITY</span><b>{l.availability}</b></div>
+            </div>
+          </div>
+          
+          <!-- Direct Email Card -->
+          <div class="channel-box cyan-box">
+            <div class="ch-header">
+              <span class="ch-icon cyan-ch-bg">✉️</span>
+              <div>
+                <div class="ch-label">{l.directEmail}</div>
+                <div class="ch-value">hello@example.com</div>
+              </div>
+            </div>
+            <button type="button" class="copy-btn" id="copy-email-btn" data-email="hello@example.com">
+              <span>{l.copyAddress}</span>
+            </button>
+          </div>
+
+          <!-- GitHub Card -->
+          <div class="channel-box magenta-box">
+            <div class="ch-header">
+              <span class="ch-icon magenta-ch-bg">💻</span>
+              <div>
+                <div class="ch-label">{l.codebase}</div>
+                <div class="ch-value">github.com/Almanex</div>
+              </div>
+            </div>
+            <a href="https://github.com/Almanex" target="_blank" class="ch-action-btn">
+              <span>{l.exploreRepos}</span>
+            </a>
+          </div>
+
+          <!-- Terminal Ping Easter Egg -->
+          <div class="ping-box">
+            <div class="ping-cmd">> $ ping almanex.github.io --count 3</div>
+            <div class="ping-out">64 bytes from almanex.github.io: icmp_seq=1 time=0.1337ms</div>
+            <div class="ping-out">64 bytes from almanex.github.io: icmp_seq=2 time=0.0842ms</div>
+            <div class="ping-loss">{l.pingLoss}</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline define:vars={{ l }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Live Clock
+    const clockEl = document.getElementById('contact-live-clock');
+    if (clockEl) {
+      const updateClock = () => {
+        const d = new Date();
+        const h = String(d.getHours()).padStart(2, '0');
+        const m = String(d.getMinutes()).padStart(2, '0');
+        const s = String(d.getSeconds()).padStart(2, '0');
+        clockEl.textContent = `${h}:${m}:${s}`;
+      };
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    // Topic Chips Selection
+    const chips = document.querySelectorAll('.topic-chip');
+    const topicInput = document.getElementById('cf-topic');
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        if (topicInput) topicInput.value = chip.getAttribute('data-topic');
+      });
+    });
+
+    // Copy Email to Clipboard
+    const copyBtn = document.getElementById('copy-email-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const email = copyBtn.getAttribute('data-email');
+        navigator.clipboard.writeText(email).then(() => {
+          copyBtn.innerHTML = `<span>${l.copied}</span>`;
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            copyBtn.innerHTML = `<span>${l.copyAddress}</span>`;
+            copyBtn.classList.remove('copied');
+          }, 2500);
+        }).catch(() => {});
+      });
+    }
+
+    // Terminal Form Simulation Log
+    const form = document.getElementById('terminal-contact-form');
+    const output = document.getElementById('dispatch-output');
+    const linesContainer = document.getElementById('console-lines');
+    if (form && output && linesContainer) {
+      form.addEventListener('submit', (e) => {
+        if (form.getAttribute('action').includes('yourFormId')) {
+          e.preventDefault();
+          output.classList.remove('hidden');
+          linesContainer.innerHTML = '';
+          
+          const msgs = l.consoleLogs;
+          
+          msgs.forEach((msg, idx) => {
+            setTimeout(() => {
+              const p = document.createElement('p');
+              p.innerHTML = msg;
+              linesContainer.appendChild(p);
+            }, idx * 400);
+          });
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .contact-hub-section {
+    padding: 0 0 100px;
+  }
+  .contact-hub-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 36px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 26px;
+    align-items: start;
+  }
+  
+  /* Dispatch Form Card */
+  .dispatch-card {
+    background: var(--surface) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 20px !important;
+    box-shadow: 8px 8px 0px var(--ink) !important;
+    overflow: hidden !important;
+  }
+  .dispatch-topbar {
+    background: var(--bar) !important;
+    border-bottom: 2px solid var(--ink) !important;
+    padding: 12px 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    user-select: none !important;
+  }
+  .dispatch-tag {
+    font-family: var(--font-mono) !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    color: var(--ink) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .dispatch-tag .led {
+    width: 10px !important;
+    height: 10px !important;
+    background: var(--green) !important;
+    border-radius: 50% !important;
+    border: 1.5px solid var(--ink) !important;
+    box-shadow: 0 0 6px var(--green) !important;
+  }
+  .dispatch-win-buttons {
+    display: flex !important;
+    gap: 6px !important;
+  }
+  .dispatch-win-buttons span {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 6px !important;
+    border: 1.5px solid var(--ink) !important;
+    background: var(--surface) !important;
+    display: grid !important;
+    place-items: center !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+  }
+  .dispatch-win-buttons .close-red {
+    background: var(--magenta) !important;
+    color: #fff !important;
+  }
+
+  .dispatch-form {
+    padding: 30px 32px 34px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 22px !important;
+  }
+  .field-label {
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    color: var(--ink) !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+  }
+
+  /* Topic Chips */
+  .topic-chips {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .topic-chip {
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    background: var(--hover) !important;
+    color: var(--ink) !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    cursor: pointer !important;
+    transition: all 0.18s !important;
+  }
+  .topic-chip:hover {
+    transform: translateY(-2px) !important;
+    background: var(--surface) !important;
+    box-shadow: 3px 3px 0px var(--ink) !important;
+  }
+  .topic-chip.active {
+    background: var(--cyan) !important;
+    color: var(--ink) !important;
+    box-shadow: 3px 3px 0px var(--ink) !important;
+  }
+
+  /* Input wrapper with prompt */
+  .input-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    background: var(--paper) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 12px !important;
+    padding: 0 14px !important;
+    box-shadow: 3px 3px 0px var(--ink) !important;
+    transition: box-shadow 0.2s, transform 0.2s !important;
+  }
+  .input-wrapper:focus-within {
+    box-shadow: 5px 5px 0px var(--cyan) !important;
+    transform: translateY(-1px) !important;
+  }
+  .input-wrapper.textarea-wrapper {
+    align-items: flex-start !important;
+    padding-top: 12px !important;
+  }
+  .prompt-prefix {
+    font-family: var(--font-mono) !important;
+    font-weight: 900 !important;
+    color: var(--magenta) !important;
+    margin-right: 10px !important;
+    user-select: none !important;
+  }
+  .input-wrapper input, .input-wrapper textarea {
+    border: none !important;
+    background: transparent !important;
+    font-family: var(--font-body) !important;
+    font-size: 16px !important;
+    color: var(--ink) !important;
+    width: 100% !important;
+    padding: 12px 0 !important;
+    outline: none !important;
+  }
+  .input-wrapper textarea {
+    resize: vertical !important;
+    min-height: 120px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Dispatch Actions */
+  .dispatch-actions {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 14px !important;
+    margin-top: 6px !important;
+  }
+  .dispatch-submit {
+    background: var(--cyan) !important;
+    color: var(--ink) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 12px !important;
+    box-shadow: 4px 4px 0px var(--ink) !important;
+    font-family: var(--font-mono) !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    padding: 15px 26px !important;
+    cursor: pointer !important;
+    transition: all 0.18s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+  .dispatch-submit:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 6px 7px 0px var(--ink) !important;
+  }
+  .dispatch-submit:active {
+    transform: translateY(0) scale(0.98) !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+  }
+  .submit-ico {
+    font-size: 18px !important;
+  }
+  .dispatch-reset {
+    background: transparent !important;
+    color: var(--gray-2) !important;
+    border: none !important;
+    font-family: var(--font-mono) !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    padding: 10px !important;
+    transition: color 0.15s !important;
+  }
+  .dispatch-reset:hover {
+    color: var(--magenta) !important;
+  }
+
+  /* Console Output Log */
+  .dispatch-console {
+    background: #111212 !important;
+    color: #36c5f0 !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 12px !important;
+    margin-top: 10px !important;
+    padding: 16px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5) !important;
+  }
+  .dispatch-console.hidden {
+    display: none !important;
+  }
+  .console-top {
+    color: #74767a !important;
+    font-size: 11px !important;
+    border-bottom: 1px dashed #373b42 !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 10px !important;
+  }
+  .console-success {
+    color: #2eb67d !important;
+    font-weight: bold !important;
+  }
+
+  /* Right Column: Status & Channels */
+  .status-channels-col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  .status-widget {
+    background: var(--surface) !important;
+    color: var(--ink) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 20px !important;
+    padding: 26px 24px !important;
+    box-shadow: 6px 6px 0px var(--cyan) !important;
+    position: relative !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+  }
+  .status-widget:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 8px 8px 0px var(--cyan) !important;
+  }
+  .status-top {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 14px !important;
+  }
+  .live-pill {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    color: var(--ink) !important;
+    background: var(--green) !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    border: 1.5px solid var(--ink) !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+  }
+  .contact-time {
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    color: var(--magenta) !important;
+  }
+  .status-h3 {
+    font-family: var(--font-display) !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    margin-bottom: 10px !important;
+    color: var(--ink) !important;
+  }
+  .status-p {
+    font-family: var(--font-body) !important;
+    font-size: 14.5px !important;
+    color: var(--ink) !important;
+    opacity: 0.85 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 20px !important;
+  }
+  .status-specs {
+    border-top: 1.5px dashed var(--line-strong) !important;
+    padding-top: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .status-spec-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+  }
+  .status-spec-row span { color: var(--gray-2) !important; opacity: 0.65 !important; }
+  .status-spec-row b { color: var(--ink) !important; font-weight: 700 !important; }
+  
+  /* Channel Box */
+  .channel-box {
+    background: var(--surface) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 18px !important;
+    padding: 20px 22px !important;
+    box-shadow: 6px 6px 0px var(--ink) !important;
+    transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+  }
+  .channel-box:hover {
+    transform: translateY(-5px) !important;
+  }
+  .channel-box.cyan-box:hover { box-shadow: 8px 9px 0px var(--cyan) !important; }
+  .channel-box.magenta-box:hover { box-shadow: 8px 9px 0px var(--magenta) !important; }
+  .channel-box.amber-box:hover { box-shadow: 8px 9px 0px var(--amber) !important; }
+
+  .ch-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+  .ch-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid var(--ink) !important;
+    display: grid !important;
+    place-items: center !important;
+    font-size: 22px !important;
+    flex-shrink: 0 !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+  }
+  .cyan-ch-bg { background: var(--cyan) !important; }
+  .magenta-ch-bg { background: var(--magenta) !important; }
+  .amber-ch-bg { background: var(--amber) !important; }
+
+  .ch-label {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: var(--gray-2) !important;
+    text-transform: uppercase !important;
+  }
+  .ch-value {
+    font-family: var(--font-body) !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: var(--ink) !important;
+  }
+
+  .copy-btn, .ch-action-btn {
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    background: var(--hover) !important;
+    color: var(--ink) !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    transition: all 0.15s !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+  }
+  .copy-btn:hover, .ch-action-btn:hover {
+    background: var(--ink) !important;
+    color: var(--paper) !important;
+    transform: translateY(-2px) !important;
+  }
+  .copy-btn.copied {
+    background: var(--green) !important;
+    color: #fff !important;
+  }
+
+  /* Ping Easter Egg Box */
+  .ping-box {
+    background: var(--bar) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 16px !important;
+    padding: 16px 18px !important;
+    box-shadow: 5px 5px 0px var(--amber) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 12.5px !important;
+    line-height: 1.6 !important;
+  }
+  .ping-cmd {
+    color: var(--ink) !important;
+    font-weight: 800 !important;
+    margin-bottom: 6px !important;
+  }
+  .ping-out {
+    color: var(--gray-2) !important;
+  }
+  .ping-loss {
+    color: var(--green) !important;
+    font-weight: 700 !important;
+    margin-top: 4px !important;
+  }
+
+  .connect-actions a:hover {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 5px 5px 0px var(--ink) !important;
+  }
+  .connect-actions a:active {
+    transform: translate(1px, 1px) !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+  }
+
+  @media (max-width: 900px) {
+    .contact-hub-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  @media (max-width: 600px) {
+    .dispatch-form { padding: 22px 18px !important; }
+    .channel-box { flex-direction: column !important; align-items: flex-start !important; }
+    .copy-btn, .ch-action-btn { width: 100% !important; text-align: center !important; }
+  }
+</style>

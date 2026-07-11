@@ -1,0 +1,707 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PROJECTS_DATA } from '../data/projects.js';
+import { PROJECT_TRANSLATIONS } from '../data/translations.js';
+
+interface Props {
+  lang: 'en' | 'ru' | 'de';
+  project: string;
+}
+
+const { lang, project } = Astro.props;
+const projectData = PROJECTS_DATA[project];
+
+const labels = {
+  en: {
+    back: "← Back to Projects",
+    lang: "Language",
+    platform: "Platform",
+    category: "Category",
+    license: "License",
+    stars: "GitHub Stars",
+    view: "VIEW REPOSITORY ON GITHUB ↗",
+    top: "⬆ Scroll to top"
+  },
+  ru: {
+    back: "← К проектам",
+    lang: "Язык",
+    platform: "Платформа",
+    category: "Категория",
+    license: "Лицензия",
+    stars: "Звезды GitHub",
+    view: "СМОТРЕТЬ РЕПОЗИТОРИЙ НА GITHUB ↗",
+    top: "⬆ Наверх"
+  },
+  de: {
+    back: "← Zurück zu Projekten",
+    lang: "Sprache",
+    platform: "Plattform",
+    category: "Kategorie",
+    license: "Lizenz",
+    stars: "GitHub-Sterne",
+    view: "REPOSITORY AUF GITHUB ANSEHEN ↗",
+    top: "⬆ Nach oben"
+  }
+};
+
+const l = labels[lang];
+
+// Localized category and subtitle
+const category = PROJECT_TRANSLATIONS[lang]?.[project]?.category || projectData.category;
+const subtitle = PROJECT_TRANSLATIONS[lang]?.[project]?.subtitle || projectData.subtitle;
+
+const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${path === '/' ? '' : path}`;
+---
+
+<Layout title={`${projectData.title} — Almanex`} activeTab="work" description={subtitle}>
+  <div class="detail-container" id="project-detail-container" data-lang={lang}>
+    <a href={getLocalizedPath('/work')} class="back-btn">{l.back}</a>
+    
+    <div class="proj-header" style="margin-top:24px;">
+      <span class="mono-label" id="proj-kicker" style="font-family: var(--font-mono);">CAT {project}/README.md //</span>
+      <h1 class="proj-title" id="proj-title">{projectData.title}</h1>
+      <p class="sub" id="proj-subtitle" style="margin-top:0; font-size:18px; color:var(--ink); opacity:0.85;">{subtitle}</p>
+    </div>
+
+    <!-- Specs Dashboard -->
+    <div class="proj-meta-dash">
+      <div class="meta-box">
+        <span class="meta-lbl">{l.lang}</span>
+        <span class="meta-val" id="meta-lang">{projectData.lang}</span>
+      </div>
+      <div class="meta-box">
+        <span class="meta-lbl">{l.platform}</span>
+        <span class="meta-val" id="meta-platform">{projectData.platform || '—'}</span>
+      </div>
+      <div class="meta-box">
+        <span class="meta-lbl">{l.category}</span>
+        <span class="meta-val" id="meta-category">{category}</span>
+      </div>
+      <div class="meta-box">
+        <span class="meta-lbl">{l.license}</span>
+        <span class="meta-val" id="meta-license">{projectData.license}</span>
+      </div>
+      <div class="meta-box">
+        <span class="meta-lbl">{l.stars}</span>
+        <span class="meta-val" id="meta-stars">★ {projectData.stars}</span>
+      </div>
+    </div>
+
+    <!-- Screenshots Slider -->
+    <div class="project-slider" id="project-slider" style="display: none;">
+      <div class="slider-container">
+        <div class="slider-wrapper" id="slider-wrapper"></div>
+        <button class="slider-nav prev" id="slider-prev">&lt;</button>
+        <button class="slider-nav next" id="slider-next">&gt;</button>
+      </div>
+      <div class="slider-dots" id="slider-dots"></div>
+    </div>
+
+    <!-- IDE File Viewer -->
+    <div class="proj-card-window">
+      <div class="window-header">
+        <span class="window-title" id="window-filepath">README.md</span>
+        <div class="window-controls">
+          <span class="control-dot dot-close"></span>
+          <span class="control-dot dot-min"></span>
+          <span class="control-dot dot-max"></span>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="line-numbers" id="line-numbers-container">
+          <!-- Line numbers will be rendered -->
+        </div>
+        <div class="readme-content" id="readme-html">
+          <!-- Rendered Markdown goes here -->
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <a href={projectData.github} target="_blank" class="github-link-btn" id="github-link">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px; height:20px;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        <span>{l.view}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bundled script for Markdown rendering and slider controls -->
+  <script>
+    import { PROJECTS_DATA } from '../data/projects.js';
+    import { marked } from 'marked';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const containerEl = document.getElementById('project-detail-container');
+      if (!containerEl) return;
+      const lang = containerEl.dataset.lang || 'en';
+
+      // Get project ID from pathname (e.g. /projects/classic-windows-image-viewer)
+      const pathParts = window.location.pathname.split('/');
+      const cleanParts = pathParts.filter(Boolean);
+      const projectId = cleanParts[cleanParts.length - 1];
+      const project = PROJECTS_DATA[projectId];
+
+      // Markdown renderer using Marked.js
+      function parseMarkdown(md: string) {
+        if (!md) return '';
+        marked.setOptions({
+          gfm: true,
+          breaks: false
+        });
+        return marked.parse(md);
+      }
+
+      // Resolve relative images and links in README to their respective GitHub raw/blob locations
+      function resolveRelativePaths(html: string, proj: any) {
+        if (!html || !proj || !proj.github) return html;
+        const baseRepo = proj.github.replace(/\/$/, "");
+        const baseRaw = baseRepo.replace("github.com", "raw.githubusercontent.com") + "/main/";
+        const baseBlob = baseRepo + "/blob/main/";
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        // Resolve links
+        tempDiv.querySelectorAll('a').forEach(a => {
+          const href = a.getAttribute('href');
+          if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+            const cleanHref = href.replace(/^\.\//, "");
+            a.setAttribute('href', baseBlob + cleanHref);
+          }
+        });
+        
+        // Resolve images
+        tempDiv.querySelectorAll('img').forEach(img => {
+          const src = img.getAttribute('src');
+          if (src) {
+            if (src.startsWith('https://github.com/') && src.includes('/blob/')) {
+              img.setAttribute('src', src.replace('/blob/', '/raw/'));
+            } else if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:')) {
+              const cleanSrc = src.replace(/^\.\//, "");
+              img.setAttribute('src', baseRaw + cleanSrc);
+            }
+          }
+        });
+        
+        return tempDiv.innerHTML;
+      }
+
+      // Extract and remove images from the parsed body
+      function processReadmeAndExtractImages(html: string) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        const imageUrls: any[] = [];
+        tempDiv.querySelectorAll('img').forEach(img => {
+          const src = img.getAttribute('src');
+          if (src && src.toLowerCase().includes('.svg')) {
+            return;
+          }
+          
+          imageUrls.push({
+            src: src,
+            alt: img.getAttribute('alt') || 'Screenshot'
+          });
+          
+          const parentLink = img.closest('a');
+          if (parentLink) {
+            parentLink.remove();
+          } else {
+            img.remove();
+          }
+        });
+        
+        tempDiv.querySelectorAll('p').forEach(p => {
+          if (p.innerHTML.trim() === '') {
+            p.remove();
+          }
+        });
+        
+        return {
+          cleanHtml: tempDiv.innerHTML,
+          images: imageUrls
+        };
+      }
+
+      // Initialize Slider
+      function initSlider(images: any[]) {
+        const slider = document.getElementById('project-slider');
+        const wrapper = document.getElementById('slider-wrapper');
+        const dotsContainer = document.getElementById('slider-dots');
+        const prevBtn = document.getElementById('slider-prev');
+        const nextBtn = document.getElementById('slider-next');
+        
+        if (!slider || !wrapper || !dotsContainer || !prevBtn || !nextBtn) return;
+        if (!images || images.length === 0) {
+          slider.style.display = 'none';
+          return;
+        }
+        
+        slider.style.display = 'block';
+        wrapper.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        
+        images.forEach((imgInfo, index) => {
+          const slide = document.createElement('div');
+          slide.className = 'slider-slide';
+          slide.innerHTML = `<img src="${imgInfo.src}" alt="${imgInfo.alt}" loading="lazy">`;
+          wrapper.appendChild(slide);
+          
+          const dot = document.createElement('span');
+          dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
+          dot.dataset.index = String(index);
+          dotsContainer.appendChild(dot);
+        });
+        
+        if (images.length <= 1) {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+          dotsContainer.style.display = 'none';
+          return;
+        }
+        
+        let currentIndex = 0;
+        function goToSlide(index: number) {
+          currentIndex = index;
+          if (currentIndex < 0) currentIndex = images.length - 1;
+          if (currentIndex >= images.length) currentIndex = 0;
+          if (wrapper) wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+          if (dotsContainer) {
+            dotsContainer.querySelectorAll('.slider-dot').forEach((dot, idx) => {
+              dot.classList.toggle('active', idx === currentIndex);
+            });
+          }
+        }
+        
+        prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+        dotsContainer.addEventListener('click', (e: any) => {
+          if (e.target.classList.contains('slider-dot')) {
+            const idx = parseInt(e.target.dataset.index);
+            goToSlide(idx);
+          }
+        });
+      }
+
+      if (project) {
+        document.getElementById('window-filepath')!.textContent = `projects/${projectId}/README.md`;
+        
+        // Select localized readme or fallback
+        let readme = project.readme;
+        if (lang === 'ru' && project.readme_ru) readme = project.readme_ru;
+        if (lang === 'de' && project.readme_de) readme = project.readme_de;
+
+        const resolvedHtml = resolveRelativePaths(parseMarkdown(readme), project);
+        const processResult = processReadmeAndExtractImages(resolvedHtml);
+        
+        let cleanHtml = processResult.cleanHtml;
+        const topText = lang === 'ru' ? '⬆ Наверх' : (lang === 'de' ? '⬆ Nach oben' : '⬆ Scroll to top');
+        if (!cleanHtml.toLowerCase().includes('top') && !cleanHtml.toLowerCase().includes('наверх') && !cleanHtml.toLowerCase().includes('oben')) {
+          cleanHtml += `<p style="text-align: right; margin-top: 32px; font-family: var(--font-mono); font-size: 13px;"><a href="#" class="top-scroll-btn">${topText}</a></p>`;
+        }
+        document.getElementById('readme-html')!.innerHTML = cleanHtml;
+
+        initSlider(processResult.images);
+
+        // Intercept scroll to top clicks
+        document.getElementById('readme-html')!.addEventListener('click', (e: any) => {
+          const a = e.target.closest('a');
+          if (a) {
+            const href = a.getAttribute('href');
+            if (href && (href.startsWith('#') || a.textContent.includes('Наверх') || a.textContent.includes('top') || a.textContent.includes('oben'))) {
+              e.preventDefault();
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              });
+            }
+          }
+        });
+
+        // Generate line numbers
+        const container = document.getElementById('readme-html')!;
+        const height = container.scrollHeight;
+        const lineCount = Math.max(30, Math.ceil(height / 28));
+        let numsHtml = '';
+        for (let i = 1; i <= lineCount; i++) {
+          numsHtml += `${i}<br>`;
+        }
+        document.getElementById('line-numbers-container')!.innerHTML = numsHtml;
+      }
+    });
+  </script>
+</Layout>
+
+<style is:global>
+  /* Detail Layout */
+  .detail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 120px 26px 80px;
+  }
+  
+  .proj-header {
+    margin-bottom: 40px;
+  }
+  
+  .proj-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5.5vw, 64px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 12px 0 16px;
+  }
+  
+  .proj-meta-dash {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    background: var(--surface);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 4px 4px 0px var(--ink);
+    margin-bottom: 40px;
+  }
+  
+  .meta-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .meta-lbl {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--gray-2);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  
+  .meta-val {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  
+  .proj-card-window {
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0px var(--ink);
+    background: var(--surface);
+    margin-bottom: 60px;
+  }
+  
+  .window-header {
+    background: var(--bar);
+    border-bottom: 2px solid var(--ink);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  
+  .window-title {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  
+  .window-controls {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .control-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+  }
+  .dot-close { background: #ff5f56; }
+  .dot-min { background: #ffbd2e; }
+  .dot-max { background: #27c93f; }
+  
+  .window-body {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+  }
+  
+  .line-numbers {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gray);
+    text-align: right;
+    padding: 24px 14px 24px 0;
+    border-right: 2px solid var(--line);
+    background: var(--bar);
+    user-select: none;
+    opacity: 0.6;
+  }
+  
+  .readme-content {
+    padding: 24px 36px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink);
+    overflow-x: auto;
+  }
+  
+  /* Simple markdown styling */
+  .readme-content h1 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 20px 0;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+  }
+  
+  .readme-content h2 {
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 800;
+    margin: 32px 0 16px 0;
+  }
+  
+  .readme-content p {
+    margin: 0 0 16px 0;
+  }
+  
+  .readme-content ul {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+    list-style-type: square;
+  }
+  
+  .readme-content li {
+    margin-bottom: 6px;
+  }
+  
+  .readme-content code {
+    font-family: var(--font-mono);
+    background: var(--hover);
+    border: 1.5px solid var(--line-strong);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  
+  .readme-content pre {
+    background: var(--hover);
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    overflow-x: auto;
+  }
+  
+  .readme-content pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--ink);
+    background: var(--surface);
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 6px 14px;
+    box-shadow: 2px 2px 0px var(--ink);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0px var(--ink);
+    background: var(--hover);
+  }
+  
+  .github-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 800;
+    color: #111212;
+    background: var(--cyan);
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 10px 18px;
+    box-shadow: 3px 3px 0px var(--ink);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .github-link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0px var(--ink);
+  }
+  
+  @media (max-width: 600px) {
+    .window-body {
+      grid-template-columns: 1fr;
+    }
+    .line-numbers {
+      display: none;
+    }
+    .readme-content {
+      padding: 20px;
+    }
+  }
+
+  /* Markdown enhancements */
+  .readme-content table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 24px 0 !important;
+    font-size: 14px !important;
+  }
+  .readme-content th,
+  .readme-content td {
+    border: 1px solid var(--line-strong) !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+  }
+  .readme-content th {
+    background: var(--bar) !important;
+    font-weight: bold !important;
+    color: var(--ink) !important;
+  }
+  .readme-content blockquote {
+    border-left: 4px solid var(--cyan) !important;
+    padding: 10px 20px !important;
+    margin: 20px 0 !important;
+    background: var(--hover) !important;
+    border-radius: 4px !important;
+    color: var(--gray-2) !important;
+  }
+  .readme-content a {
+    color: var(--cyan) !important;
+    text-decoration: underline !important;
+  }
+  .readme-content img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    border: 1.5px solid var(--line-strong) !important;
+    margin: 16px 0 !important;
+  }
+
+  /* Screenshots Slider styles */
+  .project-slider {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 32px auto 40px;
+    box-sizing: border-box;
+  }
+  .slider-container {
+    position: relative;
+    aspect-ratio: 16/10;
+    outline: 2px solid var(--ink);
+    background: var(--bar);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0px var(--ink);
+  }
+  .slider-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .slider-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bar);
+  }
+  .slider-slide img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  }
+  .slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--cyan);
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 2px 2px 0px var(--ink);
+    transition: all 0.1s;
+    z-index: 10;
+    user-select: none;
+    font-size: 16px;
+  }
+  .slider-nav:hover {
+    transform: translateY(-54%) scale(1.05);
+    background: var(--cyan-soft);
+  }
+  .slider-nav.prev { left: 16px; }
+  .slider-nav.next { right: 16px; }
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--surface);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .slider-dot.active {
+    background: var(--cyan);
+  }
+  .readme-content img[src*=".svg"] {
+    display: inline-block !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 4px !important;
+    vertical-align: middle !important;
+    box-shadow: none !important;
+    height: 20px !important;
+    width: auto !important;
+  }
+  .readme-content img[src*=".svg"] + br,
+  .readme-content a:has(img[src*=".svg"]) + br {
+    display: none !important;
+  }
+</style>

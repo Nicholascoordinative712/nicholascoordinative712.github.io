@@ -1,0 +1,322 @@
+---
+import { render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: 'en' | 'ru' | 'de';
+  post: any;
+}
+
+const { lang, post } = Astro.props;
+const { Content } = await render(post);
+
+function formatLocalizedDate(date: Date, l: string) {
+  if (l === 'ru') {
+    const ruMonths = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+    return `${date.getDate()} ${ruMonths[date.getMonth()]} ${date.getFullYear()}`;
+  }
+  if (l === 'de') {
+    const deMonths = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+    return `${date.getDate()}. ${deMonths[date.getMonth()]} ${date.getFullYear()}`;
+  }
+  const enMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  return `${enMonths[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+}
+
+const formattedDate = formatLocalizedDate(post.data.pubDate, lang);
+
+// Fetch same-language posts for recommendation
+const allPosts = await getCollection('blog');
+const langPosts = allPosts.filter(p => {
+  if (lang === 'en') return !p.id.startsWith('ru/') && !p.id.startsWith('de/');
+  return p.id.startsWith(`${lang}/`);
+});
+const sortedPosts = langPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const currentIndex = sortedPosts.findIndex(p => p.id === post.id);
+const nextPost = sortedPosts[currentIndex + 1] || sortedPosts[0];
+
+const sizeMap: Record<string, string> = {
+  'vscode-agents': '5.2 KB',
+  'dotnet-support-end': '3.6 KB',
+  'wsl-containers': '4.8 KB'
+};
+const baseSlug = nextPost ? nextPost.id.split('/').pop() || '' : '';
+const nextPostSize = sizeMap[baseSlug] || '3.0 KB';
+
+const labels = {
+  en: {
+    back: "cd .. // return to list",
+    next: "NEXT TRANSMISSION // RECOMMENDED READ",
+    read: "read",
+    explore: "cd .. // return to list"
+  },
+  ru: {
+    back: "cd .. // вернуться к списку",
+    next: "СЛЕДУЮЩИЙ ВЫПУСК // РЕКОМЕНДУЕМОЕ",
+    read: "чтения",
+    explore: "cd .. // вернуться к списку"
+  },
+  de: {
+    back: "cd .. // zurück zur Liste",
+    next: "NÄCHSTE ÜBERTRAGUNG // EMPFOHLEN",
+    read: "Lesezeit",
+    explore: "cd .. // zurück zur Liste"
+  }
+};
+
+const l = labels[lang];
+const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${path === '/' ? '' : path}`;
+---
+
+<Layout title={`${post.data.title} — Almanex`} activeTab="blog" description={post.data.description}>
+  <div id="scroll-progress-container">
+    <div id="scroll-progress-fill"></div>
+  </div>
+
+  <article style="max-width: 780px; margin: 0 auto; padding: 120px 26px 80px;">
+    <header class="detail-head">
+      <a class="article-back-btn" href={getLocalizedPath('/blog')}>
+        <span class="back-arrow">&larr;</span>
+        <span>cd .. // blog.txt</span>
+      </a>
+      
+      <p class="detail-meta" style="font-family: var(--font-mono); font-size: 13px; color: var(--gray-2); margin-top: 16px;">
+        {formattedDate} &middot; {post.data.category} &middot; {post.data.readTime} {l.read}
+      </p>
+      <h1 class="detail-title">{post.data.title}</h1>
+      <p class="detail-lead">{post.data.description}</p>
+    </header>
+
+    {post.data.image && (
+      <div class="d-img">
+        <div class="d-frame"><img src={post.data.image} alt={post.data.title} /></div>
+        <span class="d-jpg"><b>JPG</b> {post.data.image.split('/').pop()}</span>
+      </div>
+    )}
+
+    <div class="prose" style="font-family: var(--font-body); font-size: 17px; line-height: 1.7; color: var(--ink);">
+      <Content />
+    </div>
+
+    <!-- Bottom Navigation & Recommended -->
+    <div class="article-bottom-nav">
+      {nextPost && (
+        <div class="read-next-card">
+          <div class="next-label">{l.next}</div>
+          <a class="next-card-link" href={getLocalizedPath(`/blog/${nextPost.id.replace(/^(ru|de)\//, '')}`)}>
+            <div class="next-card-header">
+              <span>{baseSlug}.md</span>
+              <span>{nextPostSize}</span>
+            </div>
+            <div class="next-card-body">
+              <h4 class="next-card-title">{nextPost.data.title}</h4>
+              <p class="next-card-desc">{nextPost.data.description}</p>
+            </div>
+          </a>
+        </div>
+      )}
+
+      <div>
+        <a class="article-back-btn" href={getLocalizedPath('/blog')} style="margin-bottom: 0 !important;">
+          <span class="back-arrow">&larr;</span>
+          <span>{l.explore}</span>
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const progressFill = document.getElementById('scroll-progress-fill');
+      if (progressFill) {
+        window.addEventListener('scroll', () => {
+          const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+          const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+          progressFill.style.width = scrolled + '%';
+        }, { passive: true });
+      }
+    });
+  </script>
+</Layout>
+
+<style is:global>
+  .prose h2 {
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 800;
+    margin: 36px 0 16px 0;
+    color: var(--ink);
+  }
+  .prose p {
+    margin: 0 0 16px 0;
+  }
+  .prose ul {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+    list-style-type: square;
+  }
+  .prose li {
+    margin-bottom: 6px;
+  }
+  .prose code {
+    font-family: var(--font-mono);
+    background: var(--hover);
+    border: 1.5px solid var(--line-strong);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .prose pre {
+    background: var(--hover);
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    overflow-x: auto;
+  }
+  .prose pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .prose blockquote {
+    border-left: 4px solid var(--cyan) !important;
+    padding: 10px 20px !important;
+    margin: 20px 0 !important;
+    background: var(--hover) !important;
+    border-radius: 4px !important;
+    color: var(--gray-2) !important;
+  }
+  .prose strong {
+    font-weight: 800;
+  }
+</style>
+
+<style>
+  #scroll-progress-container {
+    position: fixed !important;
+    top: 56px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 5px !important;
+    z-index: 9999 !important;
+    background: transparent !important;
+    pointer-events: none !important;
+  }
+  #scroll-progress-fill {
+    width: 0% !important;
+    height: 100% !important;
+    background: var(--magenta) !important;
+    border-right: 2px solid var(--ink) !important;
+    transition: width 0.08s ease-out !important;
+  }
+
+  .article-back-btn {
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    background: var(--hover) !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    box-shadow: 2px 2px 0px var(--ink) !important;
+    transition: all 0.15s !important;
+    margin-bottom: 24px !important;
+  }
+  .article-back-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 3px 4px 0px var(--ink) !important;
+    background: var(--surface) !important;
+  }
+  .back-arrow {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+  }
+
+  .detail-head {
+    padding-top: 10px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 20px !important;
+  }
+  .detail-title {
+    font-family: var(--font-display) !important;
+    font-size: clamp(34px, 5.5vw, 62px) !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.02em !important;
+    margin: 16px 0 14px !important;
+    color: var(--ink);
+  }
+  .detail-lead {
+    font-family: var(--font-body) !important;
+    font-size: 20px !important;
+    line-height: 1.5 !important;
+    opacity: 0.9 !important;
+    color: var(--ink) !important;
+  }
+
+  .article-bottom-nav {
+    margin-top: 56px !important;
+    border-top: 2px dashed var(--line-strong) !important;
+    padding-top: 36px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+  .read-next-card {
+    background: var(--surface) !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 16px !important;
+    padding: 24px 26px !important;
+    box-shadow: 6px 6px 0px var(--ink) !important;
+    transition: transform 0.25s, box-shadow 0.25s !important;
+  }
+  .read-next-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 8px 8px 0px var(--magenta) !important;
+  }
+  .next-label {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    color: var(--magenta) !important;
+    text-transform: uppercase !important;
+    margin-bottom: 16px !important;
+  }
+  .next-card-link {
+    text-decoration: none !important;
+    color: var(--ink) !important;
+    display: block !important;
+  }
+  .next-card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-family: var(--font-mono) !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    border-bottom: 1.5px dashed var(--line-strong) !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 14px !important;
+  }
+  .next-card-title {
+    font-family: var(--font-body) !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    margin-bottom: 8px !important;
+  }
+  .next-card-desc {
+    font-family: var(--font-body) !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: var(--gray-2) !important;
+  }
+</style>

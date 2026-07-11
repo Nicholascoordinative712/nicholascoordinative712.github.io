@@ -1,0 +1,657 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { UI_TRANSLATIONS, PROJECT_TRANSLATIONS } from '../data/translations.js';
+
+interface Props {
+  lang: 'en' | 'ru' | 'de';
+  page: any;
+}
+
+const { lang, page } = Astro.props;
+
+// Accent colors list for retro card headers
+const accents = ['#36c5f0', '#aaabab', '#ecb22e', '#e01e5a', '#2eb67d', '#aaabab', '#ecb22e', '#e01e5a', '#36c5f0', '#aaabab', '#3a2418'];
+
+// Helper to get localized path
+const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${path === '/' ? '' : path}`;
+---
+
+<Layout title={`${UI_TRANSLATIONS[lang]["nav.projects"]} — Almanex`} activeTab="work" description="Almanex's open source software engineering portfolio, showing utilities, tools, and desktop applications.">
+  <div id="work-page-container" data-lang={lang}>
+    <header class="page-header">
+      <p class="kicker">selected work</p>
+      <h1>{UI_TRANSLATIONS[lang]["projects.title"]}</h1>
+      <p class="sub">{UI_TRANSLATIONS[lang]["projects.sub"]}</p>
+    </header>
+
+    <section class="section">
+      <div class="work-grid">
+        {page.data.map((project: any, index: number) => {
+          const accent = accents[index % accents.length];
+          const coverImg = project.firstImg || `/images/projects/cover/cover_${(index % 8) + 1}.avif`;
+          
+          // Localized category and subtitle
+          const category = PROJECT_TRANSLATIONS[lang]?.[project.id]?.category || project.category;
+          const subtitle = PROJECT_TRANSLATIONS[lang]?.[project.id]?.subtitle || project.subtitle;
+
+          return (
+            <div class="wk-card terminal-window project-terminal" data-id={project.id} style={`--accent:${accent}; display:block; cursor:pointer;`}>
+              <div class="terminal-header">
+                <div class="terminal-buttons">
+                  <span class="btn-close"></span>
+                  <span class="btn-minimize"></span>
+                  <span class="btn-maximize"></span>
+                </div>
+                <div class="terminal-title">~/projects/{project.id}</div>
+              </div>
+              <div class="terminal-body" style="padding:0 !important; min-height:auto !important; display:block !important;">
+                <div class="wk-img">
+                  <img src={coverImg} alt={project.title} loading="lazy" />
+                </div>
+                <div class="wk-body" style="padding:22px 24px 26px;">
+                  <p class="wk-meta" style="font-family:var(--font-mono); font-size:12px; margin-bottom:8px;">{category}</p>
+                  <h3 class="wk-name" style="font-size:24px; font-weight:700; margin-bottom:8px; line-height:1.2;">{project.title}</h3>
+                  <p class="wk-desc" style="font-size:15px; opacity:0.85; margin-bottom:16px; min-height:48px;">{subtitle}</p>
+                  <div class="wk-tags">
+                    <span class="wk-tag">{project.lang}</span>
+                    {project.platform && <span class="wk-tag">{project.platform}</span>}
+                  </div>
+                  
+                  <div class="wk-actions">
+                    <button class="wk-action-btn btn-console" data-project={project.id}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px;"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> CLI View
+                    </button>
+                    <a href={getLocalizedPath(`/projects/${project.id}`)} class="wk-action-btn btn-page">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Page View
+                    </a>
+                    <a href={project.github} target="_blank" class="wk-action-btn btn-gh">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px; height:12px;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> GitHub ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Pagination -->
+    {page.lastPage > 1 && (
+      <div class="wk-pagination">
+        {page.url.prev ? (
+          <a href={page.url.prev} class="wk-pagination-btn">{UI_TRANSLATIONS[lang]["projects.prev"]}</a>
+        ) : (
+          <span class="wk-pagination-btn disabled">{UI_TRANSLATIONS[lang]["projects.prev"]}</span>
+        )}
+        <span class="wk-pagination-info">{UI_TRANSLATIONS[lang]["projects.page"]} {page.currentPage} {UI_TRANSLATIONS[lang]["projects.of"]} {page.lastPage}</span>
+        {page.url.next ? (
+          <a href={page.url.next} class="wk-pagination-btn">{UI_TRANSLATIONS[lang]["projects.next"]}</a>
+        ) : (
+          <span class="wk-pagination-btn disabled">{UI_TRANSLATIONS[lang]["projects.next"]}</span>
+        )}
+      </div>
+    )}
+
+    <!-- Console Drawer Overlay -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <!-- Sliding Console Drawer -->
+    <div class="console-drawer" id="project-drawer">
+      <div class="drawer-header">
+        <div class="drawer-controls">
+          <span class="drawer-dot dd-close" id="drawer-close-dot"></span>
+          <span class="drawer-dot dd-min"></span>
+          <span class="drawer-dot dd-max"></span>
+        </div>
+        <span class="drawer-title" id="drawer-filepath">cat readme.md</span>
+        <button class="drawer-close-btn" id="drawer-close-btn">F10 Close</button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-line-numbers" id="drawer-line-numbers">
+          <!-- Rendered numbers -->
+        </div>
+        <div class="drawer-content">
+          <div class="console-command-line">alex@geek-pc:~/projects$ <span id="drawer-command">cat readme.md</span></div>
+          <div id="drawer-readme-html">
+            <!-- Rendered Readme -->
+          </div>
+          <div style="margin-top: 36px; text-align: center; border-top: 1.5px dashed var(--line-strong); padding-top: 24px;">
+            <a href="" target="_blank" class="drawer-github-btn" id="drawer-gh-link">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              <span>VIEW CODE ON GITHUB ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { PROJECTS_DATA } from '../data/projects.js';
+  import { marked } from 'marked';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Markdown renderer using Marked.js
+    function parseMarkdown(md) {
+      if (!md) return '';
+      marked.setOptions({
+        gfm: true,
+        breaks: false
+      });
+      return marked.parse(md);
+    }
+
+    // Resolve relative images and links in README to their respective GitHub raw/blob locations
+    function resolveRelativePaths(html, project) {
+      if (!html || !project || !project.github) return html;
+      const baseRepo = project.github.replace(/\/$/, "");
+      const baseRaw = baseRepo.replace("github.com", "raw.githubusercontent.com") + "/main/";
+      const baseBlob = baseRepo + "/blob/main/";
+      
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      
+      // Resolve links
+      tempDiv.querySelectorAll('a').forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+          const cleanHref = href.replace(/^\.\//, "");
+          a.setAttribute('href', baseBlob + cleanHref);
+        }
+      });
+      
+      // Resolve images
+      tempDiv.querySelectorAll('img').forEach(img => {
+        const src = img.getAttribute('src');
+        if (src) {
+          if (src.startsWith('https://github.com/') && src.includes('/blob/')) {
+            img.setAttribute('src', src.replace('/blob/', '/raw/'));
+          } else if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:')) {
+            const cleanSrc = src.replace(/^\.\//, "");
+            img.setAttribute('src', baseRaw + cleanSrc);
+          }
+        }
+      });
+      
+      return tempDiv.innerHTML;
+    }
+
+    // Strip images for terminal view
+    function stripImages(html) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      tempDiv.querySelectorAll('img').forEach(img => {
+        const parentLink = img.closest('a');
+        if (parentLink) {
+          parentLink.remove();
+        } else {
+          img.remove();
+        }
+      });
+      tempDiv.querySelectorAll('p').forEach(p => {
+        if (p.innerHTML.trim() === '') {
+          p.remove();
+        }
+      });
+      return tempDiv.innerHTML;
+    }
+
+    const drawer = document.getElementById('project-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+    const closeBtn = document.getElementById('drawer-close-btn');
+    const closeDot = document.getElementById('drawer-close-dot');
+
+    function openDrawer(projectId) {
+      const project = PROJECTS_DATA[projectId];
+      if (!project) return;
+
+      const lang = document.getElementById('work-page-container').dataset.lang;
+
+      document.getElementById('drawer-filepath').textContent = `projects/${projectId}/README.md`;
+      document.getElementById('drawer-command').textContent = `cat ${projectId}/README.md`;
+      document.getElementById('drawer-gh-link').href = project.github;
+
+      // Select localized readme or fallback
+      let readme = project.readme;
+      if (lang === 'ru' && project.readme_ru) readme = project.readme_ru;
+      if (lang === 'de' && project.readme_de) readme = project.readme_de;
+
+      // Render content, resolve relative paths and strip images for CLI view
+      const rawHtml = resolveRelativePaths(parseMarkdown(readme), project);
+      let contentHtml = stripImages(rawHtml);
+      
+      const topText = lang === 'ru' ? '⬆ Наверх' : (lang === 'de' ? '⬆ Nach oben' : '⬆ Scroll to top');
+      if (!contentHtml.toLowerCase().includes('top') && !contentHtml.toLowerCase().includes('наверх') && !contentHtml.toLowerCase().includes('oben')) {
+        contentHtml += `<p style="text-align: right; margin-top: 32px; font-family: var(--font-mono); font-size: 11px;"><a href="#" class="top-scroll-btn">${topText}</a></p>`;
+      }
+      document.getElementById('drawer-readme-html').innerHTML = contentHtml;
+
+      // Calculate line numbers
+      const container = document.getElementById('drawer-readme-html');
+      const height = container.scrollHeight;
+      const lineCount = Math.max(25, Math.ceil(height / 26));
+      let numsHtml = '';
+      for (let i = 1; i <= lineCount; i++) {
+        numsHtml += `${i}<br>`;
+      }
+      document.getElementById('drawer-line-numbers').innerHTML = numsHtml;
+
+      // Open
+      drawer.classList.add('is-open');
+      overlay.classList.add('is-visible');
+      document.body.style.overflow = 'hidden'; // Lock background scroll
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      overlay.classList.remove('is-visible');
+      document.body.style.overflow = '';
+    }
+
+    // Intercept card click to open Page View
+    document.querySelectorAll('.wk-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // If the click is on or inside action buttons, do not intercept
+        if (!e.target.closest('.wk-actions')) {
+          const pageLink = card.querySelector('.btn-page');
+          if (pageLink && pageLink.getAttribute('href')) {
+            window.location.href = pageLink.getAttribute('href');
+          }
+        }
+      });
+    });
+
+    // Add listeners to all console buttons
+    document.querySelectorAll('.btn-console').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const projId = btn.dataset.project;
+        openDrawer(projId);
+      });
+    });
+
+    // Intercept anchor clicks like "⬆ Наверх" to scroll back to top of the drawer smoothly
+    document.getElementById('drawer-readme-html').addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (a) {
+        const href = a.getAttribute('href');
+        if (href && (href.startsWith('#') || a.textContent.includes('Наверх') || a.textContent.includes('top') || a.textContent.includes('oben'))) {
+          e.preventDefault();
+          const dContent = document.querySelector('.drawer-content');
+          if (dContent) {
+            dContent.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (closeDot) closeDot.addEventListener('click', closeDrawer);
+    if (overlay) overlay.addEventListener('click', closeDrawer);
+
+    // Scroll synchronization for drawer line numbers
+    const dContent = document.querySelector('.drawer-content');
+    const dLineNums = document.getElementById('drawer-line-numbers');
+    if (dContent && dLineNums) {
+      dContent.addEventListener('scroll', () => {
+        dLineNums.scrollTop = dContent.scrollTop;
+      }, { passive: true });
+    }
+
+    // ESC key closes drawer
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+  });
+</script>
+
+<style is:global>
+  /* Work Pagination styling */
+  .wk-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 48px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .wk-pagination-btn {
+    text-decoration: none;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    padding: 6px 14px;
+    background: var(--paper);
+    box-shadow: 2px 2px 0px var(--ink);
+    transition: all 0.1s;
+    cursor: pointer;
+  }
+  .wk-pagination-btn:hover:not(.disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--ink);
+  }
+  .wk-pagination-btn:active:not(.disabled) {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--ink);
+  }
+  .wk-pagination-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .wk-pagination-info {
+    color: var(--gray-2);
+  }
+
+  /* Projects Actions & Console Drawer Styles */
+  .wk-actions {
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: 16px !important;
+    border-top: 1.5px dashed var(--line-strong) !important;
+    padding-top: 14px !important;
+    flex-wrap: wrap !important;
+  }
+  .wk-action-btn {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    padding: 6px 12px !important;
+    border: 1.6px solid var(--gray-2) !important;
+    border-radius: 6px !important;
+    background: var(--paper) !important;
+    color: var(--gray-2) !important;
+    box-shadow: 2px 2px 0px var(--gray-2) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: all 0.1s !important;
+  }
+  .wk-action-btn:hover {
+    transform: translate(-1px, -1px) !important;
+    box-shadow: 3px 3px 0px var(--ink) !important;
+    background: var(--hover) !important;
+  }
+  .wk-action-btn:active {
+    transform: translate(0, 0) !important;
+    box-shadow: 1px 1px 0px var(--ink) !important;
+  }
+  .wk-action-btn.btn-console {
+    background: var(--amber) !important;
+    color: #111212 !important;
+    border-color: var(--gray-2) !important;
+    box-shadow: 2px 2px 0px var(--gray-2) !important;
+  }
+  .wk-action-btn.btn-page {
+    background: var(--cyan) !important;
+    color: #111212 !important;
+    border-color: var(--gray-2) !important;
+    box-shadow: 2px 2px 0px var(--gray-2) !important;
+  }
+  .wk-action-btn.btn-gh {
+    border-color: var(--gray-2) !important;
+    color: var(--gray-2) !important;
+    box-shadow: 2px 2px 0px var(--gray-2) !important;
+  }
+  
+  /* Console Drawer styling */
+  .console-drawer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translate(-50%, 100%) !important;
+    width: 92% !important;
+    max-width: 1000px !important;
+    height: 520px !important;
+    background: var(--surface) !important;
+    border: 3px solid var(--ink) !important;
+    border-radius: 16px !important;
+    box-shadow: 6px 6px 0px var(--ink) !important;
+    z-index: 10000 !important;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    font-family: var(--font-mono) !important;
+  }
+  .console-drawer.is-open {
+    transform: translate(-50%, -40px) !important;
+  }
+  @media (max-width: 768px) {
+    .console-drawer {
+      width: 95% !important;
+      height: 75vh !important;
+    }
+    .console-drawer.is-open {
+      transform: translate(-50%, -16px) !important;
+    }
+    .wk-action-btn.btn-console {
+      display: none !important;
+    }
+  }
+  .drawer-header {
+    background: var(--bar) !important;
+    border-bottom: 2px solid var(--ink) !important;
+    padding: 10px 18px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    user-select: none !important;
+    flex-shrink: 0 !important;
+  }
+  .drawer-title {
+    font-size: 12.5px !important;
+    font-weight: bold !important;
+    color: var(--ink) !important;
+  }
+  .drawer-close-btn {
+    background: var(--ink) !important;
+    color: var(--paper) !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 6px !important;
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    font-family: var(--font-mono) !important;
+  }
+  .drawer-controls {
+    display: flex !important;
+    gap: 6px !important;
+  }
+  .drawer-dot {
+    width: 11px !important;
+    height: 11px !important;
+    border-radius: 50% !important;
+    border: 1px solid var(--ink) !important;
+  }
+  .dd-close { background: #ff5f56 !important; cursor: pointer; }
+  .dd-min { background: #ffbd2e !important; }
+  .dd-max { background: #27c93f !important; }
+  
+  .drawer-body {
+    flex: 1 !important;
+    display: grid !important;
+    grid-template-columns: 42px 1fr !important;
+    overflow: hidden !important;
+  }
+  .drawer-line-numbers {
+    background: var(--bar) !important;
+    border-right: 2px solid var(--line) !important;
+    padding: 20px 10px 40px 0 !important;
+    text-align: right !important;
+    font-size: 12px !important;
+    color: var(--gray) !important;
+    opacity: 0.6 !important;
+    user-select: none !important;
+    line-height: 1.7 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+  .drawer-content {
+    padding: 20px 30px 40px !important;
+    overflow-y: auto !important;
+    font-family: var(--font-body) !important;
+    color: var(--ink) !important;
+  }
+  .console-command-line {
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    color: var(--gray-2) !important;
+    margin-bottom: 20px !important;
+    border-bottom: 1.5px dashed var(--line-strong) !important;
+    padding-bottom: 10px !important;
+  }
+  .console-command-line span {
+    color: var(--cyan) !important;
+    font-weight: bold !important;
+  }
+  
+  /* Markdown inside drawer */
+  .drawer-content h1 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 6px;
+  }
+  .drawer-content h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 24px 0 12px 0;
+  }
+  .drawer-content p {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .drawer-content ul {
+    margin-bottom: 14px;
+    padding-left: 20px;
+  }
+  .drawer-content li {
+    font-size: 14.5px;
+    margin-bottom: 4px;
+  }
+  .drawer-content code {
+    font-family: var(--font-mono);
+    background: var(--hover);
+    border: 1px solid var(--line-strong);
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .drawer-content pre {
+    background: var(--hover);
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .drawer-content pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+  }
+  .drawer-github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 800;
+    color: #111212;
+    background: var(--cyan);
+    border: 2px solid var(--ink);
+    border-radius: 6px;
+    padding: 8px 16px;
+    box-shadow: 2px 2px 0px var(--ink);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .drawer-github-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0px var(--ink);
+  }
+  
+  /* Backdrop overlay */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .drawer-overlay.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Markdown enhancements inside console drawer */
+  #drawer-readme-html table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 24px 0 !important;
+    font-size: 14px !important;
+  }
+  #drawer-readme-html th,
+  #drawer-readme-html td {
+    border: 1px solid var(--line-strong) !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+  }
+  #drawer-readme-html th {
+    background: var(--bar) !important;
+    font-weight: bold !important;
+    color: var(--ink) !important;
+  }
+  #drawer-readme-html blockquote {
+    border-left: 4px solid var(--cyan) !important;
+    padding: 10px 20px !important;
+    margin: 20px 0 !important;
+    background: var(--hover) !important;
+    border-radius: 4px !important;
+    color: var(--gray-2) !important;
+  }
+  #drawer-readme-html a {
+    color: var(--cyan) !important;
+    text-decoration: underline !important;
+  }
+  #drawer-readme-html img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    border: 1.5px solid var(--line-strong) !important;
+    margin: 16px 0 !important;
+  }
+  #drawer-readme-html img[src*=".svg"] {
+    display: inline-block !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 4px !important;
+    vertical-align: middle !important;
+    box-shadow: none !important;
+    height: 20px !important;
+    width: auto !important;
+  }
+  #drawer-readme-html img[src*=".svg"] + br,
+  #drawer-readme-html a:has(img[src*=".svg"]) + br {
+    display: none !important;
+  }
+</style>

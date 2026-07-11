@@ -1,0 +1,52 @@
+---
+import { PROJECTS_DATA } from '../../../data/projects.js';
+import WorkPage from '../../../components/WorkPage.astro';
+
+export async function getStaticPaths({ paginate }) {
+  function resolveSinglePath(src, project) {
+    if (!src || src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) {
+      if (src && src.startsWith('https://github.com/') && src.includes('/blob/')) {
+        return src.replace('/blob/', '/raw/');
+      }
+      return src;
+    }
+    const baseRepo = project.github.replace(/\/$/, "");
+    const baseRaw = baseRepo.replace("github.com", "raw.githubusercontent.com") + "/main/";
+    const cleanSrc = src.replace(/^\.\//, "");
+    return baseRaw + cleanSrc;
+  }
+
+  function getFirstImageFromMarkdown(md, project) {
+    if (!md) return '';
+    const mdMatches = md.matchAll(/!\[.*?\]\((.*?)\)/g);
+    for (const match of mdMatches) {
+      const src = match[1];
+      if (src && !src.toLowerCase().includes('.svg')) {
+        return resolveSinglePath(src, project);
+      }
+    }
+    const htmlMatches = md.matchAll(/<img[^>]*?src=["'](.*?)["']/g);
+    for (const match of htmlMatches) {
+      const src = match[1];
+      if (src && !src.toLowerCase().includes('.svg')) {
+        return resolveSinglePath(src, project);
+      }
+    }
+    return '';
+  }
+
+  const projects = Object.entries(PROJECTS_DATA).map(([id, data]) => {
+    const firstImg = getFirstImageFromMarkdown(data.readme, data);
+    return {
+      id,
+      firstImg,
+      ...data
+    };
+  });
+  return paginate(projects, { pageSize: 6 });
+}
+
+const { page } = Astro.props;
+---
+
+<WorkPage lang="ru" page={page} />

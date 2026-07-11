@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPage from '../../components/BlogPage.astro';
+
+export async function getStaticPaths({ paginate }) {
+  const posts = await getCollection('blog');
+  const enPosts = posts.filter(post => !post.id.startsWith('ru/') && !post.id.startsWith('de/'));
+  const sortedPosts = enPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return paginate(sortedPosts, { pageSize: 6 });
+}
+
+const { page } = Astro.props;
+---
+
+<BlogPage lang="en" page={page} />

@@ -1,0 +1,389 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+	activeTab?: string;
+}
+
+const { title, description = "Alex is a software engineer building lightweight desktop tools, localizations, and mobile apps.", activeTab = "index" } = Astro.props;
+import '../styles/global.css';
+import { UI_TRANSLATIONS } from '../data/translations.js';
+
+const pathname = Astro.url.pathname;
+let currentLang: 'en' | 'ru' | 'de' = 'en';
+if (pathname.startsWith('/ru/') || pathname === '/ru') {
+  currentLang = 'ru';
+} else if (pathname.startsWith('/de/') || pathname === '/de') {
+  currentLang = 'de';
+}
+
+const t = UI_TRANSLATIONS[currentLang];
+
+function getLocalizedPath(path: string) {
+  if (currentLang === 'en') return path;
+  return `/${currentLang}${path === '/' ? '' : path}`;
+}
+
+function getPathForLang(lang: string) {
+  const cleanPath = pathname.replace(/^\/(ru|de)(\/|$)/, '/');
+  if (lang === 'en') return cleanPath;
+  return `/${lang}${cleanPath === '/' ? '' : cleanPath}`;
+}
+---
+
+<!DOCTYPE html>
+<html lang={currentLang}>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+	<meta name="theme-color" content="#ffffff" />
+	<meta name="color-scheme" content="light dark" />
+	<script is:inline>
+		(function(){
+			const themeDefault = "light";
+			const themeToggle = true;
+			try {
+				document.documentElement.dataset.theme = themeToggle
+					? localStorage.getItem("alex-theme") || themeDefault
+					: themeDefault;
+			} catch (e) {
+				document.documentElement.dataset.theme = themeDefault;
+			}
+		})();
+	</script>
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" href="/favicon.svg" />
+	<title>{title}</title>
+	<meta name="description" content={description} />
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+	<meta name="author" content="Alex" />
+</head>
+<body>
+	<div class="canvas-bg"></div>
+
+	<!-- Header Nav -->
+	<header class="nav" id="nav">
+		<div class="nav-left">
+			<a href={getLocalizedPath('/')} class="logo" aria-label="Almanex home">Almanex<span class="logo-dot">.</span></a>
+			<a href={getLocalizedPath('/')} class={`navlink ${activeTab === 'index' ? 'active' : ''}`}>{t["nav.home"]}</a>
+			<a href={getLocalizedPath('/work')} class={`navlink ${activeTab === 'work' ? 'active' : ''}`}>{t["nav.projects"]}</a>
+			<a href={getLocalizedPath('/blog')} class={`navlink ${activeTab === 'blog' ? 'active' : ''}`}>{t["nav.blog"]}</a>
+			<a href={getLocalizedPath('/about')} class={`navlink ${activeTab === 'about' ? 'active' : ''}`}>{t["nav.about"]}</a>
+		</div>
+		<div class="nav-right">
+			<button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+				<svg class="ic-moon" viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+				<svg class="ic-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"></circle><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4l1.4-1.4M18 6l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+			</button>
+			<a href={getLocalizedPath('/contact')} class={`btn-contact ${activeTab === 'contact' ? 'active' : ''}`}>
+				<svg class="heart-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> {t["nav.contact"]}
+			</a>
+			<button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile">
+				<span></span><span></span><span></span>
+			</button>
+		</div>
+		<!-- Language selector floating below header on both desktop and mobile -->
+		<div class="header-lang-float">
+			<a href={getPathForLang('en')} class={currentLang === 'en' ? 'lang-toggle-btn active' : 'lang-toggle-btn'}>EN</a>
+			<a href={getPathForLang('ru')} class={currentLang === 'ru' ? 'lang-toggle-btn active' : 'lang-toggle-btn'}>RU</a>
+			<a href={getPathForLang('de')} class={currentLang === 'de' ? 'lang-toggle-btn active' : 'lang-toggle-btn'}>DE</a>
+		</div>
+		<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+			<a href={getLocalizedPath('/')} class={`m-link ${activeTab === 'index' ? 'active' : ''}`}>{t["nav.home"]}</a>
+			<a href={getLocalizedPath('/work')} class={`m-link ${activeTab === 'work' ? 'active' : ''}`}>{t["nav.projects"]}</a>
+			<a href={getLocalizedPath('/blog')} class={`m-link ${activeTab === 'blog' ? 'active' : ''}`}>{t["nav.blog"]}</a>
+			<a href={getLocalizedPath('/about')} class={`m-link ${activeTab === 'about' ? 'active' : ''}`}>{t["nav.about"]}</a>
+			<a href={getLocalizedPath('/contact')} class={`m-contact ${activeTab === 'contact' ? 'active' : ''}`}>{t["nav.contact"]}</a>
+		</nav>
+	</header>
+
+	<main id="main">
+		<slot />
+	</main>
+
+	<!-- Footer terminal -->
+	<footer class="ft">
+		<div class="ft-card">
+			<div class="terminal-window">
+				<div class="terminal-header" style="background:var(--bar) !important; border-bottom:2px solid var(--ink) !important; padding:0 !important; display:flex !important; justify-content:space-between !important; align-items:stretch !important; height:42px !important; overflow:hidden !important; user-select:none !important;">
+					<div class="terminal-tabs" style="display:flex !important; align-items:flex-end !important; flex-grow:1 !important; padding-left:10px !important; height:100% !important;">
+						<a href={getLocalizedPath('/')} class={`term-tab ${activeTab === 'index' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 16px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:12px !important; font-weight:bold !important; font-family:var(--font-mono) !important;">
+							home.sh
+						</a>
+						<a href={getLocalizedPath('/work')} class={`term-tab ${activeTab === 'work' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 16px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:12px !important; font-weight:bold !important; font-family:var(--font-mono) !important;">
+							projects.exe
+						</a>
+						<a href={getLocalizedPath('/blog')} class={`term-tab ${activeTab === 'blog' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 16px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:12px !important; font-weight:bold !important; font-family:var(--font-mono) !important;">
+							blog.txt
+						</a>
+						<a href={getLocalizedPath('/about')} class={`term-tab ${activeTab === 'about' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 16px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:12px !important; font-weight:bold !important; font-family:var(--font-mono) !important;">
+							about.sys
+						</a>
+						<a href={getLocalizedPath('/contact')} class={`term-tab ${activeTab === 'contact' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 16px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:12px !important; font-weight:bold !important; font-family:var(--font-mono) !important;">
+							contact.bat
+						</a>
+						<a href="/bsod" title="Open New Tab" style="display:flex !important; align-items:center !important; justify-content:center !important; width:28px !important; height:28px !important; border:2px solid transparent !important; border-radius:6px !important; font-family:var(--font-mono) !important; font-size:16px !important; font-weight:bold !important; text-decoration:none !important; color:var(--ink) !important; margin-left:6px !important; margin-bottom:2px !important; transition:background 0.15s !important;">
+							+
+						</a>
+						<div class="lang-tabs-spacer" style="flex-grow: 1;"></div>
+						<a href={getPathForLang('en')} class={`term-tab footer-lang-tab ${currentLang === 'en' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 12px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:11px !important; font-weight:bold !important; font-family:var(--font-mono) !important; border-color: var(--cyan) !important;">
+							en.lang
+						</a>
+						<a href={getPathForLang('ru')} class={`term-tab footer-lang-tab ${currentLang === 'ru' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 12px !important; height:32px !important; text-decoration:none !important; margin-right:4px !important; font-size:11px !important; font-weight:bold !important; font-family:var(--font-mono) !important; border-color: var(--cyan) !important;">
+							ru.lang
+						</a>
+						<a href={getPathForLang('de')} class={`term-tab footer-lang-tab ${currentLang === 'de' ? 'active-tab' : ''}`} style="display:flex !important; align-items:center !important; gap:6px !important; padding:0 12px !important; height:32px !important; text-decoration:none !important; margin-right:12px !important; font-size:11px !important; font-weight:bold !important; font-family:var(--font-mono) !important; border-color: var(--cyan) !important;">
+							de.lang
+						</a>
+					</div>
+					<div class="terminal-win-controls" style="display:flex !important; align-items:center !important; padding-right:10px !important;">
+						<button class="win-btn" aria-label="Minimize" style="background:none !important; border:none !important; color:var(--ink) !important; width:36px !important; height:100% !important; font-size:11px !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; transition:background 0.15s !important;">─</button>
+						<button class="win-btn" aria-label="Maximize" style="background:none !important; border:none !important; color:var(--ink) !important; width:36px !important; height:100% !important; font-size:11px !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; transition:background 0.15s !important;">❑</button>
+						<button class="win-btn win-close" aria-label="Close" style="background:none !important; border:none !important; color:var(--ink) !important; width:36px !important; height:100% !important; font-size:13px !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; transition:background 0.15s, color 0.15s !important;">✕</button>
+					</div>
+				</div>
+				<div class="terminal-body dashboard-layout">
+					<div class="dash-top-row">
+						<div class="dash-col sys-info-col">
+							<pre class="ascii-art">
+   _   _    _____  __
+  /_\ | |  | ___\ \/ /
+ / _ \| |__| _|  >  < 
+/_/ \_\____|____/_/\_\
+							</pre>
+							<div class="sys-specs">
+								<p><span class="label">STATUS:</span> <span class="sys-status">ONLINE</span></p>
+								<p><span class="label">UPTIME:</span> 24d 13h 42m</p>
+								<p><span class="label">MEMORY:</span> 1.04 GB / 16.00 GB</p>
+								<p><span class="label">OS_VER:</span> 1.0.4</p>
+							</div>
+						</div>
+						<div class="dash-col logs-col">
+							<h5>[SYS_LOGS]</h5>
+							<div class="logs-window">
+								<p><span class="timestamp">[ 0.00s ]</span> Initializing Almanex Core...</p>
+								<p><span class="timestamp">[ 0.08s ]</span> Loading languages: C++, C#, Kotlin, Python, JS</p>
+								<p><span class="timestamp">[ 0.15s ]</span> Connected to GitHub: @Almanex</p>
+								<p><span class="timestamp">[ 0.22s ]</span> Checking systems... <span class="success">OK</span></p>
+								<p><span class="timestamp">[ 0.28s ]</span> Web server running on localhost:3000</p>
+							</div>
+						</div>
+					</div>
+					<hr class="dash-divider" />
+					<div class="dash-bottom-row">
+						<div class="dash-col">
+							<h5>[SYS_EXPLORE]</h5>
+							<p class="code-line"><a href={getLocalizedPath('/work')}>> WORK_PORTFOLIO.EXE</a></p>
+							<p class="code-line"><a href={getLocalizedPath('/about')}>> USER_PROFILE.SYS</a></p>
+							<p class="code-line"><a href={getLocalizedPath('/blog')}>> BLOG_LOGS.TXT</a></p>
+						</div>
+						<div class="dash-col">
+							<h5>[SYS_CONNECT]</h5>
+							<p class="code-line"><a href="mailto:hello@example.com">> SEND_EMAIL.CMD</a></p>
+							<p class="code-line"><a href={getLocalizedPath('/contact')}>> BOOK_MEETING.BAT</a></p>
+							<p class="code-line"><a href="https://github.com/Almanex" target="_blank">> GITHUB_PROFILE.URL</a></p>
+						</div>
+						<div class="dash-col stack-col">
+							<h5>[SYS_STACK]</h5>
+							<p class="progress-line"><span class="tech-name">C++</span> <span class="progress-bar">[||||||||||]</span></p>
+							<p class="progress-line"><span class="tech-name">C#</span> <span class="progress-bar">[||||||||| ]</span></p>
+							<p class="progress-line"><span class="tech-name">Kotlin</span> <span class="progress-bar">[||||||||  ]</span></p>
+							<p class="progress-line"><span class="tech-name">Python</span> <span class="progress-bar">[|||||||   ]</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ft-bar">
+				<p class="made">
+					© 2026 Almanex. Created by <a href="https://github.com/Almanex" target="_blank" rel="noopener">Almanex</a>
+				</p>
+				<div class="socials">
+					<a href="https://github.com/Almanex" target="_blank" aria-label="GitHub">
+						<svg viewBox="0 0 24 24" fill="currentColor" style="width:17px;height:17px;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+					</a>
+					<a href="#" aria-label="LinkedIn">
+						<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4a2 2 0 110 4 2 2 0 010-4zM2 9h4v12H2zM9 9h4v2c.6-1 2-2 4-2 3 0 5 2 5 6v7h-4v-6c0-2-1-3-2-3s-2 1-2 3v6H9z"></path></svg>
+					</a>
+					<a href="#" aria-label="X">
+						<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l4 6z"></path></svg>
+					</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Client-side navigation & theme handling & fade-in reveal -->
+	<script is:inline>
+		// Theme toggle
+		const tt = document.querySelector('.theme-toggle');
+		if (tt) {
+			tt.addEventListener('click', () => {
+				const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+				document.documentElement.dataset.theme = next;
+				localStorage.setItem('alex-theme', next);
+			});
+		}
+
+		// Scroll shadow on nav
+		const nav = document.getElementById('nav');
+		if (nav) {
+			let lastScrollY = window.scrollY;
+			const onScroll = () => {
+				const currentScrollY = window.scrollY;
+				nav.classList.toggle('scrolled', currentScrollY > 8);
+				
+				// Auto-hide behavior
+				if (currentScrollY > lastScrollY && currentScrollY > 80) {
+					if (!nav.classList.contains('menu-open')) {
+						nav.classList.add('nav-hidden');
+					}
+				} else {
+					nav.classList.remove('nav-hidden');
+				}
+				lastScrollY = currentScrollY;
+			};
+			onScroll();
+			window.addEventListener('scroll', onScroll, { passive: true });
+		}
+
+		// Mobile menu burger toggle
+		const burger = document.querySelector('.nav-burger');
+		const mobileNav = document.getElementById('nav-mobile');
+		const navHeader = document.getElementById('nav');
+		if (burger && mobileNav && navHeader) {
+			burger.addEventListener('click', () => {
+				const expanded = burger.getAttribute('aria-expanded') === 'true';
+				burger.setAttribute('aria-expanded', !expanded);
+				navHeader.classList.toggle('menu-open');
+			});
+		}
+
+		// Dynamic 24h clock inside footer
+		const clockEl = document.querySelector('.ft-time');
+		if (clockEl) {
+			const updateClock = () => {
+				const now = new Date();
+				clockEl.textContent = now.toTimeString().split(' ')[0];
+			};
+			setInterval(updateClock, 1000);
+			updateClock();
+		}
+
+		// Fade-in-up animation on scroll
+		const reduce = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+		const els = document.querySelectorAll("[data-reveal]");
+		if (reduce || !("IntersectionObserver" in window)) {
+			els.forEach((e) => e.classList.add("in"));
+		} else {
+			const io = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((e) => {
+						if (e.isIntersecting) {
+							e.target.classList.add("in");
+							io.unobserve(e.target);
+						}
+					});
+				},
+				{ threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+			);
+			els.forEach((e) => io.observe(e));
+		}
+	</script>
+</body>
+</html>
+
+<style is:global>
+	.lang-toggle-btn {
+		border: 1.6px solid var(--ink);
+		background: var(--paper);
+		width: 40px;
+		height: 40px;
+		color: var(--ink);
+		cursor: pointer;
+		border-radius: 11px;
+		display: grid;
+		place-items: center;
+		transition: transform 0.2s, background 0.2s;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		font-weight: 800;
+		text-decoration: none;
+		user-select: none;
+	}
+	.lang-toggle-btn:hover {
+		transform: translateY(-2px);
+		background: var(--hover);
+	}
+	.lang-toggle-btn:active {
+		transform: translateY(0) scale(0.96);
+	}
+	.lang-toggle-btn.active {
+		background: var(--cyan) !important;
+		color: var(--ink) !important;
+		border-color: var(--ink) !important;
+		box-shadow: 2px 2px 0px var(--ink);
+	}
+	.lang-divider {
+		color: var(--line-strong);
+		opacity: 0.5;
+	}
+	.m-lang-selector .lang-btn {
+		color: var(--gray-2) !important;
+	}
+	.m-lang-selector .lang-btn.active {
+		color: var(--cyan) !important;
+	}
+	
+	.header-lang-float {
+		display: flex !important;
+		position: absolute !important;
+		top: 70px !important;
+		right: 6px !important;
+		gap: 8px !important;
+		z-index: 100 !important;
+		transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+	}
+	.header-lang-float .lang-toggle-btn {
+		width: 40px !important;
+		height: 40px !important;
+		border-radius: 11px !important;
+		font-size: 12px !important;
+	}
+	header.nav.nav-hidden .header-lang-float {
+		transform: translateY(-100px) !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+	
+	/* Horizontal scrolling for footer terminal tabs on mobile */
+	.terminal-tabs {
+		overflow-x: auto !important;
+		display: flex !important;
+		flex-wrap: nowrap !important;
+		scrollbar-width: none !important; /* Firefox */
+		-ms-overflow-style: none !important; /* IE 10+ */
+	}
+	.terminal-tabs::-webkit-scrollbar {
+		display: none !important; /* Safari and Chrome */
+	}
+	.terminal-tabs > a {
+		flex-shrink: 0 !important;
+	}
+	
+	@media (max-width: 960px) {
+		.nav-mobile {
+			top: 130px !important;
+		}
+	}
+	@media (max-width: 768px) {
+		.logo {
+			font-size: 19px !important;
+			margin-right: 8px !important;
+		}
+		.nav-right {
+			gap: 8px !important;
+			margin-left: 8px !important;
+		}
+	}
+</style>

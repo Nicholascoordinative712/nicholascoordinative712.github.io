@@ -1,0 +1,1137 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { PROJECTS_DATA } from '../data/projects.js';
+import { PROJECT_TRANSLATIONS } from '../data/translations.js';
+
+interface Props {
+  lang: 'en' | 'ru' | 'de';
+}
+
+const { lang } = Astro.props;
+
+// Fetch all posts from content collections, filter by language, and sort
+const posts = await getCollection('blog');
+const langPosts = posts.filter(post => {
+  if (lang === 'en') return !post.id.startsWith('ru/') && !post.id.startsWith('de/');
+  return post.id.startsWith(`${lang}/`);
+});
+const targetPosts = langPosts.length > 0 ? langPosts : posts.filter(post => !post.id.startsWith('ru/') && !post.id.startsWith('de/'));
+const sortedPosts = targetPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Helper to format date
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function formatFmDate(date: Date) {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = months[date.getMonth()];
+  return `${m} ${d} 12:00`;
+}
+
+const sizeMap: Record<string, string> = {
+  'vscode-agents': '5.2 KB',
+  'dotnet-support-end': '3.6 KB',
+  'wsl-containers': '4.8 KB'
+};
+
+const getLocalizedPath = (path: string) => lang === 'en' ? path : `/${lang}${path === '/' ? '' : path}`;
+
+const articlesData = sortedPosts.map(post => {
+  const baseId = post.id.replace(/^(ru|de)\//, '');
+  return {
+    href: getLocalizedPath(`/blog/${baseId}`),
+    filename: `${baseId}.md`,
+    size: sizeMap[baseId] || '3.5 KB',
+    date: formatFmDate(post.data.pubDate),
+    status: 'PUB',
+    category: post.data.category,
+    title: post.data.title,
+    desc: post.data.description,
+    image: post.data.image,
+    readTime: post.data.readTime
+  };
+});
+
+function resolveSinglePath(src: string, project: any) {
+  if (!src || src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) {
+    if (src && src.startsWith('https://github.com/') && src.includes('/blob/')) {
+      return src.replace('/blob/', '/raw/');
+    }
+    return src;
+  }
+  const baseRepo = project.github.replace(/\/$/, "");
+  const baseRaw = baseRepo.replace("github.com", "raw.githubusercontent.com") + "/main/";
+  const cleanSrc = src.replace(/^\.\//, "");
+  return baseRaw + cleanSrc;
+}
+
+function getFirstImageFromMarkdown(md: string, project: any) {
+  if (!md) return '';
+  const mdMatches = md.matchAll(/!\[.*?\]\((.*?)\)/g);
+  for (const match of mdMatches) {
+    const src = match[1];
+    if (src && !src.toLowerCase().includes('.svg')) {
+      return resolveSinglePath(src, project);
+    }
+  }
+  const htmlMatches = md.matchAll(/<img[^>]*?src=["'](.*?)["']/g);
+  for (const match of htmlMatches) {
+    const src = match[1];
+    if (src && !src.toLowerCase().includes('.svg')) {
+      return resolveSinglePath(src, project);
+    }
+  }
+  return '';
+}
+
+// Accent colors list for retro card headers
+const accents = ['#36c5f0', '#aaabab', '#ecb22e', '#e01e5a', '#2eb67d', '#aaabab', '#ecb22e', '#e01e5a', '#36c5f0', '#aaabab', '#3a2418'];
+
+const pageLabels = {
+  en: {
+    heroFocus: "my focus is",
+    heroAvail: "Available for coding projects & open-source",
+    heroContact: "Contact me",
+    techStack: "tech stack",
+    statement: "I build efficient & useful software",
+    reposKicker: "git show-ref --tags",
+    reposTitle: "REPOSITORIES",
+    reposSub: "A collection of open-source utilities, localizations, and desktop experiments.",
+    viewOnGithub: "View on GitHub",
+    blogKicker: "latest dispatches // blog.txt",
+    blogTitle: "Thoughts & Notes",
+    blogSub: "[ SHORT-FORM ESSAYS ON SOFTWARE CRAFT, ARCHITECTURE & DESIGN ]",
+    blogExploreBtn: "EXPLORE ALL LOGS // BLOG.TXT",
+    blogPostsCount: "10+ POSTS ↗",
+    newsletterKicker: "stay in touch",
+    newsletterTitle: "The occasional note",
+    newsletterSub: "A few times a year - new work, what I'm learning, nothing else.",
+    newsletterBtn: "Subscribe",
+    newsletterNote: "No spam. Unsubscribe anytime.",
+    newsletterPlaceholder: "you@example.com",
+    fmHoverPreview: "Hover over a file for preview",
+    fmWaiting: "Waiting for selection...",
+    fmLoading: "Loading files...",
+    fmFiles: "files",
+    fmPages: "pages",
+    fmKBOnPage: "KB on page",
+    fmInitialCommit: "initial commit",
+    fmDrafts: "drafts",
+    fmDraft: "DRAFT",
+    fmConfig: "CFG"
+  },
+  ru: {
+    heroFocus: "моя специализация",
+    heroAvail: "Доступен для коммерческих и open-source проектов",
+    heroContact: "Написать мне",
+    techStack: "технологический стек",
+    statement: "Создаю эффективное и полезное программное обеспечение",
+    reposKicker: "git show-ref --tags",
+    reposTitle: "РЕПОЗИТОРИИ",
+    reposSub: "Коллекция утилит с открытым исходным кодом, локализаций и десктопных экспериментов.",
+    viewOnGithub: "Смотреть на GitHub",
+    blogKicker: "последние записи // blog.txt",
+    blogTitle: "Мысли и Заметки",
+    blogSub: "[ КОРОТКИЕ СТАТЬИ О РАЗРАБОТКЕ, АРХИТЕКТУРЕ И ДИЗАЙНЕ ]",
+    blogExploreBtn: "ВСЕ ЗАПИСИ // BLOG.TXT",
+    blogPostsCount: "10+ СТАТЕЙ ↗",
+    newsletterKicker: "оставаться на связи",
+    newsletterTitle: "Периодическая рассылка",
+    newsletterSub: "Несколько раз в год — новые работы, инсайты и ничего лишнего.",
+    newsletterBtn: "Подписаться",
+    newsletterNote: "Без спама. Отписка в любое время.",
+    newsletterPlaceholder: "you@example.com",
+    fmHoverPreview: "Наведите курсор на файл для предпросмотра",
+    fmWaiting: "Ожидание выбора...",
+    fmLoading: "Загрузка файлов...",
+    fmFiles: "файлов",
+    fmPages: "страниц",
+    fmKBOnPage: "КБ на странице",
+    fmInitialCommit: "первый коммит",
+    fmDrafts: "черновики",
+    fmDraft: "ЧЕРНОВИК",
+    fmConfig: "КОНФИГ"
+  },
+  de: {
+    heroFocus: "mein fokus ist",
+    heroAvail: "Verfügbar für Coding-Projekte & Open-Source",
+    heroContact: "Kontaktieren",
+    techStack: "Tech-Stack",
+    statement: "Ich entwickle effiziente & nützliche Software",
+    reposKicker: "git show-ref --tags",
+    reposTitle: "REPOSITORIES",
+    reposSub: "Eine Sammlung von Open-Source-Utilities, Lokalisierungen und Desktop-Experimenten.",
+    viewOnGithub: "Auf GitHub ansehen",
+    blogKicker: "neueste meldungen // blog.txt",
+    blogTitle: "Gedanken & Notizen",
+    blogSub: "[ KURZARTIKEL ÜBER SOFTWARE-HANDWERK, ARCHITEKTUR & DESIGN ]",
+    blogExploreBtn: "ALLE LOGS ANSEHEN // BLOG.TXT",
+    blogPostsCount: "10+ BEITRÄGE ↗",
+    newsletterKicker: "in kontakt bleiben",
+    newsletterTitle: "Gelegentliche Notizen",
+    newsletterSub: "Ein paar Mal im Jahr — neue Arbeiten, Erkenntnisse, sonst nichts.",
+    newsletterBtn: "Abonnieren",
+    newsletterNote: "Kein Spam. Jederzeit abbestellbar.",
+    newsletterPlaceholder: "you@example.com",
+    fmHoverPreview: "Bewege den Cursor über eine Datei für die Vorschau",
+    fmWaiting: "Warten auf Auswahl...",
+    fmLoading: "Dateien laden...",
+    fmFiles: "Dateien",
+    fmPages: "Seiten",
+    fmKBOnPage: "KB auf Seite",
+    fmInitialCommit: "Initialer Commit",
+    fmDrafts: "entwuerfe",
+    fmDraft: "ENTWURF",
+    fmConfig: "KONFIG"
+  }
+};
+
+const l = pageLabels[lang];
+---
+
+<Layout title="Almanex — Software Engineer Portfolio" activeTab="index">
+  <div id="homepage-container" data-lang={lang}>
+    <section class="hero">
+      <div class="clock" id="clock">--:--:--</div>
+      <img class="avatar flt1" src="https://skillicons.dev/icons?i=cs" alt="C#" style="top:30%;left:11%;transform:rotate(-7deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <img class="avatar flt2" src="https://skillicons.dev/icons?i=cpp" alt="C++" style="top:31%;right:10%;transform:rotate(6deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <img class="avatar flt3" src="https://skillicons.dev/icons?i=dotnet" alt=".NET" style="top:45%;left:13%;transform:rotate(5deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <img class="avatar flt4" src="https://skillicons.dev/icons?i=java" alt="Java" style="top:60%;right:14%;transform:rotate(-8deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <img class="avatar flt5" src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin" style="bottom:20%;left:13%;transform:rotate(-6deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <span class="cursor flt6" style="bottom:24%;left:22%;transform:rotate(8deg)">
+        <svg viewBox="0 0 24 24" fill="var(--amber)"><path d="M4 2l16 7-7 2-2 7z" stroke="#111" stroke-width="1.4" stroke-linejoin="round"></path></svg>
+      </span>
+      <img class="avatar flt7" src="https://skillicons.dev/icons?i=php" alt="PHP" style="bottom:21%;right:14%;transform:rotate(4deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <img class="avatar flt1" src="https://skillicons.dev/icons?i=docker" alt="Docker" style="top:18%;left:22%;transform:rotate(12deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      <img class="avatar flt2" src="https://skillicons.dev/icons?i=windows" alt="Windows" style="top:16%;right:22%;transform:rotate(-10deg);border-radius:12px;box-shadow:var(--shadow-sticker);border:1.8px solid var(--ink);width:56px;height:56px;">
+      
+      <p class="hand myname">my focus <u>is</u></p>
+      <h1 class="display-name ide-name-container">
+        <span class="ide-selection-box">
+          <span class="ide-code-declaration"><span class="keyword">const</span> <span class="type">std::string</span> focus = </span>
+          <span class="ide-quote">"</span>open-source<span class="ide-quote">"</span>
+        </span>
+        <span class="ide-blinking-cursor"></span>
+      </h1>
+      <p class="mono-label avail"><span class="dot"></span> {l.heroAvail}</p>
+      
+      <a href={getLocalizedPath('/contact')} class="cta keycap-iso-enter">
+        <svg class="keycap-svg" viewBox="0 0 166 86">
+          <path class="key-shadow" d="M 70,6 H 158 A 6,6 0 0 1 164,12 V 80 A 6,6 0 0 1 158,86 H 10 A 6,6 0 0 1 4,80 V 52 A 6,6 0 0 1 10,46 H 58 A 6,6 0 0 0 64,40 V 12 A 6,6 0 0 1 70,6 Z" fill="var(--ink)"></path>
+          <path class="key-face" d="M 66,0 H 154 A 6,6 0 0 1 160,6 V 74 A 6,6 0 0 1 154,80 H 6 A 6,6 0 0 1 0,74 V 46 A 6,6 0 0 1 6,40 H 54 A 6,6 0 0 0 60,34 V 6 A 6,6 0 0 1 66,0 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"></path>
+        </svg>
+        <div class="keycap-content">
+          <div class="keycap-top-stem">
+            <div class="keycap-top-row">
+              <span class="key-label">Enter</span>
+              <span class="key-arrow">↵</span>
+            </div>
+          </div>
+          <div class="keycap-bottom-base">
+            <span class="key-text">{l.heroContact}</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <section class="clients" id="clients">
+      <p class="ck">tech stack</p>
+      <div class="marquee marquee-tech-dark">
+        <div class="marquee-track">
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#36c5f0"></span>C++</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#a8b9d5"></span>C#</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#e01e5a"></span>Kotlin</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#ecb22e"></span>Python</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#7b5ea7"></span>.NET</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#3ddc84"></span>Android</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#36c5f0"></span>WinAPI</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#f54d27"></span>Git</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#0078d7"></span>Windows 11</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#50fa7b"></span>SQLite</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#ff79c6"></span>Gradle</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#ecb22e"></span>Java</span>
+          <!-- Duplicate for loop -->
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#36c5f0"></span>C++</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#a8b9d5"></span>C#</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#e01e5a"></span>Kotlin</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#ecb22e"></span>Python</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#7b5ea7"></span>.NET</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#3ddc84"></span>Android</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#36c5f0"></span>WinAPI</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#f54d27"></span>Git</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#0078d7"></span>Windows 11</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#50fa7b"></span>SQLite</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#ff79c6"></span>Gradle</span>
+          <span class="marquee-item tech-item"><span class="tech-dot" style="background:#ecb22e"></span>Java</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="statement">
+      <h2 data-reveal>
+        {lang === 'ru' ? (
+          <>Создаю <span class="g cyan"><svg viewBox="0 0 24 24" fill="none"><path d="M8 6L3 12l5 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 6l5 6-5 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 4l-4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path></svg></span> эффективное & полезное ПО <span class="g magenta"><svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="5" r="2.2" stroke="currentColor" stroke-width="2"></circle><circle cx="18" cy="5" r="2.2" stroke="currentColor" stroke-width="2"></circle><circle cx="6" cy="19" r="2.2" stroke="currentColor" stroke-width="2"></circle><path d="M6 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M18 7c0 5-5 7-12 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span></>
+        ) : (
+          <>I build <span class="g cyan"><svg viewBox="0 0 24 24" fill="none"><path d="M8 6L3 12l5 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 6l5 6-5 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 4l-4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path></svg></span> efficient & useful software <span class="g magenta"><svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="5" r="2.2" stroke="currentColor" stroke-width="2"></circle><circle cx="18" cy="5" r="2.2" stroke="currentColor" stroke-width="2"></circle><circle cx="6" cy="19" r="2.2" stroke="currentColor" stroke-width="2"></circle><path d="M6 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M18 7c0 5-5 7-12 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span></>
+        )}
+      </h2>
+    </section>
+
+    <div class="arc" aria-hidden="true">
+      <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="none"><path d="M 0 45 Q 10 35 20 45 Q 30 55 40 45 Q 50 35 60 45 Q 70 55 80 45 Q 90 35 100 45 Q 110 55 120 45 Q 130 35 140 45 Q 150 55 160 45 Q 170 35 180 45 Q 190 55 200 45 Q 210 35 220 45 Q 230 55 240 45 Q 250 35 260 45 Q 270 55 280 45 Q 290 35 300 45 Q 310 55 320 45 Q 330 35 340 45 Q 350 55 360 45 Q 370 35 380 45 Q 390 55 400 45 Q 410 35 420 45 Q 430 55 440 45 Q 450 35 460 45 Q 470 55 480 45 Q 490 35 500 45 Q 510 55 520 45 Q 530 35 540 45 Q 550 55 560 45 Q 570 35 580 45 Q 590 55 600 45 Q 610 35 620 45 Q 630 55 640 45 Q 650 35 660 45 Q 670 55 680 45 Q 690 35 700 45 Q 710 55 720 45 Q 730 35 740 45 Q 750 55 760 45 Q 770 35 780 45 Q 790 55 800 45 Q 810 35 820 45 Q 830 55 840 45 Q 850 35 860 45 Q 870 55 880 45 Q 890 35 900 45 Q 910 55 920 45 Q 930 35 940 45 Q 950 55 960 45 Q 970 35 980 45 Q 990 55 1000 45 Q 1010 35 1020 45 Q 1030 55 1040 45 Q 1050 35 1060 45 Q 1070 55 1080 45 Q 1090 35 1100 45 Q 1110 55 1120 45 Q 1130 35 1140 45 Q 1150 55 1160 45 Q 1170 35 1180 45 Q 1190 55 1200 45" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path></svg>
+    </div>
+
+    <section id="work">
+      <div class="works-intro">
+        <p class="hand kicker" data-reveal>git show-ref --tags</p>
+        <div class="works-title" data-reveal>{l.reposTitle}</div>
+        <div class="works-note" data-reveal>{l.reposSub}</div>
+      </div>
+      
+      <div class="stack" id="stack">
+        {Object.entries(PROJECTS_DATA).map(([id, project], index) => {
+          const accent = accents[index % accents.length];
+          const firstImg = getFirstImageFromMarkdown(project.readme, project);
+          const coverImg = firstImg || (project.image && project.image.startsWith('/') ? project.image : `/images/projects/cover/cover_${(index % 8) + 1}.avif`);
+          
+          // Localized category and subtitle
+          const category = PROJECT_TRANSLATIONS[lang]?.[id]?.category || project.category;
+          const subtitle = PROJECT_TRANSLATIONS[lang]?.[id]?.subtitle || project.subtitle;
+
+          return (
+            <article class="folder-card" data-project-id={id} style="display: none;">
+              <div class="fc-shell">
+                <div class="terminal-window project-terminal" style={`--accent:${accent};`}>
+                  <div class="terminal-header">
+                    <div class="terminal-buttons">
+                      <span class="btn-close"></span>
+                      <span class="btn-minimize"></span>
+                      <span class="btn-maximize"></span>
+                    </div>
+                    <div class="terminal-title">almanex@geek-pc: ~/projects/{id}</div>
+                  </div>
+                  <div class="terminal-body fc-inner">
+                    <div class="fc-text">
+                      <p class="fc-meta"><span class="d"></span> {category}</p>
+                      <h3 class="fc-name" style="font-size: clamp(34px, 4vw, 54px);">{project.title}</h3>
+                      <p class="fc-desc">{subtitle}</p>
+                      <a href={project.github} target="_blank" class="fc-view">
+                        {l.viewOnGithub} <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </a>
+                      <div class="fc-tags">
+                        <span class="fc-tag">{project.lang}</span>
+                        {project.platform && <span class="fc-tag">{project.platform}</span>}
+                      </div>
+                    </div>
+                    <div class="fc-img">
+                      <div class="frame"><img src={coverImg} alt={project.title} loading="lazy" /></div>
+                      <span class="handle tl"></span><span class="handle tr"></span><span class="handle bl"></span><span class="handle br"></span>
+                      <span class="jpg"><b>{project.lang.toUpperCase()}</b> {id}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+        
+        <div class="stack-end" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- Featured Blog File Manager -->
+    <section class="section" id="featured-blog" style="padding: 90px 0 70px;">
+      <div class="section-head" style="margin-bottom: 50px;">
+        <p class="kicker" style="font-family: var(--font-hand); font-size: 30px; transform: rotate(-3deg); display: inline-block; color: var(--amber);">latest dispatches // blog.txt</p>
+        <h2 style="font-family: var(--font-display); font-size: clamp(34px, 5.2vw, 56px); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase;">{l.blogTitle}</h2>
+        <p class="sub" style="font-family: var(--font-mono); font-size: 14.5px; color: var(--gray-2); margin-top: 10px;">{l.blogSub}</p>
+      </div>
+
+      <div class="fm-wrapper">
+        <div class="fm-terminal">
+          <!-- Menu Bar -->
+          <div class="fm-menubar">
+            <span><span class="fm-menu-key">F</span>ile</span>
+            <span><span class="fm-menu-key">E</span>dit</span>
+            <span><span class="fm-menu-key">V</span>iew</span>
+            <span><span class="fm-menu-key">C</span>ommands</span>
+            <span><span class="fm-menu-key">O</span>ptions</span>
+            <span><span class="fm-menu-key">H</span>elp</span>
+          </div>
+
+          <!-- Panels -->
+          <div class="fm-panels">
+            <!-- LEFT PANEL: File Listing -->
+            <div class="fm-panel">
+              <div class="fm-panel-title" id="fm-panel-dir">/home/alex/blog/</div>
+              <div class="fm-col-headers">
+                <span>Name</span>
+                <span>Size</span>
+                <span>Modified</span>
+                <span>Status</span>
+              </div>
+              <div class="fm-file-list" id="fm-file-list">
+                <!-- Will be dynamically populated by JS -->
+              </div>
+            </div>
+
+            <!-- RIGHT PANEL: Preview -->
+            <div class="fm-panel">
+              <div class="fm-panel-title preview-title">[PREVIEW]</div>
+              <div class="fm-preview" id="fm-preview">
+                <!-- Empty state -->
+                <div class="fm-preview-empty" id="fm-preview-empty">
+                  <div class="fm-big-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:48px; height:48px; opacity:0.35;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
+                  <div id="fm-empty-text">{l.fmHoverPreview}</div>
+                  <div style="margin-top: 6px; font-size: 11px; opacity: 0.6;">
+                    <span class="fm-cursor-blink">█</span> <span id="fm-waiting-text">{l.fmWaiting}</span>
+                  </div>
+                </div>
+
+                <!-- Dynamic Preview -->
+                <div class="fm-preview-content" id="fm-dynamic-preview">
+                  <img class="fm-preview-img" id="fm-prev-img" src="" alt="" loading="lazy">
+                  <div class="fm-preview-body">
+                    <span class="fm-preview-cat" id="fm-prev-cat"></span>
+                    <span class="fm-preview-date" id="fm-prev-date"></span>
+                    <h3 class="fm-preview-title" id="fm-prev-title"></h3>
+                    <p class="fm-preview-desc" id="fm-prev-desc"></p>
+                    <div class="fm-preview-meta">
+                      <span id="fm-prev-readtime"></span>
+                      <span id="fm-prev-filename"></span>
+                    </div>
+                    <a class="fm-preview-action" id="fm-prev-action" href="">F3 View →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- F-Key Command Bar -->
+          <div class="fm-cmdbar">
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F1</span><span class="fm-flabel">Help</span></div>
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F3</span><span class="fm-flabel">View</span></div>
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F4</span><span class="fm-flabel">Edit</span></div>
+            <div class="fm-cmdbar-item" id="fm-f5-btn" style="cursor:pointer; background: var(--cyan-soft) !important;"><span class="fm-fkey" style="background: var(--cyan) !important; color: #111212 !important;">F5</span><span class="fm-flabel" style="color: var(--ink) !important; font-weight: bold !important;">PrevPg</span></div>
+            <div class="fm-cmdbar-item" id="fm-f6-btn" style="cursor:pointer; background: var(--cyan-soft) !important;"><span class="fm-fkey" style="background: var(--cyan) !important; color: #111212 !important;">F6</span><span class="fm-flabel" style="color: var(--ink) !important; font-weight: bold !important;">NextPg</span></div>
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F7</span><span class="fm-flabel">MkDir</span></div>
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F8</span><span class="fm-flabel">Delete</span></div>
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F9</span><span class="fm-flabel">Menu</span></div>
+            <div class="fm-cmdbar-item"><span class="fm-fkey">F10</span><span class="fm-flabel">Quit</span></div>
+          </div>
+
+          <!-- Status bar -->
+          <div class="fm-statusbar">
+            <span id="fm-status-info">{l.fmLoading}</span>
+            <span id="fm-clock-status">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 48px;">
+        <a href={getLocalizedPath('/blog')} class="btn-view-blog" style="font-family: var(--font-mono); font-size: 13.5px; font-weight: 800; text-transform: uppercase; background: var(--surface); color: var(--ink); border: 2px solid var(--ink); border-radius: 14px; padding: 15px 30px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 5px 5px 0px var(--ink); text-decoration: none; transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);">
+          <span>{l.blogExploreBtn}</span>
+          <span style="background: var(--cyan); border: 1.5px solid var(--ink); border-radius: 6px; padding: 2px 8px; font-size: 11px;">{l.blogPostsCount}</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="newsletter">
+      <div class="newsletter-band">
+        <div class="nl-inner">
+          <p class="kicker">{l.newsletterKicker}</p>
+          <h2>{l.newsletterTitle}</h2>
+          <p class="sub">{l.newsletterSub}</p>
+          <form class="nl-form" action="https://buttondown.email/api/emails/embed-subscribe/yourname" method="POST" target="_blank">
+            <input type="email" name="email" placeholder={l.newsletterPlaceholder} required aria-label="Email address">
+            <button type="submit">{l.newsletterBtn}</button>
+          </form>
+          <p class="nl-note">{l.newsletterNote}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline define:vars={{ articlesData, l }}>
+  (function() {
+    const ARTICLES = articlesData;
+
+    const DECORATIVE = [
+      { type: 'dir', name: `${l.fmDrafts}/`, size: '<DIR>', date: 'Jul 08 18:22', status: '—' },
+      { type: 'draft', name: 'README.md', size: '1.2 KB', date: 'Jun 15 08:00', status: l.fmDraft, opacity: 0.55 },
+      { type: 'cfg', name: '.blogrc', size: '0.4 KB', date: 'Jun 01 10:00', status: l.fmConfig, opacity: 0.55 }
+    ];
+
+    const ITEMS_PER_PAGE = 3;
+    let currentPage = 0;
+    let selectedIndexOnPage = -1;
+
+    const fileList = document.getElementById('fm-file-list');
+    if (!fileList) return;
+
+    const panelDir = document.getElementById('fm-panel-dir');
+    const statusInfo = document.getElementById('fm-status-info');
+    const clockStatus = document.getElementById('fm-clock-status');
+
+    const previewEmpty = document.getElementById('fm-preview-empty');
+    const dynamicPreview = document.getElementById('fm-dynamic-preview');
+    const prevImg = document.getElementById('fm-prev-img');
+    const prevCat = document.getElementById('fm-prev-cat');
+    const prevDate = document.getElementById('fm-prev-date');
+    const prevTitle = document.getElementById('fm-prev-title');
+    const prevDesc = document.getElementById('fm-prev-desc');
+    const prevReadtime = document.getElementById('fm-prev-readtime');
+    const prevFilename = document.getElementById('fm-prev-filename');
+    const prevAction = document.getElementById('fm-prev-action');
+
+    const f5Btn = document.getElementById('fm-f5-btn');
+    const f6Btn = document.getElementById('fm-f6-btn');
+
+    const totalPages = Math.ceil(ARTICLES.length / ITEMS_PER_PAGE);
+
+    function getPageArticles() {
+      const start = currentPage * ITEMS_PER_PAGE;
+      return ARTICLES.slice(start, start + ITEMS_PER_PAGE);
+    }
+
+    function showPreview(article) {
+      if (article) {
+        if (previewEmpty) previewEmpty.style.display = 'none';
+        if (dynamicPreview) dynamicPreview.classList.add('is-visible');
+
+        if (prevImg) {
+          prevImg.src = article.image;
+          prevImg.alt = article.title;
+        }
+        if (prevCat) prevCat.textContent = article.category;
+        if (prevDate) prevDate.textContent = article.date;
+        if (prevTitle) prevTitle.textContent = article.title;
+        if (prevDesc) prevDesc.textContent = article.desc;
+        if (prevReadtime) prevReadtime.textContent = `read_time: ${article.readTime}`;
+        if (prevFilename) prevFilename.textContent = article.filename;
+        if (prevAction) {
+          prevAction.href = article.href;
+          prevAction.textContent = 'F3 View →';
+        }
+      } else {
+        if (dynamicPreview) dynamicPreview.classList.remove('is-visible');
+        if (previewEmpty) previewEmpty.style.display = '';
+      }
+    }
+
+    function render() {
+      fileList.innerHTML = '';
+      const pageArticles = getPageArticles();
+
+      // 1. Render static '..' entry
+      const parentRow = document.createElement('div');
+      parentRow.className = 'fm-file-row fm-dir';
+      parentRow.dataset.type = 'dir';
+      parentRow.innerHTML = `
+        <span class="fm-filename"><span class="fm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span> ..</span>
+        <span>&lt;DIR&gt;</span>
+        <span>Jul 10 10:58</span>
+        <span>—</span>
+      `;
+      fileList.appendChild(parentRow);
+
+      // 2. Render articles on current page
+      pageArticles.forEach((art, pageIdx) => {
+        const artRow = document.createElement('a');
+        artRow.className = 'fm-file-row';
+        artRow.href = art.href;
+        artRow.dataset.type = 'article';
+        artRow.dataset.pageIndex = String(pageIdx);
+        if (pageIdx === selectedIndexOnPage) {
+          artRow.classList.add('is-selected');
+        }
+
+        artRow.innerHTML = `
+          <span class="fm-filename"><span class="fm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></span> ${art.filename}</span>
+          <span>${art.size}</span>
+          <span>${art.date}</span>
+          <span class="fm-status fm-status-pub">● ${art.status}</span>
+        `;
+
+        artRow.addEventListener('mouseenter', () => {
+          showPreview(art);
+          const rows = fileList.querySelectorAll('.fm-file-row');
+          rows.forEach(r => r.classList.remove('is-selected'));
+          artRow.classList.add('is-selected');
+        });
+
+        artRow.addEventListener('mouseleave', () => {
+          if (selectedIndexOnPage !== pageIdx) {
+            artRow.classList.remove('is-selected');
+          }
+          restoreSelectedPreview();
+        });
+
+        artRow.addEventListener('click', () => {
+          selectedIndexOnPage = pageIdx;
+          restoreSelectedPreview();
+        });
+
+        fileList.appendChild(artRow);
+      });
+
+      // 3. Render decorative files (only on page 0)
+      if (currentPage === 0) {
+        DECORATIVE.forEach(item => {
+          const decRow = document.createElement('div');
+          decRow.className = 'fm-file-row' + (item.type === 'dir' ? ' fm-dir' : '');
+          if (item.opacity) decRow.style.opacity = String(item.opacity);
+          decRow.dataset.type = 'decorative';
+          decRow.innerHTML = `
+            <span class="fm-filename"><span class="fm-icon">${item.type === 'dir' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' : item.type === 'draft' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'}</span> ${item.name}</span>
+            <span>${item.size}</span>
+            <span>${item.date}</span>
+            <span style="color:var(--gray);">${item.status}</span>
+          `;
+          fileList.appendChild(decRow);
+        });
+      }
+
+      if (panelDir) panelDir.textContent = `/home/alex/blog/ [Page ${currentPage + 1}/${totalPages || 1}]`;
+
+      const totalKB = pageArticles.reduce((sum, art) => sum + parseFloat(art.size), 0).toFixed(1);
+      if (statusInfo) statusInfo.textContent = `${ARTICLES.length} ${l.fmFiles}, ${totalPages} ${l.fmPages} — ${totalKB} KB ${l.fmKBOnPage}`;
+
+      restoreSelectedPreview();
+    }
+
+    function restoreSelectedPreview() {
+      const rows = fileList.querySelectorAll('.fm-file-row');
+      rows.forEach(r => r.classList.remove('is-selected'));
+
+      const pageArticles = getPageArticles();
+      if (selectedIndexOnPage >= 0 && selectedIndexOnPage < pageArticles.length) {
+        const art = pageArticles[selectedIndexOnPage];
+        showPreview(art);
+        const activeRow = fileList.querySelector(`.fm-file-row[data-page-index="${selectedIndexOnPage}"]`);
+        if (activeRow) activeRow.classList.add('is-selected');
+      } else {
+        showPreview(null);
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages - 1) {
+        currentPage++;
+        selectedIndexOnPage = -1;
+        render();
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        selectedIndexOnPage = -1;
+        render();
+      }
+    }
+
+    if (f5Btn) f5Btn.addEventListener('click', prevPage);
+    if (f6Btn) f6Btn.addEventListener('click', nextPage);
+
+    document.addEventListener('keydown', (e) => {
+      const rect = fileList.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!isVisible) return;
+
+      const pageArticles = getPageArticles();
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndexOnPage = Math.min(selectedIndexOnPage + 1, pageArticles.length - 1);
+        restoreSelectedPreview();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndexOnPage = Math.max(selectedIndexOnPage - 1, 0);
+        restoreSelectedPreview();
+      } else if (e.key === 'Enter' && selectedIndexOnPage >= 0) {
+        const art = pageArticles[selectedIndexOnPage];
+        if (art && art.href) window.location.href = art.href;
+      } else if (e.key === 'F5') {
+        e.preventDefault();
+        prevPage();
+      } else if (e.key === 'F6') {
+        e.preventDefault();
+        nextPage();
+      }
+    });
+
+    if (clockStatus) {
+      const tick = () => {
+        const d = new Date();
+        const h = String(d.getHours()).padStart(2, '0');
+        const m = String(d.getMinutes()).padStart(2, '0');
+        const s = String(d.getSeconds()).padStart(2, '0');
+        clockStatus.textContent = h + ':' + m + ':' + s;
+      };
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    render();
+  })();
+</script>
+
+<script is:inline>
+  (() => {
+    // Live hero clock
+    const clock = document.getElementById("clock");
+    if (clock) {
+      const tick = () => {
+        const d = new Date();
+        const h = String(d.getHours()).padStart(2, "0");
+        const m = String(d.getMinutes()).padStart(2, "0");
+        const s = String(d.getSeconds()).padStart(2, "0");
+        clock.textContent = h + ":" + m + ":" + s;
+      };
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // Dynamic repository rotation
+    const stack = document.getElementById("stack");
+    if (stack) {
+      const cards = Array.from(stack.querySelectorAll(".folder-card"));
+      if (cards.length > 0) {
+        const mapped = cards.map((card, idx) => ({ card, idx }));
+        const shuffled = mapped.sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 4);
+        selected.sort((a, b) => a.idx - b.idx);
+        selected.forEach((item, index) => {
+          item.card.style.display = "block";
+          item.card.style.zIndex = String(index + 1);
+        });
+      }
+    }
+  })();
+</script>
+
+<style is:global>
+  .display-name {
+    font-size: clamp(38px, 6.5vw, 92px) !important;
+  }
+  @media (max-width: 960px) {
+    .display-name {
+      font-size: clamp(24px, 8.5vw, 58px) !important;
+    }
+  }
+  .ide-name-container {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .ide-selection-box {
+    background: transparent !important;
+    border: 2px solid var(--cyan) !important;
+    padding: 10px 28px !important;
+    border-radius: 12px !important;
+    position: relative !important;
+    display: inline-block !important;
+    font-family: var(--font-mono) !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 900 !important;
+  }
+  [data-theme=dark] .ide-selection-box {
+    background: transparent !important;
+  }
+  .ide-code-declaration {
+    position: absolute !important;
+    top: 0 !important; transform: translateY(-50%) !important;
+    left: 0.25em !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.16em !important;
+    color: var(--ink) !important;
+    white-space: nowrap !important;
+    background: var(--paper) !important;
+    padding: 0 0.12em !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+  }
+  .ide-code-declaration .keyword {
+    color: #0056b3 !important;
+  }
+  [data-theme=dark] .ide-code-declaration .keyword {
+    color: #569cd6 !important;
+  }
+  .ide-code-declaration .type {
+    color: #22863a !important;
+  }
+  [data-theme=dark] .ide-code-declaration .type {
+    color: #4ec9b0 !important;
+  }
+  .ide-blinking-cursor {
+    width: 0.035em !important;
+    height: 1.1em !important;
+    background: var(--ink) !important;
+    margin-left: 0.1em !important;
+    animation: cursor-blink 1.0s infinite !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+  }
+  @keyframes cursor-blink {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .ide-quote {
+    font-size: 0.55em !important;
+    vertical-align: top !important;
+    display: inline-block !important;
+    line-height: 1.4 !important;
+    color: var(--cyan) !important;
+    font-family: var(--font-mono) !important;
+    font-weight: bold !important;
+  }
+
+  /* ===== FILE MANAGER CORE ===== */
+  .fm-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 26px;
+  }
+  .fm-terminal {
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0px var(--ink);
+    background: var(--surface);
+    font-family: var(--font-mono);
+  }
+  .fm-menubar {
+    background: var(--bar);
+    border-bottom: 2px solid var(--ink);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 36px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    user-select: none;
+    overflow-x: auto;
+  }
+  .fm-menubar span {
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: default;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .fm-menubar span:hover {
+    background: var(--cyan);
+    color: #111212;
+  }
+  .fm-menubar .fm-menu-key {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .fm-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 420px;
+  }
+  .fm-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .fm-panel + .fm-panel {
+    border-left: 2px solid var(--ink);
+  }
+  .fm-panel-title {
+    background: var(--cyan);
+    color: #111212;
+    text-align: center;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--ink);
+    user-select: none;
+  }
+  .fm-panel-title.preview-title {
+    background: var(--amber);
+  }
+  .fm-col-headers {
+    display: grid;
+    grid-template-columns: 1fr 70px 110px 90px;
+    gap: 0;
+    background: var(--bar);
+    border-bottom: 2px solid var(--ink);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    user-select: none;
+  }
+  .fm-col-headers span {
+    padding: 7px 12px;
+    border-right: 1px solid var(--line);
+  }
+  .fm-col-headers span:last-child {
+    border-right: none;
+  }
+  .fm-file-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .fm-file-row {
+    display: grid;
+    grid-template-columns: 1fr 70px 110px 90px;
+    gap: 0;
+    font-size: 13px;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    border-bottom: 1px solid var(--line);
+    line-height: 1;
+  }
+  .fm-file-row span {
+    padding: 12px;
+    border-right: 1px solid var(--line);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .fm-file-row span:last-child {
+    border-right: none;
+  }
+  .fm-file-row:hover,
+  .fm-file-row.is-selected {
+    background: var(--cyan);
+    color: #111212 !important;
+  }
+  .fm-file-row:hover span,
+  .fm-file-row.is-selected span {
+    border-right-color: rgba(17, 18, 18, 0.15);
+  }
+  .fm-file-row.fm-dir {
+    font-weight: bold;
+    color: var(--cyan-strong);
+  }
+  .fm-file-row.fm-dir:hover,
+  .fm-file-row.fm-dir.is-selected {
+    color: #111212 !important;
+  }
+  .fm-status {
+    font-weight: bold;
+  }
+  .fm-status-pub {
+    color: #2eb67d;
+  }
+  .fm-file-row:hover .fm-status-pub,
+  .fm-file-row.is-selected .fm-status-pub {
+    color: #111212;
+  }
+  .fm-preview {
+    flex: 1;
+    background: var(--bar);
+    position: relative;
+  }
+  .fm-preview-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 13.5px;
+    color: var(--gray-2);
+    text-align: center;
+    line-height: 1.5;
+    user-select: none;
+    padding: 24px;
+  }
+  .fm-big-icon {
+    margin-bottom: 16px;
+  }
+  .fm-cursor-blink {
+    color: var(--cyan);
+    animation: cursor-blink 1s step-end infinite;
+  }
+  .fm-preview-content {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .fm-preview-content.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .fm-preview-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-bottom: 2px solid var(--ink);
+  }
+  .fm-preview-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .fm-preview-cat {
+    font-size: 11px;
+    color: var(--cyan-strong);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .fm-preview-date {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 2px;
+  }
+  .fm-preview-title {
+    font-family: var(--font-body);
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 800;
+    margin: 8px 0;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .fm-preview-desc {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--gray-2);
+    margin: 0 0 16px 0;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .fm-preview-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gray);
+    border-top: 1.5px dashed var(--line-strong);
+    padding-top: 12px;
+    margin-top: auto;
+  }
+  .fm-preview-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cyan);
+    color: #111212;
+    text-decoration: none;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 12.5px;
+    font-weight: 800;
+    box-shadow: 2px 2px 0px var(--ink);
+    transition: all 0.15s;
+    margin-top: 14px;
+    max-width: 140px;
+  }
+  .fm-preview-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0px var(--ink);
+  }
+
+  .fm-cmdbar {
+    background: var(--bar);
+    border-top: 2px solid var(--ink);
+    display: flex;
+    user-select: none;
+    overflow-x: auto;
+  }
+  .fm-cmdbar-item {
+    flex: 1;
+    min-width: 70px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    height: 36px;
+    border-right: 1px solid var(--line);
+  }
+  .fm-cmdbar-item:last-child {
+    border-right: none;
+  }
+  .fm-fkey {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 800;
+    padding: 0 8px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .fm-flabel {
+    padding: 0 10px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .fm-statusbar {
+    background: var(--cyan);
+    color: #111212;
+    border-top: 2px solid var(--ink);
+    padding: 6px 16px;
+    font-size: 11.5px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  @media (max-width: 768px) {
+    .fm-panels {
+      grid-template-columns: 1fr !important;
+      min-height: auto !important;
+    }
+    .fm-panels .fm-panel:nth-child(2) {
+      display: none !important;
+    }
+    .fm-col-headers {
+      grid-template-columns: 1fr 60px 80px;
+    }
+    .fm-col-headers span:nth-child(3) {
+      border-right: none;
+    }
+    .fm-col-headers span:nth-child(4) {
+      display: none;
+    }
+    .fm-file-row {
+      grid-template-columns: 1fr 60px 80px;
+    }
+    .fm-file-row span:nth-child(3) {
+      border-right: none;
+    }
+    .fm-file-row span:nth-child(4) {
+      display: none;
+    }
+    .fm-preview-img {
+      aspect-ratio: 16/7;
+    }
+  }
+
+  .btn-view-blog:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0px var(--ink) !important;
+  }
+  .btn-view-blog:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0px var(--ink) !important;
+  }
+</style>

@@ -1,0 +1,311 @@
+---
+// Standalone BSOD screen easter egg page
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Error — BSOD</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #0078d7;
+      color: #ffffff;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      overflow: hidden;
+      cursor: none; /* Hide cursor for realism */
+    }
+
+    /* CRT scanline effect on top */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 999;
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6% 8%;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: flex-start;
+    }
+
+    .emoji {
+      font-size: clamp(80px, 12vw, 150px);
+      line-height: 1;
+      font-weight: 300;
+      margin-bottom: 30px;
+      user-select: none;
+    }
+
+    .message {
+      font-size: clamp(20px, 2.5vw, 29px);
+      font-weight: 300;
+      line-height: 1.4;
+      margin-bottom: 25px;
+      max-width: 900px;
+    }
+
+    .progress {
+      font-size: clamp(18px, 2.2vw, 26px);
+      font-weight: 300;
+      margin-bottom: 45px;
+    }
+
+    .details-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 30px;
+      margin-top: auto;
+    }
+
+    .qr-container {
+      flex-shrink: 0;
+      border: 4px solid #ffffff;
+      background-color: #ffffff;
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 146px;
+      height: 146px;
+    }
+    .qr-container svg {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    .info-text {
+      font-size: clamp(13px, 1.4vw, 16px);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .info-text a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .stop-code {
+      margin-top: 15px;
+      font-family: Consolas, monospace;
+      font-size: clamp(12px, 1.3vw, 15px);
+    }
+
+    /* Glitch Animation */
+    @keyframes glitch {
+      0% { transform: translate(0) }
+      20% { transform: translate(-2px, 2px) }
+      40% { transform: translate(-2px, -2px) }
+      60% { transform: translate(2px, 2px) }
+      80% { transform: translate(2px, -2px) }
+      100% { transform: translate(0) }
+    }
+    .glitching {
+      animation: glitch 0.15s linear infinite;
+    }
+
+    /* Black screen reboot */
+    .reboot-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #000000;
+      z-index: 10000;
+      display: none;
+      color: #ffffff;
+      font-family: Consolas, Monaco, monospace;
+      padding: 40px;
+      font-size: 16px;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background: #ffffff;
+      animation: blink 0.8s infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0 }
+      50% { opacity: 1 }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="bsod-container">
+    <div class="emoji">:(</div>
+    <div class="message">
+      Your portfolio ran into a problem and needs to restart (probably because of a division by zero in my CSS). We're just collecting some debug logs and coffee stains, and then we'll reboot for you.
+    </div>
+    
+    <div class="progress" id="progress-text">0% complete</div>
+
+    <div class="details-row">
+      <div class="qr-container">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 150 150" width="130" height="130">
+          <title>QR Code</title>
+          <desc>https://github.com/Almanex</desc>
+          <rect style="fill:rgb(255, 255, 255);fill-opacity:1" x="0" y="0" width="150" height="150" />
+          <g id="elements">
+            <path style="fill:rgb(0, 0, 0)" d="M 0,0 l 6,0 0,6 -6,0 z M 6,0 l 6,0 0,6 -6,0 z M 12,0 l 6,0 0,6 -6,0 z M 18,0 l 6,0 0,6 -6,0 z M 24,0 l 6,0 0,6 -6,0 z M 30,0 l 6,0 0,6 -6,0 z M 36,0 l 6,0 0,6 -6,0 z M 54,0 l 6,0 0,6 -6,0 z M 78,0 l 6,0 0,6 -6,0 z M 96,0 l 6,0 0,6 -6,0 z M 108,0 l 6,0 0,6 -6,0 z M 114,0 l 6,0 0,6 -6,0 z M 120,0 l 6,0 0,6 -6,0 z M 126,0 l 6,0 0,6 -6,0 z M 132,0 l 6,0 0,6 -6,0 z M 138,0 l 6,0 0,6 -6,0 z M 144,0 l 6,0 0,6 -6,0 z M 0,6 l 6,0 0,6 -6,0 z M 36,6 l 6,0 0,6 -6,0 z M 48,6 l 6,0 0,6 -6,0 z M 54,6 l 6,0 0,6 -6,0 z M 66,6 l 6,0 0,6 -6,0 z M 72,6 l 6,0 0,6 -6,0 z M 84,6 l 6,0 0,6 -6,0 z M 90,6 l 6,0 0,6 -6,0 z M 96,6 l 6,0 0,6 -6,0 z M 108,6 l 6,0 0,6 -6,0 z M 144,6 l 6,0 0,6 -6,0 z M 0,12 l 6,0 0,6 -6,0 z M 12,12 l 6,0 0,6 -6,0 z M 18,12 l 6,0 0,6 -6,0 z M 24,12 l 6,0 0,6 -6,0 z M 36,12 l 6,0 0,6 -6,0 z M 54,12 l 6,0 0,6 -6,0 z M 60,12 l 6,0 0,6 -6,0 z M 66,12 l 6,0 0,6 -6,0 z M 84,12 l 6,0 0,6 -6,0 z M 96,12 l 6,0 0,6 -6,0 z M 108,12 l 6,0 0,6 -6,0 z M 120,12 l 6,0 0,6 -6,0 z M 126,12 l 6,0 0,6 -6,0 z M 132,12 l 6,0 0,6 -6,0 z M 144,12 l 6,0 0,6 -6,0 z M 0,18 l 6,0 0,6 -6,0 z M 12,18 l 6,0 0,6 -6,0 z M 18,18 l 6,0 0,6 -6,0 z M 24,18 l 6,0 0,6 -6,0 z M 36,18 l 6,0 0,6 -6,0 z M 48,18 l 6,0 0,6 -6,0 z M 54,18 l 6,0 0,6 -6,0 z M 66,18 l 6,0 0,6 -6,0 z M 78,18 l 6,0 0,6 -6,0 z M 108,18 l 6,0 0,6 -6,0 z M 120,18 l 6,0 0,6 -6,0 z M 126,18 l 6,0 0,6 -6,0 z M 132,18 l 6,0 0,6 -6,0 z M 144,18 l 6,0 0,6 -6,0 z M 0,24 l 6,0 0,6 -6,0 z M 12,24 l 6,0 0,6 -6,0 z M 18,24 l 6,0 0,6 -6,0 z M 24,24 l 6,0 0,6 -6,0 z M 36,24 l 6,0 0,6 -6,0 z M 60,24 l 6,0 0,6 -6,0 z M 72,24 l 6,0 0,6 -6,0 z M 78,24 l 6,0 0,6 -6,0 z M 96,24 l 6,0 0,6 -6,0 z M 108,24 l 6,0 0,6 -6,0 z M 120,24 l 6,0 0,6 -6,0 z M 126,24 l 6,0 0,6 -6,0 z M 132,24 l 6,0 0,6 -6,0 z M 144,24 l 6,0 0,6 -6,0 z M 0,30 l 6,0 0,6 -6,0 z M 36,30 l 6,0 0,6 -6,0 z M 48,30 l 6,0 0,6 -6,0 z M 60,30 l 6,0 0,6 -6,0 z M 78,30 l 6,0 0,6 -6,0 z M 84,30 l 6,0 0,6 -6,0 z M 90,30 l 6,0 0,6 -6,0 z M 96,30 l 6,0 0,6 -6,0 z M 108,30 l 6,0 0,6 -6,0 z M 144,30 l 6,0 0,6 -6,0 z M 0,36 l 6,0 0,6 -6,0 z M 6,36 l 6,0 0,6 -6,0 z M 12,36 l 6,0 0,6 -6,0 z M 18,36 l 6,0 0,6 -6,0 z M 24,36 l 6,0 0,6 -6,0 z M 30,36 l 6,0 0,6 -6,0 z M 36,36 l 6,0 0,6 -6,0 z M 48,36 l 6,0 0,6 -6,0 z M 60,36 l 6,0 0,6 -6,0 z M 72,36 l 6,0 0,6 -6,0 z M 84,36 l 6,0 0,6 -6,0 z M 96,36 l 6,0 0,6 -6,0 z M 108,36 l 6,0 0,6 -6,0 z M 114,36 l 6,0 0,6 -6,0 z M 120,36 l 6,0 0,6 -6,0 z M 126,36 l 6,0 0,6 -6,0 z M 132,36 l 6,0 0,6 -6,0 z M 138,36 l 6,0 0,6 -6,0 z M 144,36 l 6,0 0,6 -6,0 z M 72,42 l 6,0 0,6 -6,0 z M 84,42 l 6,0 0,6 -6,0 z M 0,48 l 6,0 0,6 -6,0 z M 6,48 l 6,0 0,6 -6,0 z M 12,48 l 6,0 0,6 -6,0 z M 18,48 l 6,0 0,6 -6,0 z M 24,48 l 6,0 0,6 -6,0 z M 36,48 l 6,0 0,6 -6,0 z M 42,48 l 6,0 0,6 -6,0 z M 48,48 l 6,0 0,6 -6,0 z M 54,48 l 6,0 0,6 -6,0 z M 60,48 l 6,0 0,6 -6,0 z M 72,48 l 6,0 0,6 -6,0 z M 84,48 l 6,0 0,6 -6,0 z M 90,48 l 6,0 0,6 -6,0 z M 102,48 l 6,0 0,6 -6,0 z M 114,48 l 6,0 0,6 -6,0 z M 126,48 l 6,0 0,6 -6,0 z M 138,48 l 6,0 0,6 -6,0 z M 12,54 l 6,0 0,6 -6,0 z M 24,54 l 6,0 0,6 -6,0 z M 42,54 l 6,0 0,6 -6,0 z M 48,54 l 6,0 0,6 -6,0 z M 54,54 l 6,0 0,6 -6,0 z M 96,54 l 6,0 0,6 -6,0 z M 114,54 l 6,0 0,6 -6,0 z M 138,54 l 6,0 0,6 -6,0 z M 24,60 l 6,0 0,6 -6,0 z M 30,60 l 6,0 0,6 -6,0 z M 36,60 l 6,0 0,6 -6,0 z M 42,60 l 6,0 0,6 -6,0 z M 48,60 l 6,0 0,6 -6,0 z M 54,60 l 6,0 0,6 -6,0 z M 66,60 l 6,0 0,6 -6,0 z M 72,60 l 6,0 0,6 -6,0 z M 90,60 l 6,0 0,6 -6,0 z M 114,60 l 6,0 0,6 -6,0 z M 120,60 l 6,0 0,6 -6,0 z M 126,60 l 6,0 0,6 -6,0 z M 138,60 l 6,0 0,6 -6,0 z M 144,60 l 6,0 0,6 -6,0 z M 6,66 l 6,0 0,6 -6,0 z M 18,66 l 6,0 0,6 -6,0 z M 48,66 l 6,0 0,6 -6,0 z M 54,66 l 6,0 0,6 -6,0 z M 60,66 l 6,0 0,6 -6,0 z M 66,66 l 6,0 0,6 -6,0 z M 84,66 l 6,0 0,6 -6,0 z M 96,66 l 6,0 0,6 -6,0 z M 102,66 l 6,0 0,6 -6,0 z M 108,66 l 6,0 0,6 -6,0 z M 114,66 l 6,0 0,6 -6,0 z M 144,66 l 6,0 0,6 -6,0 z M 0,72 l 6,0 0,6 -6,0 z M 6,72 l 6,0 0,6 -6,0 z M 12,72 l 6,0 0,6 -6,0 z M 18,72 l 6,0 0,6 -6,0 z M 30,72 l 6,0 0,6 -6,0 z M 36,72 l 6,0 0,6 -6,0 z M 42,72 l 6,0 0,6 -6,0 z M 54,72 l 6,0 0,6 -6,0 z M 66,72 l 6,0 0,6 -6,0 z M 72,72 l 6,0 0,6 -6,0 z M 78,72 l 6,0 0,6 -6,0 z M 84,72 l 6,0 0,6 -6,0 z M 102,72 l 6,0 0,6 -6,0 z M 108,72 l 6,0 0,6 -6,0 z M 120,72 l 6,0 0,6 -6,0 z M 132,72 l 6,0 0,6 -6,0 z M 138,72 l 6,0 0,6 -6,0 z M 144,72 l 6,0 0,6 -6,0 z M 0,78 l 6,0 0,6 -6,0 z M 24,78 l 6,0 0,6 -6,0 z M 42,78 l 6,0 0,6 -6,0 z M 60,78 l 6,0 0,6 -6,0 z M 72,78 l 6,0 0,6 -6,0 z M 78,78 l 6,0 0,6 -6,0 z M 102,78 l 6,0 0,6 -6,0 z M 114,78 l 6,0 0,6 -6,0 z M 126,78 l 6,0 0,6 -6,0 z M 138,78 l 6,0 0,6 -6,0 z M 0,84 l 6,0 0,6 -6,0 z M 36,84 l 6,0 0,6 -6,0 z M 48,84 l 6,0 0,6 -6,0 z M 54,84 l 6,0 0,6 -6,0 z M 60,84 l 6,0 0,6 -6,0 z M 72,84 l 6,0 0,6 -6,0 z M 84,84 l 6,0 0,6 -6,0 z M 90,84 l 6,0 0,6 -6,0 z M 102,84 l 6,0 0,6 -6,0 z M 108,84 l 6,0 0,6 -6,0 z M 114,84 l 6,0 0,6 -6,0 z M 120,84 l 6,0 0,6 -6,0 z M 126,84 l 6,0 0,6 -6,0 z M 138,84 l 6,0 0,6 -6,0 z M 144,84 l 6,0 0,6 -6,0 z M 0,90 l 6,0 0,6 -6,0 z M 48,90 l 6,0 0,6 -6,0 z M 60,90 l 6,0 0,6 -6,0 z M 72,90 l 6,0 0,6 -6,0 z M 108,90 l 6,0 0,6 -6,0 z M 114,90 l 6,0 0,6 -6,0 z M 120,90 l 6,0 0,6 -6,0 z M 144,90 l 6,0 0,6 -6,0 z M 0,96 l 6,0 0,6 -6,0 z M 18,96 l 6,0 0,6 -6,0 z M 36,96 l 6,0 0,6 -6,0 z M 48,96 l 6,0 0,6 -6,0 z M 66,96 l 6,0 0,6 -6,0 z M 78,96 l 6,0 0,6 -6,0 z M 84,96 l 6,0 0,6 -6,0 z M 90,96 l 6,0 0,6 -6,0 z M 96,96 l 6,0 0,6 -6,0 z M 102,96 l 6,0 0,6 -6,0 z M 108,96 l 6,0 0,6 -6,0 z M 114,96 l 6,0 0,6 -6,0 z M 120,96 l 6,0 0,6 -6,0 z M 132,96 l 6,0 0,6 -6,0 z M 48,102 l 6,0 0,6 -6,0 z M 66,102 l 6,0 0,6 -6,0 z M 78,102 l 6,0 0,6 -6,0 z M 90,102 l 6,0 0,6 -6,0 z M 96,102 l 6,0 0,6 -6,0 z M 120,102 l 6,0 0,6 -6,0 z M 126,102 l 6,0 0,6 -6,0 z M 0,108 l 6,0 0,6 -6,0 z M 6,108 l 6,0 0,6 -6,0 z M 12,108 l 6,0 0,6 -6,0 z M 18,108 l 6,0 0,6 -6,0 z M 24,108 l 6,0 0,6 -6,0 z M 30,108 l 6,0 0,6 -6,0 z M 36,108 l 6,0 0,6 -6,0 z M 48,108 l 6,0 0,6 -6,0 z M 54,108 l 6,0 0,6 -6,0 z M 84,108 l 6,0 0,6 -6,0 z M 96,108 l 6,0 0,6 -6,0 z M 108,108 l 6,0 0,6 -6,0 z M 120,108 l 6,0 0,6 -6,0 z M 132,108 l 6,0 0,6 -6,0 z M 138,108 l 6,0 0,6 -6,0 z M 144,108 l 6,0 0,6 -6,0 z M 0,114 l 6,0 0,6 -6,0 z M 36,114 l 6,0 0,6 -6,0 z M 54,114 l 6,0 0,6 -6,0 z M 84,114 l 6,0 0,6 -6,0 z M 96,114 l 6,0 0,6 -6,0 z M 120,114 l 6,0 0,6 -6,0 z M 126,114 l 6,0 0,6 -6,0 z M 0,120 l 6,0 0,6 -6,0 z M 12,120 l 6,0 0,6 -6,0 z M 18,120 l 6,0 0,6 -6,0 z M 24,120 l 6,0 0,6 -6,0 z M 36,120 l 6,0 0,6 -6,0 z M 48,120 l 6,0 0,6 -6,0 z M 72,120 l 6,0 0,6 -6,0 z M 78,120 l 6,0 0,6 -6,0 z M 84,120 l 6,0 0,6 -6,0 z M 90,120 l 6,0 0,6 -6,0 z M 96,120 l 6,0 0,6 -6,0 z M 102,120 l 6,0 0,6 -6,0 z M 108,120 l 6,0 0,6 -6,0 z M 114,120 l 6,0 0,6 -6,0 z M 120,120 l 6,0 0,6 -6,0 z M 132,120 l 6,0 0,6 -6,0 z M 0,126 l 6,0 0,6 -6,0 z M 12,126 l 6,0 0,6 -6,0 z M 18,126 l 6,0 0,6 -6,0 z M 24,126 l 6,0 0,6 -6,0 z M 36,126 l 6,0 0,6 -6,0 z M 48,126 l 6,0 0,6 -6,0 z M 60,126 l 6,0 0,6 -6,0 z M 66,126 l 6,0 0,6 -6,0 z M 102,126 l 6,0 0,6 -6,0 z M 108,126 l 6,0 0,6 -6,0 z M 120,126 l 6,0 0,6 -6,0 z M 126,126 l 6,0 0,6 -6,0 z M 132,126 l 6,0 0,6 -6,0 z M 138,126 l 6,0 0,6 -6,0 z M 144,126 l 6,0 0,6 -6,0 z M 0,132 l 6,0 0,6 -6,0 z M 12,132 l 6,0 0,6 -6,0 z M 18,132 l 6,0 0,6 -6,0 z M 24,132 l 6,0 0,6 -6,0 z M 36,132 l 6,0 0,6 -6,0 z M 48,132 l 6,0 0,6 -6,0 z M 72,132 l 6,0 0,6 -6,0 z M 126,132 l 6,0 0,6 -6,0 z M 132,132 l 6,0 0,6 -6,0 z M 144,132 l 6,0 0,6 -6,0 z M 0,138 l 6,0 0,6 -6,0 z M 36,138 l 6,0 0,6 -6,0 z M 48,138 l 6,0 0,6 -6,0 z M 54,138 l 6,0 0,6 -6,0 z M 60,138 l 6,0 0,6 -6,0 z M 66,138 l 6,0 0,6 -6,0 z M 84,138 l 6,0 0,6 -6,0 z M 96,138 l 6,0 0,6 -6,0 z M 114,138 l 6,0 0,6 -6,0 z M 120,138 l 6,0 0,6 -6,0 z M 126,138 l 6,0 0,6 -6,0 z M 144,138 l 6,0 0,6 -6,0 z M 0,144 l 6,0 0,6 -6,0 z M 6,144 l 6,0 0,6 -6,0 z M 12,144 l 6,0 0,6 -6,0 z M 18,144 l 6,0 0,6 -6,0 z M 24,144 l 6,0 0,6 -6,0 z M 30,144 l 6,0 0,6 -6,0 z M 36,144 l 6,0 0,6 -6,0 z M 48,144 l 6,0 0,6 -6,0 z M 54,144 l 6,0 0,6 -6,0 z M 60,144 l 6,0 0,6 -6,0 z M 66,144 l 6,0 0,6 -6,0 z M 72,144 l 6,0 0,6 -6,0 z M 78,144 l 6,0 0,6 -6,0 z M 84,144 l 6,0 0,6 -6,0 z M 108,144 l 6,0 0,6 -6,0 z M 114,144 l 6,0 0,6 -6,0 z M 120,144 l 6,0 0,6 -6,0 z M 126,144 l 6,0 0,6 -6,0 z M 132,144 l 6,0 0,6 -6,0 z M 138,144 l 6,0 0,6 -6,0 z M 144,144 l 6,0 0,6 -6,0 " />
+          </g>
+        </svg>
+      </div>
+      <div class="info-text">
+        <p>For more information about this issue and possible fixes, visit <a href="https://github.com/Almanex" target="_blank">https://github.com/Almanex</a></p>
+        <p style="margin-top: 10px; opacity: 0.85;">If you call a support person, give them this info:</p>
+        <div class="stop-code">
+          <p>Stop code: <strong>OUT_OF_COFFEE_ERROR</strong></p>
+          <p style="margin-top: 4px;">What failed: <strong>almanex_core.sys</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reboot simulation screen -->
+  <div class="reboot-screen" id="reboot-screen">
+    <div id="reboot-console"></div>
+    <span class="cursor"></span>
+  </div>
+
+  <script is:inline>
+    // Audio synthesis for glitchy BSOD hardware buzz
+    function playGlitchSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        
+        // Short error alert tone
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, ctx.currentTime); // Low buzz
+        osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.3);
+        
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch (e) {}
+    }
+
+    // Play initial buzz on interaction / load
+    window.addEventListener('click', () => {
+      playGlitchSound();
+    }, { once: true });
+
+    // Start progress counter
+    const progressText = document.getElementById('progress-text');
+    const container = document.getElementById('bsod-container');
+    const rebootScreen = document.getElementById('reboot-screen');
+    const rebootConsole = document.getElementById('reboot-console');
+    
+    let percent = 0;
+    
+    function updateProgress() {
+      if (percent < 100) {
+        percent += Math.floor(Math.random() * 8) + 2;
+        if (percent > 100) percent = 100;
+        progressText.textContent = percent + "% complete";
+        
+        if (Math.random() > 0.75) {
+          container.classList.add('glitching');
+          playGlitchSound();
+          setTimeout(() => {
+            container.classList.remove('glitching');
+          }, 80);
+        }
+        
+        setTimeout(updateProgress, Math.floor(Math.random() * 800) + 300);
+      } else {
+        setTimeout(reboot, 1000);
+      }
+    }
+    
+    setTimeout(updateProgress, 1200);
+
+    window.addEventListener('keydown', () => {
+      if (percent < 90) percent += 5;
+      playGlitchSound();
+    });
+    
+    window.addEventListener('click', () => {
+      if (percent < 90) percent += 5;
+    });
+
+    const consoleLines = [
+      "Phoenix ROM BIOS Plus Version 1.10 A05",
+      "Copyright 1985-2026 Phoenix Technologies Ltd.",
+      "All Rights Reserved",
+      "",
+      "CPU: Intel Core i9-14900K @ 3.20GHz",
+      "Memory Test: 16384MB OK",
+      "Detecting Primary Master ... [ Almanex SSD 1TB ]",
+      "Detecting Primary Slave  ... [ None ]",
+      "",
+      "Booting from Hard Disk...",
+      "Waking up the developer...",
+      "Refilling coffee levels ... [ 100% OK ]",
+      "Compiling portfolio.exe ... [ 0 errors, 1337 warnings ]",
+      "Starting local web server..."
+    ];
+
+    function reboot() {
+      container.style.display = 'none';
+      rebootScreen.style.display = 'block';
+      
+      let lineIndex = 0;
+      function printConsoleLine() {
+        if (lineIndex < consoleLines.length) {
+          const p = document.createElement('p');
+          p.textContent = consoleLines[lineIndex];
+          rebootConsole.appendChild(p);
+          lineIndex++;
+          try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.value = 800;
+            gain.gain.value = 0.005;
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.05);
+          } catch(e) {}
+          
+          setTimeout(printConsoleLine, Math.floor(Math.random() * 250) + 80);
+        } else {
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1200);
+        }
+      }
+      
+      setTimeout(printConsoleLine, 600);
+    }
+  </script>
+</body>
+</html>

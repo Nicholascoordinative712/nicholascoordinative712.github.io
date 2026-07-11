@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import BlogDetailPage from '../../../components/BlogDetailPage.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const dePosts = posts.filter(post => post.id.startsWith('de/'));
+  return dePosts.map(post => {
+    const slug = post.id.replace(/^de\//, '');
+    return {
+      params: { slug },
+      props: { post }
+    };
+  });
+}
+
+const { post } = Astro.props;
+---
+
+<BlogDetailPage lang="de" post={post} />
